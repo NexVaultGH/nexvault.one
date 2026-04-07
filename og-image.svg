@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#05060a"/>
+  <!-- Border -->
+  <rect x="24" y="24" width="1152" height="582" rx="20" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.2"/>
+  <!-- Gold accent line top -->
+  <rect x="100" y="60" width="200" height="1" fill="#c9a84c" opacity="0.5"/>
+  <!-- Logo mark -->
+  <rect x="100" y="100" width="64" height="64" rx="14" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.4"/>
+  <text x="132" y="144" text-anchor="middle" font-family="Georgia,serif" font-size="38" font-weight="700" fill="#c9a84c">V</text>
+  <!-- Brand name -->
+  <text x="184" y="142" font-family="monospace" font-size="18" letter-spacing="6" fill="#c9a84c" opacity="0.9">NEXVAULT</text>
+  <!-- Main headline -->
+  <text x="100" y="260" font-family="Georgia,serif" font-size="56" font-weight="400" fill="#e8e2d6">USDX Savings Protocol</text>
+  <!-- Sub headline -->
+  <text x="100" y="320" font-family="monospace" font-size="22" fill="#c9a84c" opacity="0.8">Earn up to 4.44% APY on USDX</text>
+  <!-- Description -->
+  <text x="100" y="380" font-family="monospace" font-size="16" fill="#5a5650">Backed by U.S. Treasury yield  ·  Three lock tiers  ·  Built on Nexus</text>
+  <!-- Tier pills -->
+  <rect x="100" y="430" width="120" height="36" rx="18" fill="none" stroke="#60a5fa" stroke-width="1" opacity="0.5"/>
+  <text x="160" y="453" text-anchor="middle" font-family="monospace" font-size="12" fill="#60a5fa">1-Year 3.80%</text>
+  <rect x="240" y="430" width="120" height="36" rx="18" fill="none" stroke="#a78bfa" stroke-width="1" opacity="0.5"/>
+  <text x="300" y="453" text-anchor="middle" font-family="monospace" font-size="12" fill="#a78bfa">3-Year 4.10%</text>
+  <rect x="380" y="430" width="120" height="36" rx="18" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+  <text x="440" y="453" text-anchor="middle" font-family="monospace" font-size="12" fill="#c9a84c">5-Year 4.44%</text>
+  <!-- URL -->
+  <text x="100" y="560" font-family="monospace" font-size="14" letter-spacing="3" fill="#5a5650">nexvault.one</text>
+  <!-- Gold accent line bottom -->
+  <rect x="100" y="580" width="200" height="1" fill="#c9a84c" opacity="0.5"/>
+  <!-- Decorative dots -->
+  <circle cx="1050" cy="150" r="80" fill="#c9a84c" opacity="0.03"/>
+  <circle cx="1000" cy="400" r="120" fill="#c9a84c" opacity="0.02"/>
+</svg>

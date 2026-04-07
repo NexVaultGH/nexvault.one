@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Get the NexVault App</title>
+  <meta name="description" content="Install NexVault on your home screen for instant access to your USDX savings vault." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="/mobile-manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NexVault" />
+  <meta name="theme-color" content="#05060a" />
+
+  <!-- Apple icons -->
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon-144.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:   #c9a84c;
+      --gold2:  #8b6914;
+      --bg:     #05060a;
+      --bg2:    #0d0f14;
+      --border: rgba(201,168,76,.18);
+      --text:   #e8e4dc;
+      --muted:  #6b7280;
+      --dim:    #374151;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .page {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: env(safe-area-inset-top, 24px) 20px env(safe-area-inset-bottom, 24px);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── Logo ───────────────────────────────────────────────── */
+    .logo-wrap {
+      margin-top: 48px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #0d0f14, #181c24);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--gold);
+      box-shadow: 0 8px 40px rgba(201,168,76,.12);
+    }
+
+    .logo-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: .04em;
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    /* ── Install card ────────────────────────────────────────── */
+    .card {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(13,15,20,.9), rgba(18,21,28,.9));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+
+    /* ── Install button ─────────────────────────────────────── */
+    .btn-install {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color: #05060a;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-install:active { transform: scale(.98); opacity: .9; }
+    .btn-install:disabled { opacity: .4; cursor: default; }
+
+    .btn-open {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      cursor: pointer;
+      transition: background .2s;
+      margin-top: 10px;
+    }
+
+    .btn-open:hover { background: rgba(201,168,76,.06); }
+
+    /* ── Features list ──────────────────────────────────────── */
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .feat {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .feat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .feat-text {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .feat-text strong { color: var(--text); }
+
+    /* ── iOS guide ──────────────────────────────────────────── */
+    #ios-guide { display: none; }
+
+    .ios-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(201,168,76,.06);
+    }
+
+    .ios-step:last-child { border-bottom: none; }
+
+    .step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+      padding-top: 4px;
+    }
+
+    .step-text strong { color: var(--text); }
+
+    /* ── Status pill ────────────────────────────────────────── */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      letter-spacing: .1em;
+      color: var(--gold);
+      background: rgba(201,168,76,.08);
+      border: 1px solid rgba(201,168,76,.15);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 20px;
+    }
+
+    .dot { width: 5px; height: 5px; border-radius: 50%; background: #22c55e; }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    .footer {
+      margin-top: auto;
+      padding-top: 32px;
+      padding-bottom: 8px;
+      text-align: center;
+    }
+
+    .footer a {
+      font-size: 10px;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: .06em;
+      margin: 0 10px;
+    }
+
+    .footer a:hover { color: var(--muted); }
+
+    /* ── Installed badge ────────────────────────────────────── */
+    #installed-msg {
+      display: none;
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(34,197,94,.08);
+      border: 1px solid rgba(34,197,94,.2);
+      color: #4ade80;
+      font-size: 11px;
+      text-align: center;
+      letter-spacing: .04em;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="logo-icon">V</div>
+    <div class="logo-name">NexVault</div>
+    <div class="logo-sub">USDX Savings Protocol · Nexus Blockchain</div>
+  </div>
+
+  <!-- Live status -->
+  <div class="status-pill">
+    <span class="dot"></span>
+    NEXVAULT LIVE ON NEXUS
+  </div>
+
+  <!-- Install card -->
+  <div class="card" id="install-card">
+    <div class="card-title">Get the App</div>
+    <div class="card-desc">
+      Install NexVault to your home screen. Opens instantly like a native app — no app store required.
+    </div>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text"><strong>Instant access</strong> — tap your home screen icon to open</div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text"><strong>Stays signed in</strong> — wallet remembered between sessions</div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text"><strong>Works offline</strong> — dashboard loads even without signal</div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text"><strong>No download</strong> — installs directly from your browser</div>
+      </div>
+    </div>
+
+    <!-- Android / Chrome install button (shown via JS) -->
+    <button class="btn-install" id="install-btn" style="display:none" onclick="triggerInstall()">
+      ⬇ Install NexVault App
+    </button>
+
+    <!-- Already installed -->
+    <div id="installed-msg">✓ NexVault is installed on your device</div>
+
+    <!-- Open app link -->
+    <button class="btn-open" onclick="window.location.href='/app.html'">
+      Open Vault Dashboard →
+    </button>
+  </div>
+
+  <!-- iOS guide (shown only on iOS Safari) -->
+  <div class="card" id="ios-guide">
+    <div class="card-title">Add to Home Screen</div>
+    <div class="card-desc">Follow these steps to install NexVault on iOS:</div>
+
+    <div class="ios-step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        Tap the <strong>Share button ⬆</strong> at the bottom of Safari
+      </div>
+    </div>
+    <div class="ios-step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        Scroll down and tap <strong>"Add to Home Screen" ＋</strong>
+      </div>
+    </div>
+    <div class="ios-step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        Tap <strong>Add</strong> — NexVault will appear on your home screen
+      </div>
+    </div>
+
+    <button class="btn-open" onclick="window.location.href='/app.html'" style="margin-top:16px">
+      Open Vault Dashboard →
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a href="/">Home</a>
+    <a href="/security">Security</a>
+    <a href="/about">About</a>
+  </div>
+
+</div>
+
+<script>
+// ── Register Service Worker ────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/mobile-sw.js')
+    .then(() => console.log('[NexVault Mobile SW] Registered'))
+    .catch(err => console.warn('[NexVault Mobile SW] Failed:', err))
+}
+
+// ── Detect platform and show correct UI ───────────────────────────────────────
+(function() {
+  const ua        = navigator.userAgent
+  const isIOS     = /iphone|ipad|ipod/i.test(ua)
+  const isSafari  = /^((?!chrome|android).)*safari/i.test(ua)
+  const isInPWA   = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
+
+  // Already installed — just show the open button
+  if (isInPWA) {
+    document.getElementById('installed-msg').style.display = 'block'
+    return
+  }
+
+  // iOS Safari → show Add to Home Screen guide
+  if (isIOS && isSafari) {
+    document.getElementById('ios-guide').style.display = 'block'
+    return
+  }
+
+  // Android / Desktop Chrome → beforeinstallprompt handles the button
+})()
+
+// ── Install prompt (Android / Chrome / Edge) ──────────────────────────────────
+let _prompt = null
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault()
+  _prompt = e
+  document.getElementById('install-btn').style.display = 'flex'
+})
+
+window.addEventListener('appinstalled', () => {
+  _prompt = null
+  document.getElementById('install-btn').style.display = 'none'
+  document.getElementById('installed-msg').style.display = 'block'
+})
+
+async function triggerInstall() {
+  if (!_prompt) return
+  const btn = document.getElementById('install-btn')
+  btn.disabled = true
+  btn.textContent = 'Installing...'
+  _prompt.prompt()
+  const { outcome } = await _prompt.userChoice
+  _prompt = null
+  if (outcome === 'accepted') {
+    document.getElementById('installed-msg').style.display = 'block'
+    btn.style.display = 'none'
+  } else {
+    btn.disabled = false
+    btn.innerHTML = '⬇ Install NexVault App'
+  }
+}
+</script>
+
+</body>
+</html>

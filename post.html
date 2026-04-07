@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Loading... — NexVault</title>
+  <meta id="page-desc" name="description" content="" />
+  <link id="page-canon" rel="canonical" href="https://nexvault.one/post" />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="NexVault" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="NexVault" />
+  <meta property="og:image" content="https://nexvault.one/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://nexvault.one/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-style.css?v=60">
+
+  <style>
+    /* ── Hero ── */
+    .post-hero {
+      min-height: 40vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 140px 24px 60px;
+    }
+
+    /* ── Tag pills ── */
+    .tag-pill {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-size: 9px; letter-spacing: 0.12em; font-weight: 700;
+    }
+    .tag-protocol { background: rgba(201,168,76,0.10); color: #c9a84c; }
+    .tag-defi     { background: rgba(99,102,241,0.10); color: #818cf8; }
+    .tag-market   { background: rgba(34,197,94,0.08);  color: #4ade80; }
+    .tag-education{ background: rgba(56,189,248,0.08); color: #38bdf8; }
+    .tag-security { background: rgba(239,68,68,0.08);  color: #f87171; }
+    .tag-ai       { background: rgba(168,85,247,0.10); color: #c084fc; }
+
+    /* ── Post layout ── */
+    .post-wrap {
+      max-width: 680px; margin: 0 auto; padding: 0 24px 80px;
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+      color: var(--text-muted); text-decoration: none; margin-bottom: 40px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+
+    .post-title {
+      font-family: var(--font); font-weight: 300;
+      font-size: clamp(28px, 4vw, 48px); color: var(--text);
+      line-height: 1.12; letter-spacing: -0.02em; margin-bottom: 20px;
+    }
+
+    .post-meta {
+      display: flex; align-items: center; gap: 14px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-dim); letter-spacing: 0.06em;
+      margin-bottom: 40px; padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-excerpt {
+      font-family: var(--font); font-weight: 300; font-size: 16px;
+      color: rgba(255,255,255,0.45); line-height: 1.8; margin-bottom: 32px;
+      border-left: 1px solid rgba(201,168,76,0.2); padding-left: 20px;
+      font-style: italic;
+    }
+
+    .post-body {
+      font-family: var(--font); font-weight: 300; font-size: 16px;
+      color: rgba(255,255,255,0.5); line-height: 1.9;
+    }
+    .post-body p { margin-bottom: 22px; }
+    .post-body h2 {
+      font-family: var(--font); font-weight: 400; font-size: 22px;
+      color: var(--text); margin: 40px 0 16px; letter-spacing: -0.01em;
+    }
+
+    .post-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 64px; padding-top: 32px;
+      border-top: 1px solid var(--border); gap: 12px; flex-wrap: wrap;
+    }
+    .post-nav-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-muted); font-family: var(--font-mono);
+      font-size: 11px; letter-spacing: 0.08em; font-weight: 500;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .post-nav-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+    .post-nav-btn.hidden { visibility: hidden; }
+
+    #not-found {
+      display: none; text-align: center; padding: 80px 24px; max-width: 680px; margin: 0 auto;
+    }
+    #not-found h2 { font-family: var(--font); font-weight: 300; font-size: 36px; color: var(--text); margin-bottom: 16px; }
+    #not-found p { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+
+    @media (max-width: 768px) {
+      .post-hero { padding: 120px 20px 40px; min-height: 30vh; }
+      .post-nav { flex-direction: column; align-items: stretch; }
+      .post-nav-btn { justify-content: center; }
+      .post-nav-btn.hidden { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="nv-grain"></div>
+
+<!-- Nav -->
+<nav class="nv-nav">
+  <a href="/" class="nv-nav-logo">
+    <div class="nv-nav-logo-mark">V</div>
+    <span class="nv-nav-logo-text">NEXVAULT</span>
+  </a>
+  <div class="nv-nav-right">
+    <button class="nv-nav-menu-btn" onclick="nvOpenSidebar()">MENU</button>
+  </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="nv-sidebar-overlay" onclick="nvCloseSidebar()"></div>
+<div class="nv-sidebar">
+  <div class="nv-sidebar-head"><button class="nv-sidebar-close" onclick="nvCloseSidebar()">CLOSE</button></div>
+  <div class="nv-sidebar-links">
+    <a href="/" class="nv-sidebar-link">Home</a>
+    <a href="/app" class="nv-sidebar-link">The Vault</a>
+    <a href="/about" class="nv-sidebar-link">About</a>
+    <a href="/security" class="nv-sidebar-link">Security</a>
+    <a href="/proof" class="nv-sidebar-link">Proof of Yield</a>
+    <a href="/news" class="nv-sidebar-link">News</a>
+    <a href="/terms" class="nv-sidebar-link">Terms</a>
+  </div>
+  <div class="nv-sidebar-foot"><a href="/app" class="nv-sidebar-cta">OPEN VAULT</a></div>
+</div>
+
+<!-- Hero -->
+<section class="post-hero">
+  <div class="label label-gold fi fi1">ARTICLE</div>
+</section>
+
+<!-- Post Content -->
+<div class="post-wrap" id="post-content">
+  <a href="/news" class="back-link">← BACK TO NEWS</a>
+  <div id="post-tag" class="tag-pill"></div>
+  <h1 class="post-title hlg" id="post-title"></h1>
+  <div class="post-meta">
+    <span id="post-date"></span>
+    <span style="color:var(--text-dim)">·</span>
+    <span>NEXVAULT</span>
+  </div>
+  <div class="post-excerpt" id="post-excerpt"></div>
+  <div class="post-body" id="post-body"></div>
+  <div class="post-nav">
+    <a id="btn-prev" class="post-nav-btn hidden" href="#">← PREV</a>
+    <a href="/news" class="post-nav-btn">ALL POSTS</a>
+    <a id="btn-next" class="post-nav-btn hidden" href="#">NEXT →</a>
+  </div>
+</div>
+
+<div id="not-found">
+  <h2>Post Not Found</h2>
+  <p>This post doesn't exist or has been removed.</p>
+  <a href="/news" class="post-nav-btn">← BACK TO NEWS</a>
+</div>
+
+<!-- Chat Widget -->
+<div class="nv-chat-trigger" title="NexVault Assistant">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
+</div>
+<div class="nv-chat-panel">
+  <div class="nv-chat-head"><span class="nv-chat-title">NEXVAULT ASSISTANT</span><button class="nv-chat-close-btn">&times;</button></div>
+  <div class="nv-chat-messages"></div>
+  <div class="nv-chat-input-wrap">
+    <input class="nv-chat-input" type="text" placeholder="Ask anything..." id="chat-input" autocomplete="off" />
+    <button class="nv-chat-send" onclick="nvSendChat()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </div>
+  <div class="nv-chat-footer">POWERED BY NEXVAULT</div>
+</div>
+
+<!-- Footer -->
+<footer class="nv-footer">
+  <span>&copy; 2026 NexVault. All rights reserved.</span>
+  <div class="nv-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script>
+// ── Load post from _posts_data.json via URL params ──
+(async function() {
+  var POSTS = [];
+  try {
+    var res = await fetch('/_posts_data.json');
+    POSTS = await res.json();
+  } catch (e) {
+    console.error('Failed to load posts:', e);
+    document.getElementById('post-content').style.display = 'none';
+    document.getElementById('not-found').style.display = '';
+    return;
+  }
+
+  var params = new URLSearchParams(window.location.search);
+  var id = parseInt(params.get('id'));
+  var post = POSTS.find(function(p) { return p.id === id; });
+
+  if (!post) {
+    document.getElementById('post-content').style.display = 'none';
+    document.getElementById('not-found').style.display = '';
+    return;
+  }
+
+  // Set page meta
+  document.title = post.title + ' \u2014 NexVault';
+  document.getElementById('page-desc').content = post.excerpt;
+  document.getElementById('page-canon').href = 'https://nexvault.one/post?id=' + post.id;
+
+  // Tag
+  var tagEl = document.getElementById('post-tag');
+  tagEl.textContent = post.tag.toUpperCase();
+  tagEl.className = 'tag-pill tag-' + post.tag;
+  tagEl.style.marginBottom = '20px';
+
+  // Title, date, excerpt
+  document.getElementById('post-title').textContent = post.title;
+  document.getElementById('post-date').textContent = post.date;
+  document.getElementById('post-excerpt').textContent = post.excerpt;
+
+  // Body: if it contains HTML tags, use innerHTML; otherwise split into paragraphs
+  var bodyEl = document.getElementById('post-body');
+  if (post.body.indexOf('<') !== -1) {
+    bodyEl.innerHTML = post.body;
+  } else {
+    var sentences = post.body.split(/(?<=[.!?])\s+(?=[A-Z])/);
+    var size = 3;
+    for (var i = 0; i < sentences.length; i += size) {
+      var p = document.createElement('p');
+      p.textContent = sentences.slice(i, i + size).join(' ');
+      bodyEl.appendChild(p);
+    }
+  }
+
+  // Prev / Next navigation
+  var idx = POSTS.findIndex(function(p) { return p.id === id; });
+  var btnPrev = document.getElementById('btn-prev');
+  var btnNext = document.getElementById('btn-next');
+  if (POSTS[idx - 1]) { btnPrev.href = '/post?id=' + POSTS[idx - 1].id; btnPrev.classList.remove('hidden'); }
+  if (POSTS[idx + 1]) { btnNext.href = '/post?id=' + POSTS[idx + 1].id; btnNext.classList.remove('hidden'); }
+})();
+</script>
+<script src="/nv-core.js?v=60"></script>
+</body>
+</html>

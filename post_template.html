@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Loading... — NexVault</title>
+  <meta id="page-desc" name="description" content="" />
+  <link id="page-canon" rel="canonical" href="https://nexvault.one/post" />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#05060a" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="NexVault" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="NexVault" />
+  <meta property="og:image" content="https://nexvault.one/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://nexvault.one/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-dim: rgba(201,168,76,0.15);
+      --bg: #05060a;
+      --text: #e8e2d6;
+      --muted: #5a5650;
+      --border: rgba(201,168,76,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1; opacity: 0.4;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 22px 40px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(201,168,76,0.06);
+      background: rgba(5,6,10,0.7); backdrop-filter: blur(20px);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; }
+    .nav-logomark {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: #05060a; border: 1.5px solid rgba(201,168,76,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: #c9a84c;
+    }
+    .nav-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 400; letter-spacing: .12em; color: var(--text); }
+    .nav-pill-link {
+      padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(201,168,76,.2);
+      background: rgba(201,168,76,.06); color: #c9a84c; font-family: 'DM Mono', monospace;
+      font-size: 10px; letter-spacing: .1em; font-weight: 600; text-decoration: none; transition: all .2s; white-space: nowrap;
+    }
+    .nav-pill-link:hover { background: rgba(201,168,76,.14); }
+    .nav-launch-btn {
+      padding: 8px 18px; border-radius: 9px; border: 1px solid rgba(201,168,76,0.35);
+      background: rgba(201,168,76,0.08); color: #c9a84c; font-family: 'DM Mono', monospace;
+      font-size: 12px; letter-spacing: .08em; font-weight: 600; text-decoration: none; transition: all .2s;
+      display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    }
+    .nav-launch-btn:hover { background: rgba(201,168,76,0.15); }
+    .dot-live { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: blink 1.8s infinite; flex-shrink: 0; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      cursor: pointer; padding: 6px; border-radius: 6px;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); margin-left: 8px;
+    }
+    .hamburger span { display: block; width: 20px; height: 2px; background: var(--gold); border-radius: 2px; }
+    .mobile-menu {
+      display: none; position: fixed; top: 56px; left: 0; right: 0;
+      background: rgba(5,6,10,.97); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,.12);
+      flex-direction: column; align-items: stretch; padding: 12px 16px 16px; gap: 6px; z-index: 999;
+    }
+    .mobile-menu a {
+      display: block; padding: 12px 16px; color: var(--text); text-decoration: none;
+      font-size: 13px; font-weight: 600; letter-spacing: .08em; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.03); transition: background .15s;
+    }
+    .mobile-menu a:hover { background: rgba(201,168,76,.08); color: var(--gold); }
+    .mobile-menu a.launch { background: rgba(201,168,76,.1); border-color: rgba(201,168,76,.2); color: var(--gold); text-align: center; margin-top: 4px; }
+    .mobile-menu.open { display: flex; }
+
+    /* ── Post layout ── */
+    main { position: relative; z-index: 2; padding: 120px 24px 80px; }
+
+    .post-wrap { max-width: 760px; margin: 0 auto; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 11px;
+      letter-spacing: .1em; color: var(--muted); text-decoration: none;
+      margin-bottom: 40px; transition: color .2s;
+    }
+    .back-link:hover { color: var(--gold); }
+
+    .post-tag {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-size: 9px; letter-spacing: .14em; font-weight: 700; margin-bottom: 20px;
+    }
+    .tag-protocol { background: rgba(201,168,76,.12); color: #c9a84c; }
+    .tag-defi     { background: rgba(99,102,241,.12);  color: #818cf8; }
+    .tag-market   { background: rgba(34,197,94,.1);    color: #4ade80; }
+    .tag-education{ background: rgba(56,189,248,.1);   color: #38bdf8; }
+    .tag-security { background: rgba(239,68,68,.1);    color: #f87171; }
+    .tag-ai       { background: rgba(168,85,247,.12);  color: #c084fc; }
+
+    .post-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700; color: var(--text); line-height: 1.15; margin-bottom: 20px;
+    }
+
+    .post-meta {
+      display: flex; align-items: center; gap: 16px; font-size: 11px;
+      color: var(--muted); letter-spacing: .08em; margin-bottom: 36px;
+      padding-bottom: 32px; border-bottom: 1px solid rgba(201,168,76,.1);
+    }
+
+    .post-excerpt {
+      font-size: 16px; color: #9ca3af; line-height: 1.8; margin-bottom: 32px;
+      font-style: italic; border-left: 2px solid rgba(201,168,76,.3); padding-left: 20px;
+    }
+
+    .post-body { font-size: 14px; color: #c4bfb8; line-height: 2; }
+    .post-body p { margin-bottom: 22px; }
+
+    .post-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 64px; padding-top: 32px;
+      border-top: 1px solid rgba(201,168,76,.1); gap: 12px; flex-wrap: wrap;
+    }
+
+    .post-nav-btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px;
+      border-radius: 10px; border: 1px solid rgba(201,168,76,.2);
+      background: rgba(201,168,76,.06); color: #c9a84c; font-family: 'DM Mono', monospace;
+      font-size: 11px; letter-spacing: .08em; font-weight: 600; text-decoration: none; transition: all .2s;
+    }
+    .post-nav-btn:hover { background: rgba(201,168,76,.14); border-color: rgba(201,168,76,.4); }
+    .post-nav-btn.hidden { visibility: hidden; }
+
+    #not-found { display: none; text-align: center; padding: 80px 24px; }
+    #not-found h2 { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--text); margin-bottom: 16px; }
+    #not-found p { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+    footer {
+      border-top: 1px solid rgba(201,168,76,0.08); padding: 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px; position: relative; z-index: 2;
+    }
+    .footer-copy { font-size: 13px; color: #5a5650; letter-spacing: .06em; font-weight: 500; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-link { font-size: 13px; color: #5a5650; text-decoration: none; letter-spacing: .06em; transition: color .2s; font-weight: 500; }
+    .footer-link:hover { color: var(--gold); }
+
+    @media (max-width: 700px) {
+      nav { padding: 12px 16px; }
+      .nav-pill-link { display: none; }
+      .hamburger { display: flex !important; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+      .post-nav { flex-direction: column; align-items: stretch; }
+      .post-nav-btn { justify-content: center; }
+      .post-nav-btn.hidden { display: none; }
+    }
+  </style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <div class="nav-logo">
+    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <div class="nav-logomark">V</div>
+      <span class="nav-name">NEXVAULT</span>
+    </a>
+    <a href="/whitepaper" class="nav-pill-link">WHITEPAPER</a>
+    <a href="/about" class="nav-pill-link">ABOUT US</a>
+    <a href="/security" class="nav-pill-link">SECURITY</a>
+    <a href="/news" class="nav-pill-link">NEWS</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div class="dot-live"></div>
+    <a href="/app" class="nav-launch-btn">◈ OPEN VAULT</a>
+    <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/whitepaper">WHITEPAPER</a>
+  <a href="/about">ABOUT US</a>
+  <a href="/security">SECURITY</a>
+  <a href="/news">NEWS</a>
+  <a href="/app" class="launch">◈ OPEN VAULT</a>
+</div>
+
+<main>
+  <div class="post-wrap" id="post-content">
+    <a href="/news" class="back-link">← BACK TO NEWS</a>
+    <div id="post-tag" class="post-tag"></div>
+    <h1 class="post-title" id="post-title"></h1>
+    <div class="post-meta">
+      <span id="post-date"></span>
+      <span>·</span>
+      <span>NEXVAULT INTELLIGENCE</span>
+    </div>
+    <div class="post-excerpt" id="post-excerpt"></div>
+    <div class="post-body" id="post-body"></div>
+    <div class="post-nav">
+      <a id="btn-prev" class="post-nav-btn hidden" href="#">← PREV</a>
+      <a href="/news" class="post-nav-btn">↩ ALL POSTS</a>
+      <a id="btn-next" class="post-nav-btn hidden" href="#">NEXT →</a>
+    </div>
+  </div>
+  <div id="not-found">
+    <h2>Post Not Found</h2>
+    <p>This post doesn't exist or has been removed.</p>
+    <a href="/news" class="post-nav-btn">← BACK TO NEWS</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-copy">© 2026 NEXVAULT · BUILT ON NEXUS.XYZ</div>
+  <div class="footer-links">
+    <a href="/" class="footer-link">HOME</a>
+    <a href="/about" class="footer-link">ABOUT</a>
+    <a href="/security" class="footer-link">SECURITY</a>
+    <a href="/news" class="footer-link">NEWS</a>
+    <a href="/whitepaper" class="footer-link">WHITEPAPER</a>
+    <a href="/app" class="footer-link">OPEN VAULT</a>
+    <a href="/terms" class="footer-link">TERMS</a>
+  </div>
+</footer>
+
+<script>
+  const POSTS = POST_DATA_PLACEHOLDER;
+
+  // Load post from ?id=N
+  const id = parseInt(new URLSearchParams(window.location.search).get('id'));
+  const post = POSTS.find(p => p.id === id);
+
+  if (!post) {
+    document.getElementById('post-content').style.display = 'none';
+    document.getElementById('not-found').style.display = 'block';
+  } else {
+    document.title = post.title + ' — NexVault';
+    document.getElementById('page-desc').content = post.excerpt;
+    document.getElementById('page-canon').href = 'https://nexvault.one/post?id=' + post.id;
+
+    const tagEl = document.getElementById('post-tag');
+    tagEl.textContent = post.tag.toUpperCase();
+    tagEl.className = 'post-tag tag-' + post.tag;
+
+    document.getElementById('post-title').textContent = post.title;
+    document.getElementById('post-date').textContent = post.date;
+    document.getElementById('post-excerpt').textContent = post.excerpt;
+
+    // Body: split into readable paragraphs every ~3 sentences
+    const bodyEl = document.getElementById('post-body');
+    const sentences = post.body.split(/(?<=[.!?])\s+(?=[A-Z])/);
+    const size = 3;
+    for (let i = 0; i < sentences.length; i += size) {
+      const p = document.createElement('p');
+      p.textContent = sentences.slice(i, i + size).join(' ');
+      bodyEl.appendChild(p);
+    }
+
+    // Prev / Next
+    const idx = POSTS.findIndex(p => p.id === id);
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    if (POSTS[idx - 1]) { btnPrev.href = '/post?id=' + POSTS[idx-1].id; btnPrev.classList.remove('hidden'); }
+    if (POSTS[idx + 1]) { btnNext.href = '/post?id=' + POSTS[idx+1].id; btnNext.classList.remove('hidden'); }
+  }
+
+  // Particle background
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  function initParticles() {
+    particles = [];
+    const count = Math.floor((W * H) / 18000);
+    for (let i = 0; i < count; i++)
+      particles.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+0.2,
+        vx: (Math.random()-.5)*.15, vy: (Math.random()-.5)*.15, o: Math.random()*.4+.05 });
+  }
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    const g = ctx.createRadialGradient(W*.5,H*.4,0,W*.5,H*.4,W*.6);
+    g.addColorStop(0,'rgba(201,168,76,0.04)'); g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    particles.forEach(p => {
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(201,168,76,${p.o})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', ()=>{ resize(); initParticles(); });
+  resize(); initParticles(); draw();
+
+  function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
+</script>
+</body>
+</html>

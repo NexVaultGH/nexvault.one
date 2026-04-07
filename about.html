@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>About Us — NexVault</title>
+  <meta name="description" content="Learn about the NexVault team and mission — building the most trusted USDX savings protocol on the Nexus blockchain." />
+  <link rel="canonical" href="https://nexvault.one/about" />
+
+  <!-- Favicon & Manifest -->
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="NexVault" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NexVault" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nexvault.one/about" />
+  <meta property="og:title" content="About Us — NexVault" />
+  <meta property="og:description" content="Learn about the NexVault team and mission — building the most trusted USDX savings protocol on the Nexus blockchain." />
+  <meta property="og:image" content="https://nexvault.one/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NexVault" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="About Us — NexVault" />
+  <meta name="twitter:description" content="Learn about the NexVault team and mission — building the most trusted USDX savings protocol on the Nexus blockchain." />
+  <meta name="twitter:image" content="https://nexvault.one/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-style.css?v=60">
+
+  <style>
+    /* Page-specific styles */
+    .about-body { max-width: 680px; margin: 0 auto; padding: 100px 24px 80px; }
+    .about-section { margin-bottom: 64px; }
+    .about-section-label {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+      color: var(--gold); font-weight: 600; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .about-section-title {
+      font-family: var(--font); font-size: clamp(26px, 3.5vw, 40px);
+      font-weight: 300; color: var(--text); line-height: 1.2; margin-bottom: 20px;
+    }
+    .about-text {
+      font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.9; margin-bottom: 16px;
+    }
+
+    .mission-card {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 16px; padding: 40px 32px; text-align: center;
+      margin: 32px 0;
+    }
+    .mission-quote {
+      font-family: var(--font); font-size: clamp(16px, 2vw, 22px);
+      font-style: italic; color: var(--text); line-height: 1.6; font-weight: 300;
+      margin-bottom: 16px;
+    }
+    .mission-attr { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 0.12em; }
+
+    .founder-card {
+      display: flex; gap: 28px; align-items: flex-start;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px 28px; margin: 24px 0;
+    }
+    .founder-avatar {
+      width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold), #8b6914);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 24px; color: #000; font-weight: 700;
+    }
+    .founder-name { font-size: 18px; font-weight: 400; color: var(--text); margin-bottom: 4px; }
+    .founder-title-text { font-family: var(--font-mono); font-size: 10px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 12px; font-weight: 600; }
+    .founder-bio { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; }
+
+    .phil-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 28px 0; }
+    .phil-card {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 12px; padding: 28px 22px;
+    }
+    .phil-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--gold); font-weight: 600; margin-bottom: 14px; }
+    .phil-title { font-size: 17px; font-weight: 300; color: var(--text); margin-bottom: 10px; line-height: 1.3; }
+    .phil-desc { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.75; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
+    .stat-box {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 18px; text-align: center;
+    }
+    .stat-num { font-family: var(--font); font-weight: 300; font-size: 32px; color: var(--gold); margin-bottom: 5px; line-height: 1; }
+    .stat-label { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; }
+
+    .gold-line { height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent); margin: 0 auto 48px; max-width: 680px; }
+
+    .cta-section { text-align: center; padding: 60px 24px 80px; max-width: 680px; margin: 0 auto; }
+    .cta-title { font-family: var(--font); font-size: clamp(26px, 4vw, 44px); font-weight: 300; color: var(--text); margin-bottom: 14px; line-height: 1.2; }
+    .cta-desc { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 28px; line-height: 1.75; }
+    .cta-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+
+    @media(max-width: 680px) {
+      .phil-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .founder-card { flex-direction: column; }
+    }
+  </style>
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About NexVault",
+    "description": "Learn about the NexVault team and mission — building the most trusted USDX savings protocol on the Nexus blockchain.",
+    "url": "https://nexvault.one/about",
+    "mainEntity": { "@id": "https://nexvault.one/#organization" }
+  }
+  </script>
+</head>
+<body>
+
+<!-- Grain overlay -->
+<div class="nv-grain"></div>
+
+<!-- Navigation -->
+<nav class="nv-nav">
+  <a href="/" class="nv-nav-logo">
+    <div class="nv-nav-logo-mark">V</div>
+    <span class="nv-nav-logo-text">NEXVAULT</span>
+  </a>
+  <div class="nv-nav-right">
+    <button class="nv-nav-menu-btn" onclick="nvOpenSidebar()">MENU</button>
+  </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="nv-sidebar-overlay" onclick="nvCloseSidebar()"></div>
+<div class="nv-sidebar">
+  <div class="nv-sidebar-head">
+    <button class="nv-sidebar-close" onclick="nvCloseSidebar()">CLOSE</button>
+  </div>
+  <div class="nv-sidebar-links">
+    <a href="/" class="nv-sidebar-link">Home</a>
+    <a href="/app" class="nv-sidebar-link">The Vault</a>
+    <a href="/about" class="nv-sidebar-link active">About</a>
+    <a href="/security" class="nv-sidebar-link">Security</a>
+    <a href="/proof" class="nv-sidebar-link">Proof of Yield</a>
+    <a href="/news" class="nv-sidebar-link">News</a>
+    <a href="/terms" class="nv-sidebar-link">Terms</a>
+  </div>
+  <div class="nv-sidebar-foot">
+    <a href="/app" class="nv-sidebar-cta">OPEN VAULT</a>
+  </div>
+</div>
+
+<!-- Chat widget -->
+<div class="nv-chat-trigger" title="NexVault Assistant">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
+</div>
+<div class="nv-chat-panel">
+  <div class="nv-chat-head">
+    <span class="nv-chat-title">NEXVAULT ASSISTANT</span>
+    <button class="nv-chat-close-btn">&times;</button>
+  </div>
+  <div class="nv-chat-messages"></div>
+  <div class="nv-chat-input-wrap">
+    <input class="nv-chat-input" type="text" placeholder="Ask anything..." id="chat-input" autocomplete="off" />
+    <button class="nv-chat-send" onclick="nvSendChat()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </div>
+  <div class="nv-chat-footer">POWERED BY NEXVAULT</div>
+</div>
+
+<!-- Hero section -->
+<section id="about-hero" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding-top:80px;padding-bottom:40px;">
+  <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;padding:0 40px;">
+    <div class="label label-gold fi fi1">WHO WE ARE</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,56px);font-weight:400;line-height:1.1;color:rgba(255,255,255,0.85)" class="fi fi2">About NexVault</h1>
+    <p style="font-size:15px;color:rgba(255,255,255,0.4);max-width:560px;line-height:1.8;" class="fi fi3">
+      NexVault is not just a savings protocol. It is a declaration that access to yield is a human right — not a privilege. We are builders, visionaries, and guardians of a mission that extends far beyond the blockchain.
+    </p>
+  </div>
+</section>
+
+<!-- Scrollable content below hero -->
+<div class="about-body">
+
+  <!-- Mission -->
+  <div class="about-section">
+    <div class="about-section-label">OUR MISSION</div>
+    <div class="about-section-title">Sovereign Yield Banking<br>for Every Human on Earth</div>
+
+    <div class="mission-card">
+      <div class="mission-quote">
+        "This mission did not start with one person or one idea. It belongs to all of us — every depositor, every builder, every person who believes there is a better way to move wealth through the world without asking permission from a system designed to keep it out of reach."
+      </div>
+      <div class="mission-attr">— NEXVAULT PROTOCOL · TRANSPARENCY PLEDGE · 2026</div>
+    </div>
+
+    <p class="about-text">
+      The financial system was not designed for everyone. It was designed for those who already have access — to institutions, to compound yield, to capital formation. Billions of people on earth have no access to a savings account that outpaces inflation, no mechanism to put even $20 to work in a meaningful way.
+    </p>
+    <p class="about-text">
+      NexVault enforces equality at the protocol level. The same 4.44% APY available to an institutional depositor is available to a first-time depositor anywhere on earth with a smartphone and a wallet. No minimum balance. No citizenship requirement. No permission to ask.
+    </p>
+  </div>
+
+  <div class="gold-line"></div>
+
+  <!-- The Builder -->
+  <div class="about-section">
+    <div class="about-section-label">THE BUILDER</div>
+    <div class="about-section-title">One Person. One Vision. One Protocol.</div>
+    <p class="about-text">
+      NexVault was conceived, designed, and built by a single architect who understood something most developers miss — that the most powerful financial tools are the ones built with a purpose beyond revenue.
+    </p>
+
+    <div class="founder-card">
+      <div class="founder-avatar">V</div>
+      <div>
+        <div class="founder-name">The Architect</div>
+        <div class="founder-title-text">FOUNDER · VAULT PROTOCOL</div>
+        <p class="founder-bio">
+          Guided by the understanding that we are here to give more to the world than we take from it. The decision to build NexVault came not from a business plan but from a belief — that DeFi's real promise was never speculation, it was access. Access to yield for the person in Phnom Penh with $50 the same as the fund manager in New York with $50 million.
+          <br><br>
+          The protocol's earnings are not a destination. They are a vehicle. The vault architect decides where that vehicle is pointed — and publishes every decision publicly so holders can see exactly where the money goes and what it is building.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="gold-line"></div>
+
+  <!-- Why We Build -->
+  <div class="about-section">
+    <div class="about-section-label">WHY WE BUILD</div>
+    <div class="about-section-title">Finance Was Supposed<br>to Set People Free</div>
+
+    <p class="about-text">
+      Somewhere along the way, finance stopped serving people and started serving itself. The systems that were supposed to help humanity accumulate, protect, and grow wealth became the very walls that kept most of humanity out.
+    </p>
+    <p class="about-text">
+      NexVault was built as a counter to that. Not a disruption for its own sake — but a quiet, deliberate proof that the right technology in the right hands, pointed at the right purpose, can give back what was taken.
+    </p>
+
+    <div class="phil-grid">
+      <div class="phil-card">
+        <div class="phil-label">THE BELIEF</div>
+        <div class="phil-title">Access to yield is not a privilege. It is a right.</div>
+        <p class="phil-desc">Every human being who saves money deserves a real return on that savings — at the same rate, without asking anyone's permission.</p>
+      </div>
+      <div class="phil-card">
+        <div class="phil-label">THE STANDARD</div>
+        <div class="phil-title">Code does not discriminate. Neither should capital.</div>
+        <p class="phil-desc">A smart contract treats every wallet identically. No premium tier for large depositors. No geographic restrictions. No credit checks. The same rules run for everyone, enforced by mathematics, not by people.</p>
+      </div>
+      <div class="phil-card">
+        <div class="phil-label">THE INTENTION</div>
+        <div class="phil-title">Profit is the vehicle. Purpose is the destination.</div>
+        <p class="phil-desc">Protocol earnings are not the end goal. They are the fuel. A portion of every dollar earned by this protocol is locked and reserved — to be deployed toward initiatives that restore, elevate, and rebuild what the world has neglected.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="gold-line"></div>
+
+  <!-- Stats -->
+  <div class="about-section">
+    <div class="about-section-label">BY THE NUMBERS</div>
+    <div class="about-section-title">Built on a Network That Proved Itself</div>
+    <p class="about-text">
+      NexVault is built on Nexus — a network that completed three successive testnets before mainnet, demonstrating global demand and technical readiness at scale. Every NexVault transaction is automatically proven correct by the <strong style="color:var(--gold)">Nexus zkVM v3.0</strong> — a Stwo-backed zero-knowledge virtual machine running on every Nexus node. No configuration required: ZK proofs of all contract execution are generated at the network layer automatically.
+    </p>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-num">2.6M</div>
+        <div class="stat-label">Testnet Participants</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">190</div>
+        <div class="stat-label">Countries Represented</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">58M</div>
+        <div class="stat-label">Transactions Processed</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gold-line"></div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-title">Ready to Join the Mission?</div>
+    <p class="cta-desc">Deposit USDX. Earn sovereign yield. Be part of something that gives back.</p>
+    <div class="cta-btns">
+      <a href="/app" class="nv-btn nv-btn-gold">OPEN VAULT</a>
+      <a href="/whitepaper" class="nv-btn nv-btn-outline">READ WHITEPAPER</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="nv-footer">
+  <span>&copy; 2026 NexVault. All rights reserved.</span>
+  <div class="nv-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script src="/nv-core.js?v=60"></script>
+</body>
+</html>

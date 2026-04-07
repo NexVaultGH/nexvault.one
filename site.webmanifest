@@ -1,0 +1,56 @@
+{
+  "name": "NexVault — USDX Savings Protocol",
+  "short_name": "NexVault",
+  "description": "Earn up to 4.44% APY on USDX savings backed by U.S. Treasury yield. Connect MetaMask and start earning.",
+  "start_url": "/app.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#05060a",
+  "theme_color": "#05060a",
+  "lang": "en",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    { "src": "/icon-72.png",          "sizes": "72x72",   "type": "image/png" },
+    { "src": "/icon-96.png",          "sizes": "96x96",   "type": "image/png" },
+    { "src": "/icon-128.png",         "sizes": "128x128", "type": "image/png" },
+    { "src": "/icon-144.png",         "sizes": "144x144", "type": "image/png" },
+    { "src": "/icon-152.png",         "sizes": "152x152", "type": "image/png" },
+    { "src": "/icon-192.png",         "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon-192.png",      "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-384.png",         "sizes": "384x384", "type": "image/png" },
+    { "src": "/icon-512.png",         "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512-maskable.png","sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Open Vault",
+      "short_name": "Vault",
+      "description": "Deposit and manage your USDX savings",
+      "url": "/app.html",
+      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Security",
+      "short_name": "Security",
+      "description": "View contract security and audit status",
+      "url": "/security.html",
+      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "About NexVault",
+      "short_name": "About",
+      "description": "Learn about the NexVault mission",
+      "url": "/about.html",
+      "icons": [{ "src": "/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "label": "NexVault USDX Savings Dashboard"
+    }
+  ]
+}

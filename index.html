@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexVault — Sovereign Yield Banking</title>
+  <meta name="description" content="The #1 USDX savings vault on Nexus blockchain. Earn up to 4.44% APY on locked USDX — backed by U.S. Treasury yield." />
+  <link rel="canonical" href="https://nexvault.one/" />
+  <meta name="google-site-verification" content="w6j1yf2iL753-yaJLzIwAtbcaU-MSm8DlPpkkuMe21Q" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="application-name" content="NexVault" />
+  <meta name="robots" content="index, follow" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NexVault" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon-144.png" />
+  <link rel="apple-touch-icon" sizes="128x128" href="/icon-128.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nexvault.one/" />
+  <meta property="og:title" content="NexVault — Sovereign Yield Banking" />
+  <meta property="og:description" content="Earn up to 4.44% APY on locked USDX — backed by U.S. Treasury yield." />
+  <meta property="og:image" content="https://nexvault.one/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NexVault" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="NexVault — Sovereign Yield Banking" />
+  <meta name="twitter:description" content="Earn up to 4.44% APY on locked USDX." />
+  <meta name="twitter:image" content="https://nexvault.one/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-style.css?v=60">
+
+  <style>
+    /* ── Hero Portal ── */
+    .hero-wrap { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+    .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-overlay { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+    .hero-overlay > * { pointer-events: auto; }
+    .hero-tagline { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.25em; color: rgba(201,168,76,0.6); text-transform: uppercase; margin-bottom: 20px; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(44px, 8vw, 88px); font-weight: 400; text-align: center; line-height: 1.05; margin-bottom: 24px; color: rgba(255,255,255,0.92); }
+    .hero-title em { font-style: italic; color: #c9a84c; }
+    .hero-sub { font-size: 17px; color: rgba(255,255,255,0.45); text-align: center; max-width: 520px; line-height: 1.8; margin-bottom: 40px; font-family: 'DM Mono', monospace; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .hero-scroll { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .hero-scroll-text { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: rgba(255,255,255,0.25); }
+    .hero-scroll-line { width: 1px; height: 32px; position: relative; overflow: hidden; }
+    .hero-scroll-line::after { content: ''; position: absolute; top: -100%; left: 0; width: 1px; height: 100%; background: #c9a84c; animation: scrollPulse 2s infinite; }
+    @keyframes scrollPulse { 0%{top:-100%} 50%{top:0%} 100%{top:100%} }
+
+    /* ── Logo floating in hero ── */
+    .hero-logo { position: absolute; top: 28px; left: 32px; z-index: 10; display: flex; align-items: center; gap: 12px; }
+    .hero-logo-mark { width: 40px; height: 40px; border-radius: 8px; border: 1.5px solid rgba(201,168,76,0.4); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 600; color: #c9a84c; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); }
+    .hero-logo-text { font-family: 'DM Mono', monospace; font-weight: 600; font-size: 15px; letter-spacing: 0.15em; color: rgba(255,255,255,0.8); }
+
+    /* ── Download buttons ── */
+    .dl-wrap { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .dl-btn { display: none; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.5); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-decoration: none; transition: all 0.3s; }
+    .dl-btn:hover { border-color: rgba(201,168,76,0.3); color: #c9a84c; background: rgba(201,168,76,0.05); }
+
+    /* ── Interactive counter ── */
+    .live-counter { position: absolute; top: 28px; right: 32px; z-index: 10; display: flex; align-items: center; gap: 20px; }
+    .counter-item { text-align: right; }
+    .counter-val { font-family: 'Playfair Display', serif; font-size: 22px; color: #c9a84c; font-weight: 400; }
+    .counter-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+    .counter-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
+
+    /* ── Form styles ── */
+    .form-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 400; margin-bottom: 10px; color: rgba(255,255,255,0.85); }
+    .form-sub { font-size: 14px; color: rgba(255,255,255,0.35); margin-bottom: 32px; line-height: 1.8; }
+    .input-group { margin-bottom: 20px; }
+    .input-label { display: block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); margin-bottom: 8px; text-transform: uppercase; }
+    .field { width: 100%; padding: 14px 0; background: transparent; border: none; border-bottom: 1.5px solid rgba(255,255,255,0.08); color: #fff; font-family: 'DM Mono', monospace; font-size: 15px; transition: border-color 0.3s; outline: none; }
+    .field:focus { border-color: rgba(201,168,76,0.4); }
+    .field::placeholder { color: rgba(255,255,255,0.15); }
+    .tier-label { display: block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); margin-bottom: 12px; text-transform: uppercase; }
+    .tier-pills { display: flex; gap: 10px; margin-bottom: 28px; }
+    .tier-pill { flex: 1; padding: 14px 10px; border-radius: 8px; text-align: center; border: 1.5px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); cursor: pointer; transition: all 0.3s; color: #fff; }
+    .tier-pill:hover { border-color: rgba(255,255,255,0.12); }
+    .tier-pill.active { border-color: rgba(201,168,76,0.35); background: rgba(201,168,76,0.06); }
+    .tier-apy { display: block; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 400; }
+    .tier-name { display: block; font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; margin-top: 4px; }
+    .submit-btn { width: 100%; padding: 16px 0; border: none; border-radius: 8px; background: rgba(201,168,76,0.2); color: #c9a84c; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: background 0.3s; }
+    .submit-btn:hover { background: rgba(201,168,76,0.3); }
+    .form-note { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.2); text-align: center; margin-top: 16px; line-height: 1.7; }
+    .success-state { display: none; text-align: center; padding: 24px 0; }
+    .success-icon { font-size: 48px; margin-bottom: 16px; }
+    .success-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 400; margin-bottom: 12px; }
+    .success-sub { font-size: 14px; color: rgba(255,255,255,0.35); line-height: 1.8; }
+    .success-position { font-family: 'DM Mono', monospace; font-size: 12px; color: #c9a84c; margin-top: 14px; letter-spacing: 0.08em; }
+
+    @media(max-width:768px) {
+      .hero-title { font-size: clamp(32px,10vw,56px); }
+      .hero-sub { font-size: 14px; }
+      .tier-pills { flex-direction: column; }
+      .live-counter { display: none; }
+      .hero-logo-text { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- HERO — Interactive wormhole portal                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="hero-wrap">
+  <canvas class="hero-canvas" id="hero-canvas"></canvas>
+
+  <!-- Logo top-left -->
+  <div class="hero-logo">
+    <div class="hero-logo-mark">V</div>
+    <span class="hero-logo-text">NEXVAULT</span>
+  </div>
+
+  <!-- Top-right nav pills -->
+  <div class="nv-top" style="z-index:200">
+    <a href="/app" class="nv-top-pill">Vault</a>
+    <div class="nv-top-sep"></div>
+    <a href="/security" class="nv-top-pill">Security</a>
+    <div class="nv-top-sep"></div>
+    <a href="/proof" class="nv-top-pill">Proof</a>
+    <div class="nv-top-sep"></div>
+    <a href="/news" class="nv-top-pill">News</a>
+    <div class="nv-top-sep"></div>
+    <a href="/about" class="nv-top-pill">About</a>
+  </div>
+
+  <!-- Center content -->
+  <div class="hero-overlay">
+    <div class="hero-tagline reveal">USDX Savings Protocol</div>
+    <h1 class="hero-title reveal">Sovereign<br><em>Yield Banking</em></h1>
+    <p class="hero-sub reveal">Non-custodial savings vault earning up to 4.44% APY backed by U.S. Treasury yield. Your keys. Your vault. Your future.</p>
+    <div class="hero-ctas reveal">
+      <a href="/app" class="nv-btn nv-btn-gold">Open Vault</a>
+      <a href="#how-it-works" class="nv-btn nv-btn-outline">How It Works</a>
+    </div>
+    <div class="dl-wrap reveal">
+      <a id="dl-windows" class="dl-btn" href="https://github.com/NexVaultGH/nexvault-desktop/releases/latest/download/NexVault.Setup.1.1.0.exe">Download for Windows</a>
+      <a id="dl-mobile" class="dl-btn" href="/mobile">Get Mobile App</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span class="hero-scroll-text">SCROLL</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</div>
+
+<!-- Chat widget -->
+<div class="nv-chat-trigger" title="NexVault Assistant">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
+</div>
+<div class="nv-chat-panel">
+  <div class="nv-chat-head"><span class="nv-chat-title">NEXVAULT ASSISTANT</span><button class="nv-chat-close-btn">&times;</button></div>
+  <div class="nv-chat-messages"></div>
+  <div class="nv-chat-input-wrap">
+    <input class="nv-chat-input" type="text" placeholder="Ask anything..." id="chat-input" autocomplete="off" />
+    <button class="nv-chat-send" onclick="nvSendChat()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </div>
+  <div class="nv-chat-footer">NEXVAULT</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SCROLLABLE CONTENT                                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="nv-content">
+
+<!-- Stats bar -->
+<div class="nv-stats-grid reveal" style="margin-top:0;border-radius:0">
+  <div class="nv-stat-card"><div class="nv-stat-val">4.44%</div><div class="nv-stat-lbl">Max APY</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val" style="color:#4ade80">174</div><div class="nv-stat-lbl">Passing Tests</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val" style="color:#60a5fa">24/7</div><div class="nv-stat-lbl">Yield Accrual</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val" style="color:#a78bfa">5,000</div><div class="nv-stat-lbl">Genesis Badges</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val" style="color:#4ade80">0</div><div class="nv-stat-lbl">Admin Keys</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val">GYDS</div><div class="nv-stat-lbl">Yield Source</div></div>
+</div>
+
+<hr class="nv-sect-divider">
+
+<!-- What Is NexVault -->
+<div class="nv-sect" id="what">
+  <div class="nv-split">
+    <div>
+      <div class="nv-sect-label reveal">What Is NexVault</div>
+      <h2 class="nv-sect-title reveal">A vault that pays you<br><em>every second</em></h2>
+      <p class="nv-sect-desc reveal">NexVault is a non-custodial USDX savings protocol on the Nexus blockchain. You deposit USDX stablecoins into an immutable smart contract, choose a lock period, and earn fixed yield automatically. No bank. No middleman. No permission needed.</p>
+      <p class="nv-sect-desc reveal" style="margin-top:18px">Your yield is generated through GYDS (Global Yield Distribution System), which channels real U.S. Treasury yield on-chain. Every yield event is recorded, verifiable, and transparent.</p>
+    </div>
+    <div>
+      <div class="nv-features reveal">
+        <div class="nv-feature"><div class="nv-feature-icon">&#9670;</div><div class="nv-feature-text"><h4>Non-Custodial</h4><p>Your funds stay in the smart contract. Only your wallet can withdraw.</p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon">&#9678;</div><div class="nv-feature-text"><h4>Fixed APY</h4><p>Your rate is locked at deposit time for the full term. No surprises.</p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon">&#9733;</div><div class="nv-feature-text"><h4>Equal Access</h4><p>Same rate for $50 or $50 million. No minimums. No premium tiers.</p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon">&#10003;</div><div class="nv-feature-text"><h4>Open Source</h4><p>Every line of contract code is public on GitHub. Verify everything.</p></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="nv-sect-divider">
+
+<!-- How It Works -->
+<div class="nv-sect" id="how-it-works">
+  <div class="nv-sect-label reveal">How It Works</div>
+  <h2 class="nv-sect-title reveal">Three steps to<br><em>sovereign yield</em></h2>
+  <div class="nv-steps reveal">
+    <div class="nv-step">
+      <div class="nv-step-num">01</div>
+      <div class="nv-step-title">Connect Your Wallet</div>
+      <div class="nv-step-desc">Install MetaMask on desktop or mobile. Connect to NexVault. Your wallet is your identity, your key, and your proof of ownership.</div>
+    </div>
+    <div class="nv-step">
+      <div class="nv-step-num">02</div>
+      <div class="nv-step-title">Deposit USDX & Choose Tier</div>
+      <div class="nv-step-desc">Enter any amount of USDX. Select a 1-Year, 3-Year, or 5-Year lock period. Longer locks earn higher APY.</div>
+    </div>
+    <div class="nv-step">
+      <div class="nv-step-num">03</div>
+      <div class="nv-step-title">Earn Yield Automatically</div>
+      <div class="nv-step-desc">Yield accrues every second, powered by GYDS. When your lock period ends, withdraw your principal plus all earned yield.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="nv-sect-divider">
+
+<!-- Yield Tiers -->
+<div class="nv-sect" id="tiers">
+  <div class="nv-sect-label reveal">Yield Tiers</div>
+  <h2 class="nv-sect-title reveal">More commitment,<br><em>more reward</em></h2>
+  <p class="nv-sect-desc reveal">Three tiers. One principle: the longer you lock, the more you earn. Every depositor gets the same rate regardless of deposit size.</p>
+  <div class="nv-tier-grid reveal">
+    <div class="nv-tier-card">
+      <div class="nv-tier-apy" style="color:#60a5fa">3.80%</div>
+      <div class="nv-tier-name">1-YEAR LOCK</div>
+      <div class="nv-tier-detail">365-day lock period<br>Fixed APY from day one<br>Withdraw at unlock<br>Full yield + principal returned</div>
+    </div>
+    <div class="nv-tier-card">
+      <div class="nv-tier-apy" style="color:#a78bfa">4.10%</div>
+      <div class="nv-tier-name">3-YEAR LOCK</div>
+      <div class="nv-tier-detail">1,095-day lock period<br>Higher yield for commitment<br>Most popular tier<br>Balance of flexibility and return</div>
+    </div>
+    <div class="nv-tier-card featured">
+      <div class="nv-tier-apy" style="color:#c9a84c">4.44%</div>
+      <div class="nv-tier-name">5-YEAR LOCK</div>
+      <div class="nv-tier-detail">1,825-day lock period<br>Maximum yield rate<br>For long-term conviction<br>Highest return available</div>
+    </div>
+  </div>
+</div>
+
+<hr class="nv-sect-divider">
+
+<!-- The Mission -->
+<div class="nv-sect" id="mission">
+  <div class="nv-split">
+    <div>
+      <div class="nv-sect-label reveal">The Mission</div>
+      <h2 class="nv-sect-title reveal">Access to yield is<br><em>a human right</em></h2>
+      <p class="nv-sect-desc reveal">The financial system was not designed for everyone. Billions of people have no access to a savings account that outpaces inflation.</p>
+      <p class="nv-sect-desc reveal" style="margin-top:18px">NexVault enforces equality at the protocol level. The same 4.44% APY available to an institutional depositor is available to a first-time depositor anywhere on earth with a smartphone and a wallet.</p>
+    </div>
+    <div>
+      <div class="nv-features reveal">
+        <div class="nv-feature"><div class="nv-feature-icon" style="color:#c9a84c">&#9670;</div><div class="nv-feature-text"><h4>174 Contract Tests</h4><p>Full coverage. Every flow verified. <a href="/security" style="color:#c9a84c;text-decoration:underline">View Security</a></p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon" style="color:#c9a84c">&#9678;</div><div class="nv-feature-text"><h4>On-Chain Proof</h4><p>Every yield event verifiable. <a href="/proof" style="color:#c9a84c;text-decoration:underline">View Proof</a></p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon" style="color:#c9a84c">&#9733;</div><div class="nv-feature-text"><h4>5,000 Genesis Badges</h4><p>First depositors earn a soulbound NFT. <a href="/about" style="color:#c9a84c;text-decoration:underline">Learn More</a></p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon" style="color:#c9a84c">&#10003;</div><div class="nv-feature-text"><h4>Open Source</h4><p>Every line of code is public. <a href="https://github.com/NexVaultGH/nexvault-contracts" style="color:#c9a84c;text-decoration:underline" target="_blank">GitHub</a></p></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="nv-sect-divider">
+
+<!-- CTA -->
+<div class="nv-cta-section reveal">
+  <div class="nv-cta-glow"></div>
+  <div class="nv-sect-label" style="position:relative;margin-bottom:16px">Early Access Open</div>
+  <h2 class="nv-sect-title" style="position:relative;text-align:center;margin:0 auto 28px">Ready to enter<br><em>the vault?</em></h2>
+  <p style="font-size:16px;color:rgba(255,255,255,0.35);text-align:center;max-width:440px;margin:0 auto 32px;line-height:1.8;position:relative;font-family:'DM Mono',monospace">Join the first generation of depositors. Earn yield from day one. Claim your Genesis Badge before all 5,000 are minted.</p>
+  <div style="display:flex;gap:16px;justify-content:center;position:relative">
+    <a href="/app" class="nv-btn nv-btn-gold">Open Vault</a>
+    <a href="#reserve" class="nv-btn nv-btn-outline">Reserve Spot</a>
+  </div>
+</div>
+
+<hr class="nv-sect-divider">
+
+<!-- Waitlist Form -->
+<div class="nv-form-section" id="reserve">
+  <div class="nv-form-card">
+    <div class="form-title reveal">Reserve Your Spot</div>
+    <p class="form-sub reveal">Early members lock in priority access and the Vault Genesis NFT badge when mainnet launches.</p>
+    <form name="vault-waitlist" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" id="waitlist-form" onsubmit="handleSubmit(event)">
+      <input type="hidden" name="form-name" value="vault-waitlist" />
+      <p style="display:none"><input name="bot-field" /></p>
+      <div class="input-group reveal"><label class="input-label" for="email">Email</label><input class="field" type="email" id="email" name="email" placeholder="you@email.com" required /></div>
+      <div class="input-group reveal"><label class="input-label" for="wallet">Wallet Address</label><input class="field" type="text" id="wallet" name="wallet" placeholder="0x..." required /></div>
+      <div class="reveal">
+        <label class="tier-label">Preferred Tier</label>
+        <div class="tier-pills">
+          <button type="button" class="tier-pill" onclick="selectTier(this,'1-year')"><span class="tier-apy">3.80%</span><span class="tier-name">1-Year</span></button>
+          <button type="button" class="tier-pill" onclick="selectTier(this,'3-year')"><span class="tier-apy">4.10%</span><span class="tier-name">3-Year</span></button>
+          <button type="button" class="tier-pill active" onclick="selectTier(this,'5-year')"><span class="tier-apy">4.44%</span><span class="tier-name">5-Year</span></button>
+        </div>
+        <input type="hidden" name="tier" id="selected-tier" value="5-year" />
+      </div>
+      <button type="submit" class="submit-btn reveal">Secure Early Access</button>
+      <p class="form-note">No spam. You'll be notified when mainnet launches.</p>
+    </form>
+    <div class="success-state" id="success-state">
+      <div class="success-icon">&#127942;</div>
+      <div class="success-title">You're on the list.</div>
+      <p class="success-sub">Your position is locked in. You'll receive priority access and the Genesis Badge the moment mainnet goes live.</p>
+      <div class="success-position" id="success-position">You are among our earliest members</div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="nv-footer">
+  <span>&copy; 2026 NexVault</span>
+  <div class="nv-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+</div>
+
+<!-- Scripts -->
+<script src="/nv-canvas.js?v=60"></script>
+<script src="/nv-core.js?v=60"></script>
+<script>
+  // Device detection
+  (function() {
+    var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) && !/Windows NT/i.test(navigator.userAgent);
+    if (isMobile) document.getElementById('dl-mobile').style.display = 'inline-flex';
+    else document.getElementById('dl-windows').style.display = 'inline-flex';
+  })();
+
+  // Init wormhole
+  document.addEventListener('DOMContentLoaded', function() { NVScene.createScene('hero-canvas'); });
+
+  // Tier selection
+  function selectTier(btn, val) {
+    document.querySelectorAll('.tier-pill').forEach(function(p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('selected-tier').value = val;
+  }
+
+  // Form validation
+  var BLOCKED_DOMAINS = ['mailinator.com','guerrillamail.com','tempmail.com','throwaway.email','yopmail.com','sharklasers.com','1secmail.com','fakeemail.com','fakemail.com','trashmail.com'];
+  var EMAIL_RE = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+  function validateEmail(e) {
+    if (!e) return 'Email is required.';
+    if (!EMAIL_RE.test(e)) return 'Enter a valid email.';
+    var d = e.split('@')[1].toLowerCase();
+    if (BLOCKED_DOMAINS.indexOf(d) >= 0) return 'Use a real email address.';
+    return null;
+  }
+  function handleSubmit(ev) {
+    ev.preventDefault();
+    var email = document.getElementById('email').value.trim();
+    var wallet = document.getElementById('wallet').value.trim();
+    var err = validateEmail(email);
+    if (err) { showFormError(err); return; }
+    if (!wallet || !wallet.startsWith('0x') || wallet.length < 42) { showFormError('Enter a valid wallet address (0x...).'); return; }
+    hideFormError();
+    var fd = new FormData();
+    fd.append('form-name','vault-waitlist'); fd.append('email',email); fd.append('wallet',wallet); fd.append('tier',document.getElementById('selected-tier').value);
+    fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(fd).toString() })
+    .then(function(){ document.getElementById('waitlist-form').style.display='none'; document.getElementById('success-state').style.display='block'; })
+    .catch(function(){ showFormError('Something went wrong. Try again.'); });
+  }
+  function showFormError(msg) {
+    var el = document.getElementById('form-error');
+    if (!el) { el = document.createElement('div'); el.id='form-error'; el.style.cssText='padding:10px 16px;border-radius:8px;background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.12);color:#f87171;font-size:12px;margin-bottom:14px;text-align:center'; document.getElementById('waitlist-form').insertBefore(el, document.querySelector('.submit-btn')); }
+    el.textContent = msg; el.style.display = 'block';
+  }
+  function hideFormError() { var el = document.getElementById('form-error'); if (el) el.style.display = 'none'; }
+</script>
+<script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</body>
+</html>

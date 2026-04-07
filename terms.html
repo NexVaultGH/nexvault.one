@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Terms of Service &amp; Legal Disclaimer — NexVault</title>
+  <meta name="description" content="Terms of Service, legal disclaimer, and risk disclosures for NexVault — a non-custodial USDX savings protocol on the Nexus blockchain." />
+  <link rel="canonical" href="https://nexvault.one/terms" />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="author" content="NexVault" />
+  <meta name="robots" content="index, follow" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nexvault.one/terms" />
+  <meta property="og:title" content="Terms of Service — NexVault" />
+  <meta property="og:description" content="Terms of Service, legal disclaimer, and risk disclosures for NexVault — a non-custodial USDX savings protocol on the Nexus blockchain." />
+  <meta property="og:image" content="https://nexvault.one/og-image.png" />
+  <meta property="og:site_name" content="NexVault" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Terms of Service — NexVault" />
+  <meta name="twitter:description" content="Terms of Service, legal disclaimer, and risk disclosures for NexVault." />
+  <meta name="twitter:image" content="https://nexvault.one/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-style.css?v=60">
+
+  <style>
+    /* ── Hero ── */
+    .terms-hero {
+      min-height: 40vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 140px 24px 60px;
+    }
+    .terms-hero-content { max-width: 680px; }
+    .terms-subtitle {
+      font-family: var(--font); font-weight: 300; font-size: 14px;
+      color: rgba(255,255,255,0.35); line-height: 1.8; max-width: 520px;
+      margin: 16px auto 0;
+    }
+    .terms-updated {
+      font-family: var(--font-mono); font-size: 10px; color: var(--text-dim);
+      letter-spacing: 0.1em; margin-top: 20px;
+    }
+
+    /* ── Body ── */
+    .terms-body {
+      max-width: 680px; margin: 0 auto; padding: 0 24px 80px;
+    }
+
+    /* ── Warning banner ── */
+    .warning-banner {
+      background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 8px; padding: 24px 28px; margin-bottom: 56px;
+      font-family: var(--font); font-weight: 300; font-size: 13px;
+      color: rgba(201,168,76,0.7); line-height: 1.8;
+    }
+    .warning-banner strong {
+      color: var(--gold); font-weight: 600; letter-spacing: 0.04em;
+    }
+
+    /* ── Legal sections ── */
+    .legal-section { margin-bottom: 56px; }
+    .legal-num {
+      font-family: var(--font); font-weight: 700; font-size: 10px;
+      letter-spacing: 0.14em; color: var(--gold); margin-bottom: 8px;
+    }
+    .legal-heading {
+      font-family: var(--font); font-weight: 300;
+      font-size: clamp(20px, 2.5vw, 30px); color: var(--text);
+      line-height: 1.2; margin-bottom: 20px; letter-spacing: -0.01em;
+    }
+    .legal-text {
+      font-family: var(--font); font-weight: 300; font-size: 15px;
+      color: rgba(255,255,255,0.4); line-height: 1.8;
+    }
+    .legal-text p { margin-bottom: 16px; }
+    .legal-text ul { margin: 12px 0 16px 20px; list-style: none; }
+    .legal-text ul li { position: relative; padding-left: 18px; margin-bottom: 10px; }
+    .legal-text ul li::before {
+      content: ''; position: absolute; left: 0; top: 9px;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--gold); opacity: 0.4;
+    }
+    .legal-text strong { color: rgba(255,255,255,0.7); font-weight: 500; }
+    .legal-text code {
+      background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.1);
+      border-radius: 3px; padding: 2px 7px;
+      font-family: var(--font-mono); font-size: 12px; color: var(--gold);
+      word-break: break-all;
+    }
+    .legal-text a {
+      color: var(--gold); text-decoration: none;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding-bottom: 1px; transition: border-color 0.2s;
+    }
+    .legal-text a:hover { border-color: var(--gold); }
+
+    .section-line {
+      height: 1px; background: var(--border); margin: 0 0 56px;
+    }
+
+    /* ── Acknowledgment ── */
+    .ack-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 32px; text-align: center; margin-top: 64px;
+    }
+    .ack-box p {
+      font-family: var(--font); font-weight: 300; font-size: 13px;
+      color: var(--text-muted); line-height: 1.8; margin-bottom: 12px;
+    }
+    .ack-box .ack-statement {
+      font-size: 14px; color: var(--text); font-weight: 500; letter-spacing: 0.02em;
+    }
+
+    @media (max-width: 768px) {
+      .terms-hero { padding: 120px 20px 40px; min-height: 30vh; }
+      .terms-body { padding: 0 20px 60px; }
+      .warning-banner { padding: 20px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Terms of Service — NexVault",
+    "description": "Terms of Service, legal disclaimer, and risk disclosures for NexVault — a non-custodial USDX savings protocol on the Nexus blockchain.",
+    "url": "https://nexvault.one/terms",
+    "publisher": {
+      "@type": "Organization",
+      "name": "NexVault",
+      "url": "https://nexvault.one"
+    },
+    "inLanguage": "en-US",
+    "dateModified": "2026-03-31"
+  }
+  </script>
+</head>
+<body>
+
+<div class="nv-grain"></div>
+
+<!-- Nav -->
+<nav class="nv-nav">
+  <a href="/" class="nv-nav-logo">
+    <div class="nv-nav-logo-mark">V</div>
+    <span class="nv-nav-logo-text">NEXVAULT</span>
+  </a>
+  <div class="nv-nav-right">
+    <button class="nv-nav-menu-btn" onclick="nvOpenSidebar()">MENU</button>
+  </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="nv-sidebar-overlay" onclick="nvCloseSidebar()"></div>
+<div class="nv-sidebar">
+  <div class="nv-sidebar-head"><button class="nv-sidebar-close" onclick="nvCloseSidebar()">CLOSE</button></div>
+  <div class="nv-sidebar-links">
+    <a href="/" class="nv-sidebar-link">Home</a>
+    <a href="/app" class="nv-sidebar-link">The Vault</a>
+    <a href="/about" class="nv-sidebar-link">About</a>
+    <a href="/security" class="nv-sidebar-link">Security</a>
+    <a href="/proof" class="nv-sidebar-link">Proof of Yield</a>
+    <a href="/news" class="nv-sidebar-link">News</a>
+    <a href="/terms" class="nv-sidebar-link active">Terms</a>
+  </div>
+  <div class="nv-sidebar-foot"><a href="/app" class="nv-sidebar-cta">OPEN VAULT</a></div>
+</div>
+
+<!-- Hero -->
+<section class="terms-hero">
+  <div class="terms-hero-content">
+    <div class="label label-gold fi fi1" style="margin-bottom:20px">TERMS</div>
+    <h1 class="hlg fi fi2">Terms of Service</h1>
+    <p class="terms-subtitle fi fi3">Please read these terms carefully before using the NexVault protocol. By interacting with NexVault smart contracts, you agree to be bound by these terms.</p>
+    <div class="terms-updated fi fi4">LAST UPDATED: MARCH 31, 2026</div>
+  </div>
+</section>
+
+<!-- Terms Content -->
+<div class="terms-body">
+
+  <!-- Warning banner -->
+  <div class="warning-banner fi fi5">
+    <strong>IMPORTANT:</strong> NexVault smart contracts are thoroughly tested with 174 passing tests across all functions, security properties, and edge cases. At initial launch, contracts have not yet been reviewed by a third-party security firm. A formal audit is in progress. Only deposit amounts you are comfortable with until the audit is published. This is not financial advice.
+  </div>
+
+  <!-- 1. Nature of the Protocol -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 1</div>
+    <h2 class="legal-heading">Nature of the Protocol</h2>
+    <div class="legal-text">
+      <p>NexVault is non-custodial software deployed on the Nexus blockchain. It consists of four smart contracts — USDXVault, VaultGenesisBadge, ReferralRegistry, and AutoCompounder — that together form a fixed-rate USDX savings protocol.</p>
+      <p>These smart contracts are autonomous. Once deployed, they execute exactly as coded. No individual, company, entity, or organization controls the contracts or has the ability to access, move, freeze, or redirect user funds. The contracts are non-upgradeable: there is no proxy pattern, no admin upgrade key, and no mechanism to change the deployed code.</p>
+      <p><strong>NexVault is not a bank.</strong> It is not a financial institution, investment fund, brokerage, money services business, or licensed financial services provider of any kind. NexVault is open-source software provided as-is under the MIT license. Using NexVault is equivalent to interacting directly with smart contract code on a public blockchain.</p>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 2. No Financial Advice -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 2</div>
+    <h2 class="legal-heading">No Financial Advice</h2>
+    <div class="legal-text">
+      <p>Nothing on nexvault.one, in the NexVault smart contracts, in the NexVault whitepaper, or in any NexVault communication constitutes financial, investment, legal, or tax advice. All content is provided for informational and educational purposes only.</p>
+      <ul>
+        <li>Users make their own independent decisions about whether to deposit funds, which tier to select, and how long to lock their capital.</li>
+        <li>Past yield rates do not guarantee future returns. APY figures displayed on the website represent current rates, which are subject to change.</li>
+        <li>GYDS (Global Yield Distribution System) yield rates are determined entirely by the Nexus blockchain infrastructure and are outside NexVault's control. Yield distributions may increase, decrease, or cease at any time.</li>
+        <li>Users should consult their own financial, legal, and tax advisors before making any decisions related to the protocol.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 3. Assumption of Risk -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 3</div>
+    <h2 class="legal-heading">Assumption of Risk</h2>
+    <div class="legal-text">
+      <p>By using NexVault, you acknowledge and voluntarily assume the following risks:</p>
+      <ul>
+        <li><strong>Smart contract risk:</strong> NexVault smart contracts have undergone comprehensive internal testing with 174 passing tests across all functions, security properties, and edge cases. At initial launch, contracts have not yet been reviewed by a third-party security firm. A formal security audit is actively being funded and will be published publicly at nexvault.one/security upon completion. Users should deposit only amounts they are comfortable with until the audit report is published.</li>
+        <li><strong>Blockchain risk:</strong> The Nexus blockchain is a new network. Network issues, forks, consensus failures, validator downtime, or other infrastructure problems could affect the accessibility or security of deposits.</li>
+        <li><strong>Yield risk:</strong> GYDS distributions are variable. The yield rate may decrease or distributions may cease entirely. NexVault does not guarantee any specific return.</li>
+        <li><strong>Lock period risk:</strong> Locked deposits cannot be withdrawn before expiry under any circumstance. Lock periods of 1 year (LOCK_1YR), 3 years (LOCK_3YR), and 5 years (LOCK_5YR) are enforced by on-chain timestamps and cannot be overridden by anyone — including the protocol developer. The constant <code>LOCK_IS_FINAL = true</code> is encoded in the contract as an immutable declaration of this property.</li>
+        <li><strong>Regulatory risk:</strong> The legal status of DeFi protocols, stablecoins, and on-chain yield products varies by jurisdiction and is evolving rapidly. Users are solely responsible for compliance with all applicable laws and regulations in their jurisdiction.</li>
+        <li><strong>No insurance:</strong> Deposits in NexVault are not covered by the FDIC, SIPC, or any government or private deposit insurance scheme. There is no fund of last resort.</li>
+        <li><strong>Stablecoin risk:</strong> USDX is a stablecoin that maintains its peg through its own mechanism. NexVault does not guarantee the stability, redeemability, or value of USDX.</li>
+      </ul>
+      <p>By depositing into NexVault, you acknowledge and accept all of the above risks. If you do not accept these risks, do not use the protocol.</p>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 4. Limitation of Liability -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 4</div>
+    <h2 class="legal-heading">Limitation of Liability</h2>
+    <div class="legal-text">
+      <p>To the maximum extent permitted by applicable law, the NexVault protocol developer, contributors, and all associated parties shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages arising from or related to your use of the protocol.</p>
+      <p>This includes, without limitation:</p>
+      <ul>
+        <li>Loss of funds due to smart contract vulnerabilities, exploits, or bugs</li>
+        <li>Loss of yield due to GYDS changes, reductions, or cessation</li>
+        <li>Inability to withdraw funds during active lock periods</li>
+        <li>Loss of value of USDX or any other token</li>
+        <li>Network failures, blockchain reorganizations, or consensus issues on Nexus</li>
+        <li>Any other protocol-related loss of any kind</li>
+      </ul>
+      <p><strong>Maximum aggregate liability to any user is zero.</strong> Users interact with autonomous, immutable smart contracts deployed on a public blockchain — not with a company, individual, or managed service. The protocol has no treasury, no insurance fund, and no mechanism to compensate users for losses.</p>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 5. Non-Custodial Declaration -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 5</div>
+    <h2 class="legal-heading">Non-Custodial Declaration</h2>
+    <div class="legal-text">
+      <p>At no point does NexVault, its developer, or any associated party hold, control, or have access to user funds. The distinction is absolute:</p>
+      <ul>
+        <li>The USDXVault smart contract is the sole custodian of deposited USDX. It is governed entirely by its immutable deployed code — not by any person, organization, or governance mechanism.</li>
+        <li>The owner wallet (<code>0x44e06FB3517Ee815BBA5612F783712Ac4f498ba0</code>) has exactly one financial privilege: it can claim protocol earnings from the dev earnings function. This function enforces an on-chain invariant that the vault's USDX balance must always cover total user principal before any earnings can be withdrawn.</li>
+        <li>The owner wallet <strong>cannot</strong> access, freeze, redirect, or withdraw user principal under any circumstances. This is not a policy — it is a mathematical constraint enforced by the smart contract code, verifiable by anyone on-chain.</li>
+        <li>The owner address is a compile-time constant. There is no ownership transfer function. The address cannot be changed after deployment.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 6. Intellectual Property -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 6</div>
+    <h2 class="legal-heading">Intellectual Property</h2>
+    <div class="legal-text">
+      <p>NexVault smart contracts are open-source software released under the MIT license. Anyone may read, fork, modify, and deploy the contract code for any purpose.</p>
+      <p>The NexVault name, the "V" logomark, the nexvault.one domain, and the website design are the intellectual property of the protocol developer. Use of the NexVault brand, name, or visual identity in connection with forked or modified contracts is prohibited without explicit written permission.</p>
+      <p>Anyone may fork the contracts. No one may represent a fork as NexVault or use NexVault branding to imply affiliation, endorsement, or continuity with the original protocol.</p>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 7. No Warranty -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 7</div>
+    <h2 class="legal-heading">No Warranty</h2>
+    <div class="legal-text">
+      <p>THE NEXVAULT PROTOCOL IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY. THIS INCLUDES, WITHOUT LIMITATION, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.</p>
+      <p>The developer makes no representations or warranties that:</p>
+      <ul>
+        <li>The protocol will operate without interruption or error</li>
+        <li>The protocol will be free from vulnerabilities or exploits</li>
+        <li>Any specific yield rate will be achieved or maintained</li>
+        <li>The protocol will be compatible with any particular wallet, network configuration, or jurisdiction</li>
+      </ul>
+      <p>Users use the protocol entirely at their own risk and discretion.</p>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 8. Governing Law -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 8</div>
+    <h2 class="legal-heading">Governing Law &amp; Dispute Resolution</h2>
+    <div class="legal-text">
+      <p>These terms are governed by and construed in accordance with general principles of international commercial law, without regard to conflict of law provisions of any jurisdiction.</p>
+      <p>Any dispute, controversy, or claim arising out of or relating to these terms, or the breach, termination, or invalidity thereof, shall be settled by binding arbitration administered under internationally recognized arbitration rules. The arbitration shall be conducted in the English language.</p>
+      <p>By using the NexVault protocol, you agree to resolve any disputes individually and waive any right to participate in class action lawsuits, class-wide arbitration, or any other representative proceedings against the protocol developer or associated parties.</p>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 9. Changes to Terms -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 9</div>
+    <h2 class="legal-heading">Changes to Terms</h2>
+    <div class="legal-text">
+      <p>These terms may be updated at any time at the sole discretion of the protocol developer. Updated terms will be published at nexvault.one/terms with a revised "Last Updated" date.</p>
+      <p>Continued use of the NexVault protocol or website after the publication of updated terms constitutes your acceptance of those updated terms.</p>
+      <p><strong>Important distinction:</strong> While these terms (a website document) can be updated, the NexVault smart contracts themselves cannot be changed after deployment. The on-chain rules — lock periods, yield formulas, access controls, and all other contract logic — are permanent and immutable regardless of any change to these terms.</p>
+    </div>
+  </div>
+
+  <div class="section-line"></div>
+
+  <!-- 10. Contact -->
+  <div class="legal-section">
+    <div class="legal-num">SECTION 10</div>
+    <h2 class="legal-heading">Contact</h2>
+    <div class="legal-text">
+      <p>NexVault is autonomous software. It does not have customer service, a support team, or a help desk.</p>
+      <p>For questions about the protocol, its smart contracts, or its operation, the official contact email is:</p>
+      <p style="margin:16px 0"><a href="mailto:NexVaultOfficial@proton.me">NexVaultOfficial@proton.me</a></p>
+      <p>The protocol developer monitors this channel but is under no obligation to respond within any specific timeframe.</p>
+    </div>
+  </div>
+
+  <!-- Acknowledgment box -->
+  <div class="ack-box">
+    <p>By accessing the NexVault website, interacting with NexVault smart contracts, or depositing funds into the protocol, you confirm that:</p>
+    <p class="ack-statement">You have read, understood, and agree to be bound by these Terms of Service and Legal Disclaimer in their entirety.</p>
+  </div>
+
+</div>
+
+<!-- Chat Widget -->
+<div class="nv-chat-trigger" title="NexVault Assistant">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
+</div>
+<div class="nv-chat-panel">
+  <div class="nv-chat-head"><span class="nv-chat-title">NEXVAULT ASSISTANT</span><button class="nv-chat-close-btn">&times;</button></div>
+  <div class="nv-chat-messages"></div>
+  <div class="nv-chat-input-wrap">
+    <input class="nv-chat-input" type="text" placeholder="Ask anything..." id="chat-input" autocomplete="off" />
+    <button class="nv-chat-send" onclick="nvSendChat()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </div>
+  <div class="nv-chat-footer">POWERED BY NEXVAULT</div>
+</div>
+
+<!-- Footer -->
+<footer class="nv-footer">
+  <span>&copy; 2026 NexVault. All rights reserved.</span>
+  <div class="nv-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script src="/nv-core.js?v=60"></script>
+</body>
+</html>

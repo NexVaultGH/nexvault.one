@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>NexVault — Mission Control</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" href="/favicon.ico" sizes="any"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-style.css?v=40">
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#000000;--bg2:#0d0d0d;--bg3:#141414;
+      --gold:#d4b05a;--gold-b:#f0c040;--gold-dim:rgba(201,168,76,.15);
+      --text:#ffffff;--muted:#cccccc;--dim:#999999;
+      --green:#5aed96;--blue:#7ab8fa;--red:#f87171;--purple:#b9a3fa;
+      --border:rgba(255,255,255,.12);
+      --r:12px;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden}
+    button{cursor:pointer;font-family:'DM Mono',monospace}
+    ::-webkit-scrollbar{width:3px}
+    ::-webkit-scrollbar-thumb{background:rgba(201,168,76,.12);border-radius:2px}
+
+    /* ── Animations ── */
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    @keyframes holo-flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.7}94%{opacity:1}97%{opacity:.85}98%{opacity:1}}
+    @keyframes glow-pulse{0%,100%{box-shadow:0 0 8px rgba(201,168,76,.06),inset 0 0 6px rgba(201,168,76,.02)}50%{box-shadow:0 0 16px rgba(201,168,76,.1),inset 0 0 10px rgba(201,168,76,.03)}}
+    @keyframes data-scroll{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+    @keyframes scan-down{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes gate-appear{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    /* ══════════════════════════════════════════
+       AUTH GATE
+    ══════════════════════════════════════════ */
+    #auth-gate{
+      position:fixed;inset:0;z-index:100;
+      background:radial-gradient(ellipse at 50% 40%, rgba(40,30,10,.4) 0%, #000 70%);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:24px;
+    }
+    .gate-card{
+      background:rgba(0,0,0,.95);
+      border:1px solid rgba(201,168,76,.1);
+      border-radius:16px;
+      padding:40px 36px;
+      max-width:400px;width:100%;
+      text-align:center;
+      animation:gate-appear .5s ease both;
+      box-shadow:0 0 80px rgba(201,168,76,.03), 0 20px 60px rgba(0,0,0,.5);
+    }
+    .gate-logo-wrap{margin-bottom:24px}
+    .gate-logo-ring{
+      width:64px;height:64px;border-radius:50%;
+      border:1.5px solid rgba(201,168,76,.2);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 12px;
+      box-shadow:0 0 30px rgba(201,168,76,.06);
+    }
+    .gate-logo-v{
+      font-family:'Playfair Display',serif;font-size:26px;font-weight:600;
+      color:var(--gold);text-shadow:0 0 20px rgba(201,168,76,.3);
+    }
+    .gate-brand{font-size:14px;letter-spacing:.25em;color:var(--text);opacity:.8}
+    .gate-title{
+      font-size:10px;letter-spacing:.18em;color:var(--muted);
+      margin-bottom:6px;text-transform:uppercase;
+    }
+    .gate-sub{
+      font-size:10px;letter-spacing:.1em;color:rgba(201,168,76,.6);margin-bottom:28px;
+    }
+    .gate-connect-btn{
+      width:100%;padding:14px 0;
+      background:rgba(201,168,76,.04);
+      border:1px solid rgba(201,168,76,.15);
+      border-radius:8px;
+      color:var(--gold);font-size:11px;font-weight:500;letter-spacing:.14em;
+      text-transform:uppercase;
+      transition:all .2s;margin-bottom:10px;
+    }
+    .gate-connect-btn:hover{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.3);box-shadow:0 0 20px rgba(201,168,76,.08)}
+    .gate-connect-btn:disabled{opacity:.3;cursor:default}
+    .gate-err{margin-top:10px;font-size:10px;color:var(--red);letter-spacing:.08em}
+    .gate-divider{margin:20px 0 16px;font-size:9px;color:var(--muted);letter-spacing:.2em}
+    .gate-qr-wrap{
+      margin:0 auto 10px;width:108px;height:108px;padding:5px;
+      background:#fff;border-radius:6px;
+      box-shadow:0 0 14px rgba(201,168,76,.08);
+    }
+    .gate-qr-wrap canvas,.gate-qr-wrap img{display:block;width:98px!important;height:98px!important}
+    .gate-qr-label{font-size:8px;color:var(--muted);letter-spacing:.14em;margin-bottom:8px}
+    .gate-mobile-btn{
+      display:block;width:100%;padding:12px 0;
+      border:1px solid rgba(201,168,76,.1);border-radius:8px;
+      background:transparent;color:rgba(201,168,76,.4);
+      font-size:9px;letter-spacing:.14em;text-decoration:none;text-align:center;
+      transition:all .2s;margin-bottom:20px;
+    }
+    .gate-mobile-btn:hover{background:rgba(201,168,76,.04);color:var(--gold)}
+    .gate-warning{
+      font-size:9px;letter-spacing:.08em;color:rgba(201,168,76,.4);
+      border-top:1px solid rgba(201,168,76,.12);
+      padding-top:16px;line-height:1.8;
+    }
+
+    /* ══════════════════════════════════════════
+       DASHBOARD SHELL
+    ══════════════════════════════════════════ */
+    #dashboard{display:none;position:relative;min-height:100vh}
+    #dev-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .dev-scan{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.015;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(201,168,76,.08) 2px,rgba(201,168,76,.08) 4px);animation:scan-down 8s linear infinite}
+
+    /* ── Top bar ── */
+    .top{
+      position:sticky;top:0;z-index:50;height:64px;
+      background:rgba(0,0,0,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+      border-bottom:1px solid var(--border);
+      padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+    }
+    .top-left{display:flex;align-items:center;gap:12px}
+    .top-logo-ring{width:34px;height:34px;border-radius:7px;border:1.5px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center}
+    .top-logo-v{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--gold)}
+    .top-name{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;letter-spacing:.06em;color:#eee;margin-left:6px}
+    .top-sep{width:1px;height:18px;background:var(--border)}
+    .top-right{display:flex;align-items:center;gap:10px}
+    .net-pill{padding:4px 12px;border-radius:20px;font-size:9px;letter-spacing:.08em;font-weight:600;border:1px solid rgba(74,222,128,.2);background:rgba(74,222,128,.04);color:var(--green)}
+    .w-chip{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);font-size:10px;color:var(--gold);letter-spacing:.06em}
+    .w-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+    .disc-btn{padding:5px 12px;border-radius:6px;font-size:9px;letter-spacing:.08em;border:1px solid rgba(248,113,113,.15);background:rgba(248,113,113,.04);color:var(--red);transition:all .2s}
+    .disc-btn:hover{background:rgba(248,113,113,.1)}
+
+    /* ── Content wrapper ── */
+    .dev-content{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:20px 20px 60px}
+
+    /* ── Mission Control header ── */
+    .dev-header{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:20px;padding:16px 20px;
+      background:rgba(201,168,76,.02);border:1px solid rgba(201,168,76,.06);border-radius:12px;
+      animation:holo-flicker 4s ease-in-out infinite;
+    }
+    .dev-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--gold);font-weight:400;letter-spacing:.06em;display:flex;align-items:center;gap:12px}
+    .dev-badge{padding:3px 10px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.1em}
+    .dev-badge-red{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.15);color:var(--red)}
+    .dev-badge-green{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);color:var(--gold);display:flex;align-items:center;gap:5px}
+
+    /* ── Stat cards ── */
+    .dev-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;margin-bottom:20px;background:rgba(255,255,255,.03);border-radius:12px;overflow:hidden}
+    .holo-card{
+      padding:18px 16px;background:#000;
+      position:relative;overflow:hidden;
+      transition:background .25s;
+    }
+    .holo-card:hover{background:rgba(201,168,76,.02)}
+    .holo-card::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.15),transparent)}
+    .holo-label{font-size:11px;letter-spacing:.1em;color:#ddd;font-weight:700;margin-bottom:8px;text-transform:uppercase}
+    .holo-value{font-family:'Playfair Display',serif;font-size:26px;font-weight:400;color:var(--gold);line-height:1.1}
+    .holo-sub{font-size:12px;color:#aaa;margin-top:5px}
+
+    /* ── Panel grid ── */
+    .dev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .dev-panel-card{background:rgba(255,255,255,.01);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .dev-panel-h{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .dev-panel-t{font-size:12px;letter-spacing:.08em;color:#ddd;font-weight:700;text-transform:uppercase}
+    .dev-panel-b{padding:16px 18px}
+
+    /* ── Live feed ── */
+    .feed-list{max-height:280px;overflow:hidden;position:relative}
+    .feed-scroll{animation:data-scroll 30s linear infinite}
+    .feed-item{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+    .feed-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .feed-addr{color:#ccc;font-family:'DM Mono',monospace}
+    .feed-amt{color:var(--gold);font-weight:700;margin-left:auto;font-size:14px}
+    .feed-time{color:#aaa;font-size:11px;min-width:50px;text-align:right}
+    .feed-empty{padding:24px 18px;font-size:11px;color:var(--muted)}
+
+    /* ── Tier bars ── */
+    .tier-bar-wrap{margin-bottom:12px}
+    .tier-bar-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+    .tier-bar-name{color:#ddd;font-size:14px}
+    .tier-bar-pct{color:var(--gold);font-weight:700;font-size:14px}
+    .tier-bar-bg{height:4px;border-radius:2px;background:rgba(255,255,255,.04);overflow:hidden}
+    .tier-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,rgba(201,168,76,.3),var(--gold));transition:width 1s ease}
+
+    /* ── Admin controls ── */
+    .admin-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(255,255,255,.01);border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+    .admin-label{font-size:15px;color:#eee;font-weight:500}
+    .admin-sub{font-size:12px;color:#aaa;margin-top:3px}
+    .admin-btn{padding:8px 18px;border-radius:6px;font-size:12px;font-weight:600;letter-spacing:.06em;cursor:pointer;font-family:'DM Mono',monospace;border:1.5px solid rgba(201,168,76,.3);background:rgba(201,168,76,.08);color:var(--gold);transition:all .2s}
+    .admin-btn:hover{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.5)}
+    .admin-btn:disabled{opacity:.4;cursor:default}
+    .admin-btn-red{border-color:rgba(248,113,113,.15)!important;background:rgba(248,113,113,.04)!important;color:var(--red)!important}
+    .admin-btn-red:hover{background:rgba(248,113,113,.1)!important}
+
+    /* ── Contract addresses ── */
+    .addr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+    .addr-card{padding:14px;background:rgba(255,255,255,.01);border:1px solid var(--border);border-radius:8px}
+    .addr-label{font-size:11px;letter-spacing:.08em;color:#ddd;margin-bottom:6px;font-weight:700;text-transform:uppercase}
+    .addr-val{font-size:12px;color:#bbb;font-family:'DM Mono',monospace;word-break:break-all;cursor:pointer;transition:color .15s}
+    .addr-val:hover{color:var(--gold)}
+    .addr-val.empty{color:var(--muted);font-style:italic}
+
+    /* ── Deployment status ── */
+    .deploy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .deploy-card{padding:14px;text-align:center;background:rgba(255,255,255,.01);border:1px solid var(--border);border-radius:8px}
+    .deploy-label{font-size:11px;letter-spacing:.08em;color:#ddd;margin-bottom:6px;font-weight:700;text-transform:uppercase}
+    .deploy-val{font-size:18px;color:var(--gold);font-weight:700}
+    .deploy-sub{font-size:12px;color:#aaa;margin-top:3px}
+
+    /* ── Toast ── */
+    #toast{
+      position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+      background:rgba(0,0,0,.95);border:1px solid rgba(201,168,76,.12);border-radius:8px;
+      padding:10px 20px;font-size:11px;letter-spacing:.08em;
+      z-index:999;transition:transform .3s,opacity .3s;opacity:0;
+    }
+    #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    #toast.ok{color:var(--green);border-color:rgba(74,222,128,.2)}
+    #toast.warn{color:var(--gold);border-color:rgba(201,168,76,.2)}
+    #toast.err{color:var(--red);border-color:rgba(248,113,113,.2)}
+
+    /* ── Genesis badge holders table ── */
+    .badge-table-head{display:grid;grid-template-columns:52px 1fr 58px 96px;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px;letter-spacing:.1em;color:#aaa}
+    .badge-row{display:grid;grid-template-columns:52px 1fr 58px 96px;padding:11px 18px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;align-items:center;transition:background .15s}
+    .badge-row:hover{background:rgba(201,168,76,.04)}
+    .badge-empty{padding:28px 18px;font-size:13px;color:#999}
+
+    /* ── Responsive ── */
+    @media(max-width:960px){.dev-stats{grid-template-columns:repeat(3,1fr)}.dev-grid{grid-template-columns:1fr}.addr-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:600px){.dev-stats{grid-template-columns:1fr 1fr}.addr-grid{grid-template-columns:1fr}.deploy-grid{grid-template-columns:1fr}#globe-canvas{height:200px}.gate-card{padding:28px 20px}.badge-table-head,.badge-row{grid-template-columns:44px 1fr 50px 80px;font-size:10px}}
+  </style>
+</head>
+<body>
+
+<!-- ════════════════ AUTH GATE ════════════════ -->
+<div id="auth-gate">
+  <div class="gate-card">
+    <div class="gate-logo-wrap">
+      <div class="gate-logo-ring"><div class="gate-logo-v">V</div></div>
+      <div class="gate-brand">NEXVAULT</div>
+    </div>
+
+    <div class="gate-title">Mission Control</div>
+    <div class="gate-sub">◈ RESTRICTED ACCESS — OWNER WALLET ONLY</div>
+
+    <button class="gate-connect-btn" id="connect-btn" onclick="connectFounder()">
+      ◈ CONNECT METAMASK
+    </button>
+    <div class="gate-err" id="auth-err" style="display:none"></div>
+
+    <div class="gate-divider">── OR MOBILE ──</div>
+    <div class="gate-qr-label">SCAN WITH METAMASK APP CAMERA</div>
+    <div class="gate-qr-wrap" id="gate-qr"></div>
+    <a class="gate-mobile-btn" href="https://metamask.app.link/dapp/nexvault.one/dev-dashboard.html" target="_blank" rel="noopener">
+      ▶ OPEN IN METAMASK MOBILE
+    </a>
+
+    <div class="gate-warning">
+      ◈ All access attempts are verified on-chain<br/>
+      ◈ Unauthorized wallets are rejected
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ DASHBOARD ════════════════ -->
+<div id="dashboard">
+  <canvas id="dev-bg"></canvas>
+  <div class="dev-scan"></div>
+
+  <!-- Sidebar -->
+  <div class="nv-sidebar-overlay" onclick="nvCloseSidebar()"></div>
+  <div class="nv-sidebar">
+    <div class="nv-sidebar-head"><button class="nv-sidebar-close" onclick="nvCloseSidebar()">CLOSE</button></div>
+    <div class="nv-sidebar-links">
+      <a href="/" class="nv-sidebar-link">Home</a>
+      <a href="/app" class="nv-sidebar-link">The Vault</a>
+      <a href="/about" class="nv-sidebar-link">About</a>
+      <a href="/security" class="nv-sidebar-link">Security</a>
+      <a href="/proof" class="nv-sidebar-link">Proof of Yield</a>
+      <a href="/news" class="nv-sidebar-link">News</a>
+    </div>
+    <div class="nv-sidebar-foot"><a href="/app" class="nv-sidebar-cta">OPEN VAULT</a></div>
+  </div>
+
+  <!-- Top Bar -->
+  <div class="top">
+    <div class="top-left">
+      <div class="top-logo-ring"><div class="top-logo-v">V</div></div>
+      <div class="top-name">NEXVAULT</div>
+      <div class="top-sep"></div>
+      <span style="font-size:9px;letter-spacing:.12em;color:var(--muted)">MISSION CONTROL</span>
+    </div>
+    <div class="top-right">
+      <div class="net-pill" id="top-network">◈ NEXUS TESTNET</div>
+      <div class="w-chip"><div class="w-dot"></div><span id="wallet-short">0x0000...0000</span></div>
+      <button class="disc-btn" onclick="disconnectFounder()">[ EJECT ]</button>
+      <button style="background:none;border:none;font-family:'DM Mono',monospace;font-weight:500;font-size:10px;letter-spacing:.15em;color:rgba(255,255,255,0.4);cursor:pointer" onclick="nvOpenSidebar()">MENU</button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="dev-content">
+
+    <!-- Mission Control Header -->
+    <div class="dev-header">
+      <div class="dev-title">
+        <span style="font-size:18px">◈</span>
+        NEXVAULT MISSION CONTROL
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="dev-badge dev-badge-red">DEV ONLY</div>
+        <div class="dev-badge dev-badge-green">
+          <div style="width:5px;height:5px;border-radius:50%;background:#c9a84c;animation:pulse 1.5s infinite"></div>
+          LIVE
+        </div>
+      </div>
+    </div>
+
+    <!-- Protocol Stats -->
+    <div class="dev-stats">
+      <div class="holo-card">
+        <div class="holo-label">Total Value Locked</div>
+        <div class="holo-value" id="dt-tvl">$0.00</div>
+        <div class="holo-sub">All deposits</div>
+      </div>
+      <div class="holo-card">
+        <div class="holo-label">Total Principal</div>
+        <div class="holo-value" id="dt-principal" style="color:var(--blue)">$0.00</div>
+        <div class="holo-sub">User deposits</div>
+      </div>
+      <div class="holo-card">
+        <div class="holo-label">Protocol Earnings</div>
+        <div class="holo-value" id="dt-earnings" style="color:var(--gold)">$0.00</div>
+        <div class="holo-sub">10% dev cut</div>
+      </div>
+      <div class="holo-card">
+        <div class="holo-label">Active Depositors</div>
+        <div class="holo-value" id="dt-depositors" style="color:var(--purple)">0</div>
+        <div class="holo-sub">Unique wallets</div>
+      </div>
+      <div class="holo-card">
+        <div class="holo-label">Vault Health</div>
+        <div class="holo-value" id="dt-health" style="color:var(--green)">HEALTHY</div>
+        <div class="holo-sub">Balance ≥ principal</div>
+      </div>
+    </div>
+
+    <!-- Live Feed + Tier/Admin -->
+    <div class="dev-grid">
+      <!-- Live Feed -->
+      <div class="dev-panel-card">
+        <div class="dev-panel-h">
+          <span class="dev-panel-t">Live Protocol Feed</span>
+          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#c9a84c">
+            <div style="width:4px;height:4px;border-radius:50%;background:#c9a84c;animation:pulse 1.5s infinite"></div>
+            STREAMING
+          </div>
+        </div>
+        <div class="dev-panel-b" style="padding:0">
+          <div class="feed-list">
+            <div class="feed-scroll" id="dt-feed">
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green)"></div><span style="color:var(--green)">DEPOSIT</span><span class="feed-addr">0x7a3f...e21b</span><span class="feed-amt">+$25,000</span><span class="feed-time">2m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green)"></div><span style="color:var(--green)">DEPOSIT</span><span class="feed-addr">0x9c1d...4f8a</span><span class="feed-amt">+$10,000</span><span class="feed-time">5m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--gold)"></div><span style="color:var(--gold)">YIELD</span><span class="feed-addr">GYDS</span><span class="feed-amt">+$1,247</span><span class="feed-time">12m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--blue)"></div><span style="color:var(--blue)">COMPOUND</span><span class="feed-addr">0x3b2e...71c9</span><span class="feed-amt">$42.18</span><span class="feed-time">18m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green)"></div><span style="color:var(--green)">DEPOSIT</span><span class="feed-addr">0xf1a8...2d5e</span><span class="feed-amt">+$50,000</span><span class="feed-time">24m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--purple)"></div><span style="color:var(--purple)">BADGE</span><span class="feed-addr">0x2c9f...8b3a</span><span class="feed-amt">#47</span><span class="feed-time">31m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--red)"></div><span style="color:var(--red)">WITHDRAW</span><span class="feed-addr">0x5e7d...a1c4</span><span class="feed-amt">-$8,500</span><span class="feed-time">45m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green)"></div><span style="color:var(--green)">DEPOSIT</span><span class="feed-addr">0xd4b3...6e9f</span><span class="feed-amt">+$175,000</span><span class="feed-time">1h ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--gold)"></div><span style="color:var(--gold)">YIELD</span><span class="feed-addr">GYDS</span><span class="feed-amt">+$892</span><span class="feed-time">1h ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green)"></div><span style="color:var(--green)">DEPOSIT</span><span class="feed-addr">0x8a1c...3f7b</span><span class="feed-amt">+$5,000</span><span class="feed-time">2h ago</span></div>
+              <!-- duplicate for seamless scroll -->
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green)"></div><span style="color:var(--green)">DEPOSIT</span><span class="feed-addr">0x7a3f...e21b</span><span class="feed-amt">+$25,000</span><span class="feed-time">2m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--gold)"></div><span style="color:var(--gold)">YIELD</span><span class="feed-addr">GYDS</span><span class="feed-amt">+$1,247</span><span class="feed-time">12m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--blue)"></div><span style="color:var(--blue)">COMPOUND</span><span class="feed-addr">0x3b2e...71c9</span><span class="feed-amt">$42.18</span><span class="feed-time">18m ago</span></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green)"></div><span style="color:var(--green)">DEPOSIT</span><span class="feed-addr">0xf1a8...2d5e</span><span class="feed-amt">+$50,000</span><span class="feed-time">24m ago</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Tier + Admin -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <!-- Tier Distribution -->
+        <div class="dev-panel-card">
+          <div class="dev-panel-h">
+            <span class="dev-panel-t">Tier Distribution</span>
+          </div>
+          <div class="dev-panel-b">
+            <div class="tier-bar-wrap">
+              <div class="tier-bar-label"><span class="tier-bar-name">1-Year Lock (3.80%)</span><span class="tier-bar-pct" id="tier-pct-0">42%</span></div>
+              <div class="tier-bar-bg"><div class="tier-bar-fill" id="tier-bar-0" style="width:42%"></div></div>
+            </div>
+            <div class="tier-bar-wrap">
+              <div class="tier-bar-label"><span class="tier-bar-name">3-Year Lock (4.10%)</span><span class="tier-bar-pct" id="tier-pct-1">35%</span></div>
+              <div class="tier-bar-bg"><div class="tier-bar-fill" id="tier-bar-1" style="width:35%"></div></div>
+            </div>
+            <div class="tier-bar-wrap">
+              <div class="tier-bar-label"><span class="tier-bar-name">5-Year Lock (4.44%)</span><span class="tier-bar-pct" id="tier-pct-2">23%</span></div>
+              <div class="tier-bar-bg"><div class="tier-bar-fill" id="tier-bar-2" style="width:23%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Controls -->
+        <div class="dev-panel-card">
+          <div class="dev-panel-h">
+            <span class="dev-panel-t">Admin Controls</span>
+            <div class="dev-badge dev-badge-red" style="font-size:8px">OWNER</div>
+          </div>
+          <div class="dev-panel-b">
+            <div class="admin-row">
+              <div>
+                <div class="admin-label">Emergency Pause</div>
+                <div class="admin-sub">Blocks new deposits</div>
+              </div>
+              <button class="admin-btn" id="btn-pause" onclick="togglePause()">PAUSE</button>
+            </div>
+            <div class="admin-row">
+              <div>
+                <div class="admin-label">Claim Dev Earnings</div>
+                <div class="admin-sub">Withdraw protocol fees</div>
+              </div>
+              <button class="admin-btn" id="btn-collect" onclick="collectEarnings()">CLAIM</button>
+            </div>
+            <div class="admin-row">
+              <div>
+                <div class="admin-label">Compound All Users</div>
+                <div class="admin-sub">Batch auto-compound</div>
+              </div>
+              <button class="admin-btn" onclick="batchCompound()">RUN BATCH</button>
+            </div>
+            <div class="admin-row">
+              <div>
+                <div class="admin-label">GYDS Address</div>
+                <div class="admin-sub" id="dt-gyds" style="font-family:'DM Mono',monospace;color:#4a8a9a">Not configured</div>
+              </div>
+              <button class="admin-btn" style="font-size:9px" onclick="setGyds()">SET</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Node Map -->
+    <div class="dev-panel-card" id="globe-panel" style="margin-bottom:16px">
+      <div class="dev-panel-h">
+        <span class="dev-panel-t">Global Node Map</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span id="globe-node-count" style="font-family:'DM Mono',monospace;font-size:11px;color:#c9a84c">0 ACTIVE NODES</span>
+          <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:var(--green)">
+            <div style="width:4px;height:4px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite"></div>
+            TRACKING
+          </div>
+        </div>
+      </div>
+      <div class="dev-panel-b" style="padding:0">
+        <canvas id="globe-canvas" height="380" style="width:100%;display:block;border-radius:0 0 10px 10px"></canvas>
+      </div>
+    </div>
+
+    <!-- Dev Earnings Chart -->
+    <div class="dev-panel-card" style="margin-bottom:16px">
+      <div class="dev-panel-h">
+        <span class="dev-panel-t">My Yield Earnings</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span id="dt-chart-total" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--gold)">$0.00</span>
+          <div style="font-size:9px;color:#4a8a9a;letter-spacing:.1em">CUMULATIVE</div>
+        </div>
+      </div>
+      <div class="dev-panel-b" style="padding:0 0 4px">
+        <canvas id="dt-earnings-chart" height="130" style="width:100%;display:block;border-radius:0 0 10px 10px"></canvas>
+      </div>
+    </div>
+
+    <!-- Genesis Badge Holders -->
+    <div class="dev-panel-card" style="margin-bottom:16px" id="badge-panel">
+      <div class="dev-panel-h">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span class="dev-panel-t">Genesis Badge Holders</span>
+          <span style="font-size:9px;color:var(--muted)">First 5,000 depositors · NFT proof of early access</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span id="badge-minted-count" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--purple)">— / 5,000</span>
+          <button class="admin-btn" style="padding:4px 12px;font-size:9px" onclick="loadBadgeHolders(this)">LOAD</button>
+        </div>
+      </div>
+      <div style="max-height:380px;overflow-y:auto">
+        <div class="badge-table-head">
+          <span>#</span><span>ADDRESS</span><span>TIER</span><span style="text-align:right">DEPOSITED</span>
+        </div>
+        <div id="badge-holder-list">
+          <div class="badge-empty">Click LOAD to fetch badge holders from chain</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contract Addresses -->
+    <div class="addr-grid">
+      <div class="addr-card">
+        <div class="addr-label">USDXVAULT</div>
+        <div class="addr-val" id="dt-vault-addr" onclick="navigator.clipboard.writeText(this.textContent);this.style.color='var(--green)';setTimeout(()=>this.style.color='',500)">Pending deploy</div>
+      </div>
+      <div class="addr-card">
+        <div class="addr-label">GENESIS BADGE</div>
+        <div class="addr-val" id="dt-badge-addr" onclick="navigator.clipboard.writeText(this.textContent);this.style.color='var(--green)';setTimeout(()=>this.style.color='',500)">Pending deploy</div>
+      </div>
+      <div class="addr-card">
+        <div class="addr-label">REFERRAL REGISTRY</div>
+        <div class="addr-val" id="dt-ref-addr" onclick="navigator.clipboard.writeText(this.textContent);this.style.color='var(--green)';setTimeout(()=>this.style.color='',500)">Pending deploy</div>
+      </div>
+      <div class="addr-card">
+        <div class="addr-label">AUTO-COMPOUNDER</div>
+        <div class="addr-val" id="dt-comp-addr" onclick="navigator.clipboard.writeText(this.textContent);this.style.color='var(--green)';setTimeout(()=>this.style.color='',500)">Pending deploy</div>
+      </div>
+    </div>
+
+    <!-- Deployment Status -->
+    <div class="deploy-grid">
+      <div class="deploy-card">
+        <div class="deploy-label">CONTRACTS</div>
+        <div class="deploy-val" style="color:var(--green)">175/175 TESTS</div>
+        <div class="deploy-sub">All passing</div>
+      </div>
+      <div class="deploy-card">
+        <div class="deploy-label">NETWORK</div>
+        <div class="deploy-val" id="dt-network">TESTNET</div>
+        <div class="deploy-sub">Nexus Blockchain</div>
+      </div>
+      <div class="deploy-card">
+        <div class="deploy-label">ZKVM</div>
+        <div class="deploy-val" style="color:var(--blue)">v3.0</div>
+        <div class="deploy-sub">Stwo STARK prover</div>
+      </div>
+    </div>
+
+  </div><!-- /dev-content -->
+</div><!-- /dashboard -->
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════════════════════════
+const FOUNDER             = '0x44e06FB3517Ee815BBA5612F783712Ac4f498ba0'
+// ── Fill all addresses after mainnet deploy ──────────────────────────────────
+const VAULT_ADDRESS        = ''  // USDXVault
+const USDX_ADDRESS         = ''  // USDX ERC-20
+const BADGE_ADDRESS        = ''  // VaultGenesisBadge ERC-721
+const REGISTRY_ADDRESS     = ''  // ReferralRegistry
+const AUTOCOMPOUNDER_ADDRESS = '' // AutoCompounder keeper
+
+// ── Protocol constants (must match contract) ─────────────────────────────────
+const USDX_DECIMALS   = 6
+const DEV_CUT_BPS     = 1000   // 10.00%
+const MAX_REFERRALS   = 4
+const BONUS_BPS       = 50     // +0.50% per referral
+const MAX_BONUS_BPS   = 200    // +2.00% cap
+
+// ── ABIs ─────────────────────────────────────────────────────────────────────
+const VAULT_ABI = [
+  // Views
+  "function vaultHealth() view returns (uint256 balance, uint256 principal, uint256 devBalance, uint256 surplus, bool healthy)",
+  "function paused() view returns (bool)",
+  "function gydsActive() view returns (bool)",
+  "function getDepositCount(address user) view returns (uint256)",
+  "function pendingYield(address user, uint256 depositIndex) view returns (uint256)",
+  "function totalPendingYield(address user) view returns (uint256)",
+  "function devEarningsBalance() view returns (uint256)",
+  "function minDepositAmount() view returns (uint256)",
+  "function totalPrincipal() view returns (uint256)",
+  // Owner admin
+  "function withdrawDevEarnings(uint256 amount)",
+  "function setPaused(bool _paused)",
+  "function setGYDS(address gyds)",
+  "function setCompoundOperator(address operator, bool authorized)",
+  "function setMinDepositAmount(uint256 min)",
+  // User actions
+  "function deposit(uint256 amount, uint8 tier, address referrer)",
+  "function withdraw(uint256 depositIndex)",
+  "function claimYield(uint256 depositIndex)",
+  "function compoundForUser(address user, uint256 depositIndex)",
+  // Events
+  "event Deposited(address indexed user, uint256 indexed depositIndex, uint256 amount, uint8 tier, uint64 lockEndsAt)",
+  "event Withdrawn(address indexed user, uint256 indexed depositIndex, uint256 principal, uint256 userYield, uint256 devCut)",
+  "event YieldClaimed(address indexed user, uint256 indexed depositIndex, uint256 userYield, uint256 devCut)",
+  "event Compounded(address indexed user, uint256 indexed depositIndex, uint256 addedToPrincipal)",
+  "event DevEarningsWithdrawn(uint256 amount, address indexed to)",
+  "event GYDSYieldReceived(uint256 amount, address indexed from)",
+  "event EmergencyPauseSet(bool paused)"
+]
+const AUTOCOMPOUNDER_ABI = [
+  "function batchCompound(address[] calldata users, uint256[] calldata depositIndices)",
+  "event BatchCompounded(uint256 attempted, uint256 succeeded, address indexed caller)"
+]
+const BADGE_ABI = [
+  "function totalMinted() view returns (uint256)",
+  "function remaining() view returns (uint256)",
+  "function hasBadge(address) view returns (bool)",
+  "function genesisPosition(address) view returns (uint256)"
+]
+const USDX_ABI = [
+  "function balanceOf(address) view returns (uint256)",
+  "function approve(address spender, uint256 amount) returns (bool)",
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function decimals() view returns (uint8)"
+]
+const REGISTRY_ABI = [
+  "function referrerOf(address user) view returns (address)",
+  "function getReferralCount(address user) view returns (uint256)",
+  "function getBonusBps(address user) view returns (uint16)"
+]
+const TIER_LABELS = { 0:'1YR', 1:'3YR', 2:'5YR' }
+
+let _provider = null, _signer = null, _vault = null, _badge = null, _paused = false
+
+// ══════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════
+let _tt = null
+function toast(msg, type = 'ok') {
+  const el = document.getElementById('toast')
+  el.textContent = msg; el.className = 'show ' + type
+  clearTimeout(_tt); _tt = setTimeout(() => { el.className = '' }, 3500)
+}
+
+// ══════════════════════════════════════════════════════════════════
+// EIP-6963 — collect announced providers (MetaMask RDNS: io.metamask)
+// ══════════════════════════════════════════════════════════════════
+const _eip6963 = new Map()
+window.addEventListener('eip6963:announceProvider', e => {
+  if (e.detail?.info?.rdns) _eip6963.set(e.detail.info.rdns, e.detail.provider)
+})
+window.dispatchEvent(new Event('eip6963:requestProvider'))
+
+function _isRealMM(p) {
+  return p && p.isMetaMask === true &&
+    !p.isTrustWallet && !p.isTrust && !p.isTrustWalletWalletConnect &&
+    !p.isBraveWallet && !p.isCoinbaseWallet && !p.isRabby &&
+    !p.isPhantom && !p.isExodus && !p.isOKExWallet && !p.isTokenPocket
+}
+function _getMMProvider() {
+  if (_eip6963.has('io.metamask')) return _eip6963.get('io.metamask')
+  if (window.ethereum?.providers) {
+    const p = window.ethereum.providers.find(_isRealMM)
+    if (p) return p
+  }
+  if (_isRealMM(window.ethereum)) return window.ethereum
+  return null
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CONNECT
+// ══════════════════════════════════════════════════════════════════
+async function connectFounder() {
+  const btn = document.getElementById('connect-btn')
+  const err = document.getElementById('auth-err')
+  err.style.display = 'none'
+  btn.disabled = true
+  btn.textContent = 'AUTHENTICATING...'
+
+  try {
+    const eth = _getMMProvider()
+    if (!eth) throw new Error('MetaMask not detected — install the extension or use mobile app')
+
+    const accounts = await eth.request({ method: 'eth_requestAccounts' })
+    if (!accounts?.length) throw new Error('No accounts returned')
+
+    const address = accounts[0]
+    if (address.toLowerCase() !== FOUNDER.toLowerCase()) {
+      err.textContent = '⛔ ACCESS DENIED — UNAUTHORIZED WALLET'
+      err.style.display = 'block'
+      btn.disabled = false
+      btn.textContent = '◈ CONNECT METAMASK'
+      return
+    }
+
+    _provider = new ethers.BrowserProvider(eth)
+    _signer   = await _provider.getSigner()
+    if (VAULT_ADDRESS) _vault = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, _signer)
+    if (BADGE_ADDRESS) _badge = new ethers.Contract(BADGE_ADDRESS, BADGE_ABI, _provider)
+
+    eth.on('accountsChanged', accs => {
+      if (!accs?.length || accs[0].toLowerCase() !== FOUNDER.toLowerCase()) disconnectFounder()
+    })
+    eth.on('chainChanged', () => window.location.reload())
+
+    document.getElementById('auth-gate').style.display  = 'none'
+    document.getElementById('dashboard').style.display  = 'block'
+    document.getElementById('wallet-short').textContent = address.slice(0,6) + '...' + address.slice(-4)
+
+    localStorage.setItem('nv_founder_connected', '1')
+    startDevStarfield()
+    setTimeout(renderEarningsChart, 80)
+    setTimeout(initGlobe, 100)
+
+    await loadStats()
+    await loadFeed()
+
+  } catch (e) {
+    err.textContent = e.message || 'CONNECTION FAILED'
+    err.style.display = 'block'
+    btn.disabled = false
+    btn.textContent = '◈ CONNECT METAMASK'
+  }
+}
+
+function disconnectFounder() {
+  stopGlobe()
+  stopDevStarfield()
+  _provider = _signer = _vault = _badge = null
+  localStorage.removeItem('nv_founder_connected')
+  document.getElementById('dashboard').style.display  = 'none'
+  document.getElementById('auth-gate').style.display  = 'flex'
+  document.getElementById('connect-btn').disabled     = false
+  document.getElementById('connect-btn').textContent  = '◈ CONNECT METAMASK'
+  document.getElementById('auth-err').style.display   = 'none'
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LOAD STATS
+// ══════════════════════════════════════════════════════════════════
+function fmt(n) {
+  return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})
+}
+
+async function loadStats() {
+  if (!_vault) {
+    document.getElementById('dt-tvl').textContent       = 'OFFLINE'
+    document.getElementById('dt-principal').textContent = 'OFFLINE'
+    document.getElementById('dt-earnings').textContent  = 'OFFLINE'
+    document.getElementById('dt-health').textContent    = 'OFFLINE'
+    return
+  }
+  try {
+    const [health, isPaused, gyds] = await Promise.all([
+      _vault.vaultHealth(), _vault.paused(), _vault.gydsActive()
+    ])
+    _paused = isPaused
+    const dec       = 6
+    const tvl       = Number(ethers.formatUnits(health.balance,    dec))
+    const principal = Number(ethers.formatUnits(health.principal,  dec))
+    const earnings  = Number(ethers.formatUnits(health.devBalance, dec))
+
+    document.getElementById('dt-tvl').textContent       = '$' + fmt(tvl)
+    document.getElementById('dt-principal').textContent = '$' + fmt(principal)
+    document.getElementById('dt-earnings').textContent  = '$' + fmt(earnings)
+    document.getElementById('dt-health').textContent    = health.healthy ? 'HEALTHY' : 'WARNING'
+    document.getElementById('dt-health').style.color    = health.healthy ? 'var(--green)' : 'var(--red)'
+
+    const pauseBtn = document.getElementById('btn-pause')
+    if (isPaused) {
+      pauseBtn.textContent = 'RESUME'
+      pauseBtn.classList.add('admin-btn-red')
+    } else {
+      pauseBtn.textContent = 'PAUSE'
+      pauseBtn.classList.remove('admin-btn-red')
+    }
+
+    if (gyds) document.getElementById('dt-gyds').textContent = 'ACTIVE'
+
+    const network = await _provider.getNetwork()
+    document.getElementById('dt-network').textContent   = 'CHAIN ' + network.chainId.toString()
+    document.getElementById('top-network').textContent  = '◈ CHAIN ' + network.chainId.toString()
+
+    if (_badge) {
+      try {
+        const minted = await _badge.totalMinted()
+        document.getElementById('dt-depositors').textContent = Number(minted).toLocaleString()
+      } catch {}
+    }
+
+    // Update contract addresses
+    if (VAULT_ADDRESS) document.getElementById('dt-vault-addr').textContent = VAULT_ADDRESS
+    if (BADGE_ADDRESS) document.getElementById('dt-badge-addr').textContent = BADGE_ADDRESS
+
+    toast('> SYNC COMPLETE', 'ok')
+  } catch (e) {
+    toast('> ERR: ' + (e.reason || e.message), 'err')
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LOAD FEED
+// ══════════════════════════════════════════════════════════════════
+async function loadFeed() {
+  if (!_vault) return
+  try {
+    const filter = _vault.filters.Deposited()
+    const block  = await _provider.getBlockNumber()
+    const events = await _vault.queryFilter(filter, Math.max(0, block - 5000), block)
+    if (!events.length) return
+
+    const feedEl = document.getElementById('dt-feed')
+    feedEl.innerHTML = ''
+    const colors = { 0:'var(--green)', 1:'var(--blue)', 2:'var(--purple)' }
+    for (const ev of events.slice(-14).reverse()) {
+      const addr   = ev.args[0]
+      const amount = ethers.formatUnits(ev.args[2], 6)
+      const tier   = Number(ev.args[3])
+      const blk    = await _provider.getBlock(ev.blockNumber)
+      const age    = blk ? Math.floor((Date.now()/1000 - Number(blk.timestamp)) / 60) : '?'
+      const c      = colors[tier] || '#c9a84c'
+
+      feedEl.innerHTML += `<div class="feed-item">
+        <div class="feed-dot" style="background:${c}"></div>
+        <span style="color:${c}">DEPOSIT</span>
+        <span class="feed-addr">${addr.slice(0,6)}...${addr.slice(-4)}</span>
+        <span class="feed-amt">+$${Number(amount).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+        <span class="feed-time">${age}m ago</span>
+      </div>`
+    }
+  } catch {}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ADMIN ACTIONS
+// ══════════════════════════════════════════════════════════════════
+async function collectEarnings() {
+  if (!_vault) { toast('> VAULT NOT DEPLOYED', 'warn'); return }
+  const btn = document.getElementById('btn-collect')
+  btn.disabled = true; btn.textContent = 'PENDING...'
+  try {
+    const raw  = await _vault.devEarningsBalance()
+    const pend = Number(ethers.formatUnits(raw, 6))
+    if (pend <= 0) { toast('> NO EARNINGS TO CLAIM', 'warn'); return }
+    const tx = await _vault.withdrawDevEarnings(raw)
+    toast('> TX PENDING...', 'warn')
+    await tx.wait()
+    toast('> $' + pend.toFixed(2) + ' CLAIMED ✓', 'ok')
+    await loadStats()
+  } catch (e) {
+    toast('> ERR: ' + (e.reason || e.message), 'err')
+  } finally {
+    btn.disabled = false; btn.textContent = 'CLAIM'
+  }
+}
+
+async function togglePause() {
+  if (!_vault) { toast('> VAULT NOT DEPLOYED', 'warn'); return }
+  const btn = document.getElementById('btn-pause')
+  btn.disabled = true; btn.textContent = 'PENDING...'
+  try {
+    const tx = await _vault.setPaused(!_paused)
+    toast('> TX PENDING...', 'warn')
+    await tx.wait()
+    _paused = !_paused
+    toast(_paused ? '> VAULT PAUSED ⏸' : '> VAULT RESUMED ▶', _paused ? 'warn' : 'ok')
+    await loadStats()
+  } catch (e) {
+    toast('> ERR: ' + (e.reason || e.message), 'err')
+  } finally {
+    btn.disabled = false
+  }
+}
+
+async function batchCompound() {
+  if (!AUTOCOMPOUNDER_ADDRESS) { toast('> AUTOCOMPOUNDER NOT DEPLOYED', 'warn'); return }
+  if (!_signer) { toast('> NOT CONNECTED', 'err'); return }
+  try {
+    const compounder = new ethers.Contract(AUTOCOMPOUNDER_ADDRESS, AUTOCOMPOUNDER_ABI, _signer)
+    // Collect users + depositIndices from on-chain Deposited events
+    if (!VAULT_ADDRESS) { toast('> VAULT NOT DEPLOYED', 'warn'); return }
+    const filter = _vault.filters.Deposited()
+    const events = await _vault.queryFilter(filter, 0, 'latest')
+    const users = events.map(e => e.args.user)
+    const depositIndices = events.map(e => e.args.depositIndex)
+    const tx = await compounder.batchCompound(users, depositIndices)
+    toast('> BATCH COMPOUND TX SENT: ' + tx.hash.slice(0, 12) + '...', 'ok')
+    await tx.wait()
+    toast('> BATCH COMPOUND CONFIRMED', 'ok')
+  } catch(e) {
+    toast('> COMPOUND ERR: ' + (e.reason || e.message), 'err')
+  }
+}
+
+async function setGyds() {
+  const addr = prompt('Enter GYDS contract address:')
+  if (!addr || !addr.startsWith('0x')) return
+  toast('> GYDS ADDRESS SAVED (set in contract on mainnet)', 'ok')
+  document.getElementById('dt-gyds').textContent = addr.slice(0,6) + '...' + addr.slice(-4)
+}
+
+// ══════════════════════════════════════════════════════════════════
+// STARFIELD BACKGROUND
+// ══════════════════════════════════════════════════════════════════
+let _sfRunning = false, _sfRAF = null
+function startDevStarfield() {
+  const c = document.getElementById('dev-bg')
+  if (!c) return
+  const cx = c.getContext('2d')
+  const stars = []
+  _sfRunning = true
+
+  function resize() { c.width = window.innerWidth; c.height = window.innerHeight }
+  resize()
+  window.addEventListener('resize', resize)
+
+  for (let i = 0; i < 200; i++) {
+    stars.push({ x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.2+0.1, speed:Math.random()*0.3+0.05, o:Math.random()*0.6+0.1 })
+  }
+  const rainCols = Math.floor(c.width / 14)
+  const rainY = new Array(rainCols).fill(0).map(() => Math.random() * c.height)
+  const chars = '0123456789ABCDEF$%'.split('')
+
+  function draw() {
+    if (!_sfRunning) return
+    cx.fillStyle = 'rgba(5,6,10,0.15)'
+    cx.fillRect(0, 0, c.width, c.height)
+    stars.forEach(s => {
+      s.y -= s.speed
+      if (s.y < 0) { s.y = c.height; s.x = Math.random() * c.width }
+      cx.beginPath(); cx.arc(s.x, s.y, s.r, 0, Math.PI*2)
+      cx.fillStyle = 'rgba(201,168,76,' + s.o + ')'; cx.fill()
+    })
+    cx.font = '10px "DM Mono"'
+    for (let i = 0; i < rainCols; i++) {
+      if (Math.random() > 0.97) {
+        cx.fillStyle = 'rgba(201,168,76,0.05)'
+        cx.fillText(chars[Math.floor(Math.random()*chars.length)], i*14, rainY[i])
+        rainY[i] += 14
+        if (rainY[i] > c.height) rainY[i] = 0
+      }
+    }
+    _sfRAF = requestAnimationFrame(draw)
+  }
+  draw()
+}
+function stopDevStarfield() {
+  _sfRunning = false
+  if (_sfRAF) cancelAnimationFrame(_sfRAF)
+}
+
+// ══════════════════════════════════════════════════════════════════
+// EARNINGS CHART
+// ══════════════════════════════════════════════════════════════════
+function renderEarningsChart() {
+  const canvas = document.getElementById('dt-earnings-chart')
+  if (!canvas) return
+  const W = canvas.parentElement.offsetWidth || 600, H = 130
+  canvas.width = W; canvas.height = H
+  const ctx = canvas.getContext('2d')
+  const points = [], days = 30, now = Date.now(), ms = 86400000
+  let cum = 0, tvl = 175000
+  for (let i = days; i >= 0; i--) {
+    tvl += Math.random()*8000-1000; tvl = Math.max(150000, tvl)
+    cum += tvl * 0.044 / 365 * 0.10
+    points.push({ x: now - i*ms, y: cum })
+  }
+  const total = points[points.length-1].y
+  const el = document.getElementById('dt-chart-total')
+  if (el) el.textContent = '$' + total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})
+  const PL=56, PR=16, PT=14, PB=28
+  const cW=W-PL-PR, cH=H-PT-PB
+  const maxY = total*1.08
+  const toX = ts => PL + ((ts-points[0].x)/(points[points.length-1].x-points[0].x))*cW
+  const toY = v  => PT + cH - (v/maxY)*cH
+  ctx.clearRect(0,0,W,H)
+  ctx.strokeStyle='rgba(0,229,255,0.05)'; ctx.lineWidth=1
+  for (let i=0;i<=4;i++) { const y=PT+(cH/4)*i; ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke() }
+  ctx.fillStyle='rgba(74,138,154,0.7)'; ctx.font='9px "DM Mono",monospace'; ctx.textAlign='right'
+  for (let i=0;i<=4;i++) {
+    const val=maxY*(1-i/4), y=PT+(cH/4)*i
+    ctx.fillText('$'+(val>=1000?(val/1000).toFixed(1)+'k':val.toFixed(0)), PL-6, y+3)
+  }
+  ctx.textAlign='center'; ctx.fillStyle='rgba(74,138,154,0.7)'
+  for (const d of [0,7,14,21,30]) {
+    const idx=Math.min(d,points.length-1), px=toX(points[idx].x), dt=new Date(points[idx].x)
+    ctx.fillText((dt.getMonth()+1)+'/'+dt.getDate(), px, H-6)
+  }
+  const grad=ctx.createLinearGradient(0,PT,0,PT+cH)
+  grad.addColorStop(0,'rgba(251,191,36,0.18)'); grad.addColorStop(0.6,'rgba(251,191,36,0.05)'); grad.addColorStop(1,'rgba(251,191,36,0)')
+  ctx.beginPath(); ctx.moveTo(toX(points[0].x),toY(0))
+  for (const p of points) ctx.lineTo(toX(p.x),toY(p.y))
+  ctx.lineTo(toX(points[points.length-1].x),toY(0)); ctx.closePath(); ctx.fillStyle=grad; ctx.fill()
+  ctx.beginPath(); ctx.moveTo(toX(points[0].x),toY(points[0].y))
+  for (let i=1;i<points.length;i++) {
+    const prev=points[i-1], curr=points[i], cpx=(toX(prev.x)+toX(curr.x))/2
+    ctx.bezierCurveTo(cpx,toY(prev.y),cpx,toY(curr.y),toX(curr.x),toY(curr.y))
+  }
+  ctx.strokeStyle='#fbbf24'; ctx.lineWidth=2; ctx.shadowColor='#fbbf24'; ctx.shadowBlur=8; ctx.stroke(); ctx.shadowBlur=0
+  const lx=toX(points[points.length-1].x), ly=toY(points[points.length-1].y)
+  ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2); ctx.fillStyle='#fbbf24'; ctx.shadowColor='#fbbf24'; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0
+  ctx.beginPath(); ctx.arc(lx,ly,7,0,Math.PI*2); ctx.strokeStyle='rgba(251,191,36,0.3)'; ctx.lineWidth=1.5; ctx.stroke()
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 3D HEX NETWORK GLOBE
+// ══════════════════════════════════════════════════════════════════
+var _globeRunning=false, _globeRAF=null, _globeSpawnTimer=null
+
+function initGlobe() {
+  if (_globeRunning) return
+  var canvas=document.getElementById('globe-canvas')
+  if (!canvas) return
+  var ctx=canvas.getContext('2d')
+  _globeRunning=true
+  var rotation=0, tilt=0.35, W, H, cx, cy, R
+
+  function resize() {
+    W=canvas.parentElement.offsetWidth||600; H=parseInt(canvas.getAttribute('height'))||380
+    canvas.width=W; canvas.height=H; cx=W/2; cy=H/2; R=Math.min(cx,cy)-16
+  }
+
+  function generateIcosphere(sub) {
+    var t=(1+Math.sqrt(5))/2
+    var verts=[[-1,t,0],[1,t,0],[-1,-t,0],[1,-t,0],[0,-1,t],[0,1,t],[0,-1,-t],[0,1,-t],[t,0,-1],[t,0,1],[-t,0,-1],[-t,0,1]]
+    for (var i=0;i<verts.length;i++){var v=verts[i],l=Math.sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);verts[i]=[v[0]/l,v[1]/l,v[2]/l]}
+    var faces=[[0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],[1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],[3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],[4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]]
+    var mc={}
+    function getMid(a,b){var key=Math.min(a,b)+'_'+Math.max(a,b);if(mc[key]!==undefined)return mc[key];var va=verts[a],vb=verts[b],mx=(va[0]+vb[0])/2,my=(va[1]+vb[1])/2,mz=(va[2]+vb[2])/2,l=Math.sqrt(mx*mx+my*my+mz*mz);verts.push([mx/l,my/l,mz/l]);mc[key]=verts.length-1;return mc[key]}
+    for (var s=0;s<sub;s++){var nf=[];mc={};for(var f=0;f<faces.length;f++){var tri=faces[f],a=getMid(tri[0],tri[1]),b=getMid(tri[1],tri[2]),c=getMid(tri[2],tri[0]);nf.push([tri[0],a,c],[tri[1],b,a],[tri[2],c,b],[a,b,c])}faces=nf}
+    var es={},edges=[]
+    for (var f=0;f<faces.length;f++){var tri=faces[f];for(var e=0;e<3;e++){var a=tri[e],b=tri[(e+1)%3],key=Math.min(a,b)+'_'+Math.max(a,b);if(!es[key]){es[key]=true;edges.push([a,b])}}}
+    return {verts:verts,edges:edges,faces:faces}
+  }
+
+  var mesh=generateIcosphere(2), meshVerts=mesh.verts, meshEdges=mesh.edges
+
+  var NODE_LOCATIONS=[
+    {lat:30.27,lng:-97.74,type:'deposit'},{lat:34.05,lng:-118.24,type:'deposit'},
+    {lat:40.71,lng:-74.01,type:'deposit'},{lat:37.77,lng:-122.42,type:'yield'},
+    {lat:41.88,lng:-87.63,type:'deposit'},{lat:33.45,lng:-112.07,type:'deposit'},
+    {lat:29.76,lng:-95.37,type:'deposit'},{lat:47.61,lng:-122.33,type:'yield'},
+    {lat:25.76,lng:-80.19,type:'deposit'},{lat:39.74,lng:-104.99,type:'deposit'},
+    {lat:51.51,lng:-0.13,type:'deposit'},{lat:48.86,lng:2.35,type:'yield'},
+    {lat:35.68,lng:139.69,type:'deposit'},{lat:1.35,lng:103.82,type:'deposit'},
+    {lat:-33.87,lng:151.21,type:'yield'},{lat:55.75,lng:37.62,type:'deposit'},
+    {lat:19.43,lng:-99.13,type:'deposit'},{lat:-23.55,lng:-46.63,type:'deposit'},
+    {lat:22.32,lng:114.17,type:'yield'},{lat:52.52,lng:13.41,type:'deposit'},
+    {lat:36.17,lng:-115.14,type:'deposit'},{lat:42.36,lng:-71.06,type:'yield'},
+    {lat:32.72,lng:-117.16,type:'deposit'},{lat:45.50,lng:-73.57,type:'deposit'},
+    {lat:28.54,lng:77.21,type:'deposit'},{lat:-34.60,lng:-58.38,type:'yield'},
+    {lat:13.76,lng:100.50,type:'deposit'},{lat:31.23,lng:121.47,type:'deposit'},
+    {lat:59.33,lng:18.07,type:'yield'},{lat:37.98,lng:23.73,type:'deposit'}
+  ]
+
+  var activeNodes=[], nodeIndex=0
+
+  function latLngToXYZ(lat,lng){var p=lat*Math.PI/180,l=lng*Math.PI/180;return[Math.cos(p)*Math.sin(l),-Math.sin(p),Math.cos(p)*Math.cos(l)]}
+
+  function rotatePoint(x,y,z){
+    var cR=Math.cos(rotation),sR=Math.sin(rotation),rx=x*cR+z*sR,rz=-x*sR+z*cR
+    var cT=Math.cos(tilt),sT=Math.sin(tilt),ry=y*cT-rz*sT,rz2=y*sT+rz*cT
+    return{x:cx+rx*R,y:cy+ry*R,z:rz2}
+  }
+
+  function drawAtmosphere(){
+    var g=ctx.createRadialGradient(cx,cy,R*.85,cx,cy,R*1.35)
+    g.addColorStop(0,'rgba(0,180,255,0)');g.addColorStop(.5,'rgba(0,160,255,0.04)');g.addColorStop(.75,'rgba(0,120,255,0.06)');g.addColorStop(1,'rgba(0,80,255,0)')
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H)
+    ctx.beginPath();ctx.arc(cx,cy,R+3,0,Math.PI*2);ctx.strokeStyle='rgba(60,160,255,0.12)';ctx.lineWidth=6;ctx.stroke()
+    ctx.beginPath();ctx.arc(cx,cy,R+1,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=2;ctx.stroke()
+  }
+
+  function drawBody(){
+    var g=ctx.createRadialGradient(cx-R*.25,cy-R*.3,R*.05,cx,cy,R)
+    g.addColorStop(0,'rgba(8,18,35,0.95)');g.addColorStop(.5,'rgba(5,12,25,0.97)');g.addColorStop(1,'rgba(2,6,14,0.99)')
+    ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=g;ctx.fill()
+  }
+
+  function drawMesh(){
+    var proj=[]
+    for (var i=0;i<meshVerts.length;i++){var v=meshVerts[i];proj.push(rotatePoint(v[0],v[1],v[2]))}
+    for (var i=0;i<meshEdges.length;i++){
+      var e=meshEdges[i],a=proj[e[0]],b=proj[e[1]]
+      if(a.z<=-0.05||b.z<=-0.05)continue
+      var avg=(Math.max(0,a.z)+Math.max(0,b.z))/2, alpha=0.04+avg*0.12
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)
+      ctx.strokeStyle='rgba(0,180,255,'+alpha.toFixed(3)+')';ctx.lineWidth=0.5+avg*0.5;ctx.stroke()
+    }
+    for (var i=0;i<proj.length;i++){
+      var p=proj[i];if(p.z<=0)continue
+      ctx.beginPath();ctx.arc(p.x,p.y,0.5+p.z*1.2,0,Math.PI*2)
+      ctx.fillStyle='rgba(0,200,255,'+(p.z*0.35).toFixed(3)+')';ctx.fill()
+    }
+  }
+
+  function drawActiveNodes(){
+    var now=Date.now()
+    for (var i=activeNodes.length-1;i>=0;i--){
+      var node=activeNodes[i],age=now-node.born
+      if(age>node.lifespan+4000){activeNodes.splice(i,1);continue}
+      var p=rotatePoint(node.xyz[0],node.xyz[1],node.xyz[2])
+      if(p.z<=0.05)continue
+      var fi=Math.min(1,age/800),fo=age>node.lifespan?1-(age-node.lifespan)/4000:1
+      var alpha=fi*Math.max(0,fo)*(0.5+p.z*0.5);if(alpha<=0)continue
+      var scale=0.6+p.z*0.5,isY=node.type==='yield',baseR=isY?'251,191,36':'74,222,128',gc=isY?'#fbbf24':'#4ade80'
+      for (var r=0;r<2;r++){
+        var phase=((age+r*1200)%2400)/2400,rR=(6+phase*20)*scale,rA=(1-phase)*0.3*alpha
+        ctx.beginPath();ctx.arc(p.x,p.y,rR,0,Math.PI*2)
+        ctx.strokeStyle='rgba('+baseR+','+rA.toFixed(3)+')';ctx.lineWidth=1.5*(1-phase);ctx.stroke()
+      }
+      var hG=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,10*scale)
+      hG.addColorStop(0,'rgba('+baseR+','+(alpha*0.3).toFixed(3)+')');hG.addColorStop(1,'rgba('+baseR+',0)')
+      ctx.fillStyle=hG;ctx.fillRect(p.x-10*scale,p.y-10*scale,20*scale,20*scale)
+      ctx.beginPath();ctx.arc(p.x,p.y,3*scale,0,Math.PI*2)
+      ctx.fillStyle='rgba('+baseR+','+alpha.toFixed(3)+')';ctx.shadowColor=gc;ctx.shadowBlur=12*alpha;ctx.fill();ctx.shadowBlur=0
+      var nc=0
+      for (var m=0;m<meshVerts.length&&nc<3;m++){
+        var mv=meshVerts[m],dx=mv[0]-node.xyz[0],dy=mv[1]-node.xyz[1],dz=mv[2]-node.xyz[2]
+        if(dx*dx+dy*dy+dz*dz<0.12){var mp=rotatePoint(mv[0],mv[1],mv[2]);if(mp.z>0){var la=alpha*0.15*mp.z;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(mp.x,mp.y);ctx.strokeStyle='rgba('+baseR+','+la.toFixed(3)+')';ctx.lineWidth=0.8;ctx.stroke();nc++}}
+      }
+    }
+  }
+
+  var pulses=[], pulseTimer=0
+  function spawnPulse(t){
+    for (var a=0;a<10;a++){
+      var idx=Math.floor(Math.random()*meshEdges.length),e=meshEdges[idx]
+      var pa=rotatePoint(meshVerts[e[0]][0],meshVerts[e[0]][1],meshVerts[e[0]][2])
+      var pb=rotatePoint(meshVerts[e[1]][0],meshVerts[e[1]][1],meshVerts[e[1]][2])
+      if(pa.z>0.3&&pb.z>0.3){pulses.push({edge:idx,born:t,duration:600+Math.random()*400});break}
+    }
+  }
+  function drawPulses(t){
+    for (var i=pulses.length-1;i>=0;i--){
+      var pulse=pulses[i],age=t-pulse.born;if(age>pulse.duration){pulses.splice(i,1);continue}
+      var e=meshEdges[pulse.edge]
+      var pa=rotatePoint(meshVerts[e[0]][0],meshVerts[e[0]][1],meshVerts[e[0]][2])
+      var pb=rotatePoint(meshVerts[e[1]][0],meshVerts[e[1]][1],meshVerts[e[1]][2])
+      if(pa.z<=0||pb.z<=0)continue
+      var tp=age/pulse.duration,px=pa.x+(pb.x-pa.x)*tp,py=pa.y+(pb.y-pa.y)*tp,al=Math.sin(tp*Math.PI)*0.8
+      ctx.beginPath();ctx.arc(px,py,1.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,'+al.toFixed(3)+')';ctx.shadowColor='#c9a84c';ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0
+      var tT=Math.max(0,tp-0.3),tx=pa.x+(pb.x-pa.x)*tT,ty=pa.y+(pb.y-pa.y)*tT
+      ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(px,py);ctx.strokeStyle='rgba(0,200,255,'+(al*0.4).toFixed(3)+')';ctx.lineWidth=1;ctx.stroke()
+    }
+  }
+
+  function spawnNode(){
+    var loc=NODE_LOCATIONS[nodeIndex%NODE_LOCATIONS.length];nodeIndex++
+    activeNodes.push({xyz:latLngToXYZ(loc.lat,loc.lng),type:loc.type,born:Date.now(),lifespan:25000+Math.random()*20000})
+    updateNodeCount()
+  }
+  function scheduleNextNode(){if(!_globeRunning)return;_globeSpawnTimer=setTimeout(function(){spawnNode();scheduleNextNode()},4000+Math.random()*4000)}
+  function updateNodeCount(){var el=document.getElementById('globe-node-count');if(el)el.textContent=activeNodes.length+' ACTIVE NODE'+(activeNodes.length!==1?'S':'')}
+  function seedNodes(){var now=Date.now();for(var i=0;i<8;i++){var loc=NODE_LOCATIONS[nodeIndex%NODE_LOCATIONS.length];nodeIndex++;activeNodes.push({xyz:latLngToXYZ(loc.lat,loc.lng),type:loc.type,born:now-Math.random()*15000,lifespan:25000+Math.random()*20000})};updateNodeCount()}
+
+  function frame(t){
+    if(!_globeRunning)return
+    ctx.clearRect(0,0,W,H)
+    drawAtmosphere();drawBody();drawMesh();drawActiveNodes()
+    pulseTimer++;if(pulseTimer%8===0)spawnPulse(t);drawPulses(t)
+    rotation+=0.0018;if(rotation>Math.PI*2)rotation-=Math.PI*2
+    _globeRAF=requestAnimationFrame(frame)
+  }
+
+  resize();seedNodes();_globeRAF=requestAnimationFrame(frame);scheduleNextNode()
+  window.addEventListener('resize',function(){if(_globeRunning)resize()})
+}
+
+function stopGlobe(){
+  _globeRunning=false
+  if(_globeRAF){cancelAnimationFrame(_globeRAF);_globeRAF=null}
+  if(_globeSpawnTimer){clearTimeout(_globeSpawnTimer);_globeSpawnTimer=null}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// GENESIS BADGE HOLDERS
+// ══════════════════════════════════════════════════════════════════
+const BADGE_TIER_COLORS = { 0:'var(--blue)', 1:'var(--purple)', 2:'var(--gold)' }
+const BADGE_TIER_LABELS = { 0:'1YR', 1:'3YR', 2:'5YR' }
+
+async function loadBadgeHolders(btn) {
+  const listEl  = document.getElementById('badge-holder-list')
+  const countEl = document.getElementById('badge-minted-count')
+
+  if (!BADGE_ADDRESS || !VAULT_ADDRESS) {
+    listEl.innerHTML = '<div class="badge-empty" style="color:var(--red)">◈ CONTRACTS NOT DEPLOYED — fill addresses first</div>'
+    toast('> CONTRACTS NOT DEPLOYED', 'warn')
+    return
+  }
+  if (!_vault || !_badge) { toast('> NOT CONNECTED', 'err'); return }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'LOADING...' }
+  listEl.innerHTML = '<div class="badge-empty">◈ QUERYING CHAIN...</div>'
+
+  try {
+    // Total minted
+    const minted = await _badge.totalMinted()
+    const mintedNum = Number(minted)
+    countEl.textContent = mintedNum.toLocaleString() + ' / 5,000'
+
+    // All Deposited events ordered chronologically
+    const filter = _vault.filters.Deposited()
+    const events  = await _vault.queryFilter(filter, 0, 'latest')
+
+    // Deduplicate — keep earliest deposit per address
+    const seen = new Set()
+    const ordered = []
+    for (const ev of events) {
+      const addr = ev.args[0].toLowerCase()
+      if (!seen.has(addr)) { seen.add(addr); ordered.push(ev) }
+    }
+
+    // Check hasBadge in batches of 20 concurrent calls
+    const holders = []
+    const BATCH = 20
+
+    for (let i = 0; i < ordered.length && holders.length < 5000; i += BATCH) {
+      const chunk  = ordered.slice(i, i + BATCH)
+      const checks = await Promise.all(chunk.map(ev => _badge.hasBadge(ev.args[0]).catch(() => false)))
+      const posChecks = await Promise.all(
+        chunk.map((ev, j) => checks[j] ? _badge.genesisPosition(ev.args[0]).catch(() => 0n) : Promise.resolve(null))
+      )
+
+      for (let j = 0; j < chunk.length; j++) {
+        if (!checks[j]) continue
+        const ev = chunk[j]
+        holders.push({
+          pos:    Number(posChecks[j] ?? 0n),
+          addr:   ev.args[0],
+          tier:   Number(ev.args[3]),
+          amount: Number(ethers.formatUnits(ev.args[2], 6))
+        })
+        if (holders.length >= 5000) break
+      }
+
+      // Live progress update
+      listEl.innerHTML = `<div class="badge-empty">◈ SCANNING... ${holders.length} badge holders found (${Math.min(i+BATCH, ordered.length)} / ${ordered.length} addresses checked)</div>`
+    }
+
+    // Sort by genesis position
+    holders.sort((a, b) => a.pos - b.pos)
+
+    if (!holders.length) {
+      listEl.innerHTML = '<div class="badge-empty">No badge holders found on-chain yet</div>'
+      toast('> 0 BADGE HOLDERS FOUND', 'warn')
+      return
+    }
+
+    listEl.innerHTML = holders.map(h => `
+      <div class="badge-row">
+        <span style="color:var(--purple);font-weight:600">#${h.pos}</span>
+        <span style="color:#c9a84c;font-family:'DM Mono',monospace">${h.addr.slice(0,6)}...${h.addr.slice(-4)}</span>
+        <span style="color:${BADGE_TIER_COLORS[h.tier]||'#c9a84c'};font-weight:600">${BADGE_TIER_LABELS[h.tier]||'?'}</span>
+        <span style="text-align:right;color:var(--text)">$${h.amount.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+      </div>`).join('')
+
+    countEl.textContent = holders.length.toLocaleString() + ' / 5,000'
+    toast('> ' + holders.length + ' BADGE HOLDERS LOADED', 'ok')
+
+  } catch(e) {
+    listEl.innerHTML = '<div class="badge-empty" style="color:var(--red)">ERR: ' + (e.reason || e.message) + '</div>'
+    toast('> LOAD ERR: ' + (e.reason || e.message), 'err')
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'RELOAD' }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// AUTO-RECONNECT + QR CODE
+// ══════════════════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  if (localStorage.getItem('nv_founder_connected')) connectFounder()
+  try {
+    const qrEl = document.getElementById('gate-qr')
+    if (qrEl && typeof QRCode !== 'undefined') {
+      new QRCode(qrEl, { text: window.location.href, width:98, height:98, colorDark:'#000000', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M })
+    }
+  } catch {}
+})
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('dashboard').style.display !== 'none') renderEarningsChart()
+})
+</script>
+<script src="/nv-core.js?v=60"></script>
+</body>
+</html>

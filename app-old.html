@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexVault — USDX Savings Dashboard</title>
+  <meta name="description" content="Access your NexVault USDX savings dashboard — manage deposits, track APY earnings, and monitor your vault positions." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://nexvault.one/app" />
+
+  <!-- Favicon & Manifest -->
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#06070a" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nexvault.one/app" />
+  <meta property="og:title" content="NexVault — USDX Savings Dashboard" />
+  <meta property="og:description" content="Access your NexVault USDX savings dashboard — manage deposits, track APY earnings, and monitor your vault positions." />
+  <meta property="og:image" content="https://nexvault.one/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NexVault" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="NexVault — USDX Savings Dashboard" />
+  <meta name="twitter:description" content="Access your NexVault USDX savings dashboard — manage deposits, track APY earnings, and monitor your vault positions." />
+  <meta name="twitter:image" content="https://nexvault.one/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --gold:#fbbf24;--gold2:#d97706;--bg:#06070a;--card:rgba(255,255,255,.026);
+      --border:rgba(255,255,255,.07);--text:#e8e4dc;--muted:#6b7280;--dim:#374151;
+    }
+    body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden}
+    button{cursor:pointer;font-family:'DM Mono',monospace}
+    input:focus{outline:none}
+    input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+
+    /* ── Orbs ── */
+    .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+
+    /* ── Card ── */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px}
+
+    /* ── Animations ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+    @keyframes gp{0%{box-shadow:0 0 0 0 rgba(251,191,36,.5)}60%{box-shadow:0 0 50px 14px rgba(251,191,36,.14)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .blink{animation:blink 1.6s infinite}
+    .gp{animation:gp .7s ease}
+    .spin{animation:spin 1s linear infinite}
+
+    /* ── Nav ── */
+    nav{
+      position:sticky;top:0;z-index:50;
+      background:rgba(6,7,10,.85);backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px
+    }
+    .nav-logo{display:flex;align-items:center;gap:10px}
+    .nav-mark{width:34px;height:34px;border-radius:8px;background:#05060a;border:1.5px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-family:serif;font-size:16px;font-weight:700;color:#c9a84c}
+    .nav-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;letter-spacing:.15em;color:var(--text)}
+
+    /* ── Wallet button ── */
+    .wallet-btn{
+      padding:9px 20px;border-radius:9px;font-size:12px;letter-spacing:.06em;font-weight:500;
+      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#9ca3af;
+      transition:all .2s;display:flex;align-items:center;gap:8px
+    }
+    .wallet-btn:hover{border-color:rgba(251,191,36,.3);color:var(--gold)}
+    .wallet-btn.connected{border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.07);color:#60a5fa}
+    .wallet-dot{width:7px;height:7px;border-radius:50%;background:#4ade80}
+
+    /* ── Tabs ── */
+    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+    .tab{padding:9px 18px;border-radius:8px;font-size:11px;letter-spacing:.07em;border:none;background:transparent;color:var(--muted);transition:all .2s;font-weight:500}
+    .tab:hover{color:#9ca3af}
+    .tab.active{background:rgba(255,255,255,.06);color:var(--text);border-bottom:2px solid rgba(255,255,255,.15)}
+    .tab.dev-tab{color:rgba(251,191,36,.3)}
+    .tab.dev-tab.active{color:var(--gold);border-bottom-color:rgba(251,191,36,.4)}
+
+    /* ── Stats row ── */
+    .stat-card{flex:1 1 130px;background:rgba(255,255,255,.023);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px 18px}
+
+    /* ── Inputs ── */
+    .inp{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:14px 16px;color:var(--text);font-family:'DM Mono',monospace;font-size:20px;transition:border-color .2s}
+    .inp:focus{border-color:rgba(251,191,36,.35)}
+    .inp::placeholder{color:#1f2937}
+
+    /* ── Buttons ── */
+    .qbtn{padding:7px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:var(--muted);font-size:12px;transition:all .15s}
+    .qbtn:hover{background:rgba(251,191,36,.08);color:var(--gold);border-color:rgba(251,191,36,.2)}
+    .pbtn{width:100%;padding:15px;border-radius:10px;font-size:13px;letter-spacing:.1em;border:none;font-weight:600;transition:all .2s}
+    .pbtn:hover{opacity:.88;transform:translateY(-1px)}
+    .pbtn-d{background:linear-gradient(135deg,#fbbf24,#d97706);color:#06070a}
+    .pbtn-w{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.18)}
+
+    /* ── Badge ── */
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;letter-spacing:.09em;font-weight:500}
+
+    /* ── Progress ── */
+    .prog{height:4px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden}
+    .prog-fill{height:100%;background:linear-gradient(90deg,#d97706,#fbbf24);transition:width 1s ease}
+
+    /* ── Tier options ── */
+    .tier-opt{border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;margin-bottom:10px}
+    .tier-opt:hover{border-color:rgba(255,255,255,.16)}
+
+    /* ── Toggle ── */
+    .toggle-wrap{width:48px;height:26px;border-radius:13px;position:relative;cursor:pointer;transition:background .25s;flex-shrink:0}
+    .toggle-knob{position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4);transition:left .25s cubic-bezier(0.34,1.56,0.64,1)}
+
+    /* ── Leaderboard ── */
+    .lb-row{display:grid;grid-template-columns:28px 1fr auto auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .lb-row:last-child{border:none}
+    .you-row{background:rgba(251,191,36,.04);border-radius:8px;padding:10px 12px;border:1px solid rgba(251,191,36,.1);margin:0 -12px}
+
+    /* ── Vote bar ── */
+    .vbar{height:6px;border-radius:3px;background:rgba(255,255,255,.05);overflow:hidden;margin-top:8px}
+
+    /* ── Notification ── */
+    #notif{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);padding:11px 26px;border-radius:40px;font-size:12px;z-index:9999;white-space:nowrap;letter-spacing:.04em;font-weight:500;display:none;transition:all .3s}
+
+    /* ── Network banner ── */
+    #net-banner{display:none;padding:10px 24px;background:rgba(239,68,68,.1);border-bottom:1px solid rgba(239,68,68,.2);text-align:center;font-size:12px;color:#f87171;font-weight:500}
+
+    /* ── PIN gate ── */
+    #pin-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px}
+    .pin-card{padding:36px 40px;background:var(--card);border:1px solid var(--border);border-radius:18px;text-align:center;min-width:280px}
+    .pin-inp{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 14px;color:var(--text);font-family:monospace;font-size:24px;text-align:center;letter-spacing:.3em;margin-bottom:14px;transition:border-color .2s}
+    .pin-inp:focus{outline:none}
+
+    /* ── Chart ── */
+    .mini-chart{width:100%;height:80px}
+
+    /* ── Responsive ── */
+    @media(max-width:680px){.g2{grid-template-columns:1fr!important}.g3{grid-template-columns:1fr 1fr!important}.hide-sm{display:none!important}}
+  </style>
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "NexVault USDX Savings Dashboard",
+    "description": "Manage deposits, track APY earnings, and monitor your vault positions in the NexVault DApp.",
+    "url": "https://nexvault.one/app",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web Browser",
+    "provider": { "@id": "https://nexvault.one/#organization" }
+  }
+  </script>
+  <!-- ethers.js v6 — blockchain interactions -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+
+<!-- Background orbs -->
+<div class="orb" style="width:700px;height:700px;background:rgba(251,191,36,.025);top:-250px;right:-200px"></div>
+<div class="orb" style="width:500px;height:500px;background:rgba(96,165,250,.03);bottom:-150px;left:-200px"></div>
+
+<!-- Network warning banner -->
+<div id="net-banner">
+  ⚠️ Wrong network detected. Please switch to <strong>Nexus Mainnet</strong> to use NexVault.
+  <button onclick="switchNetwork()" style="margin-left:12px;padding:4px 12px;border-radius:6px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.1);color:#f87171;font-size:11px;cursor:pointer">SWITCH NETWORK</button>
+</div>
+
+<!-- Notification -->
+<div id="notif"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">
+    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <div class="nav-mark">V</div>
+      <span class="nav-name">NEXVAULT</span>
+    </a>
+    <div class="badge" style="background:rgba(251,191,36,.09);border:1px solid rgba(251,191,36,.22);color:var(--gold)">🏛️ VAULT GENESIS</div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <!-- Testnet / Mainnet toggle -->
+    <button id="network-toggle-btn" onclick="toggleNetwork()"
+      style="padding:5px 12px;border-radius:20px;font-size:10px;letter-spacing:.08em;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid rgba(251,191,36,.35);background:rgba(251,191,36,.08);color:#fbbf24;font-family:'DM Mono',monospace">
+      TESTNET
+    </button>
+    <div class="blink" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0"></div>
+    <button id="wallet-btn" class="wallet-btn" onclick="window._activeProvider ? disconnectWallet() : connectWallet()">
+      <span id="wallet-icon">◈</span>
+      <span id="wallet-text">CONNECT WALLET</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Main -->
+<div style="max-width:1100px;margin:0 auto;padding:26px 16px;position:relative;z-index:1">
+
+  <!-- Global Stats -->
+  <div style="display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;animation:fadeUp .6s ease .1s both">
+    <div class="stat-card">
+      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Total Value Locked</div>
+      <div id="stat-tvl" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold)">$0.00</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:2px">Grows with every deposit</div>
+    </div>
+    <div class="stat-card">
+      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Ecosystem APY</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#a78bfa">3.80 – 4.44%</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:2px">Tier based</div>
+    </div>
+    <div class="stat-card">
+      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Active Vaults</div>
+      <div id="stat-depositors" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#60a5fa">0</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:2px">Be the first</div>
+    </div>
+    <div class="stat-card">
+      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Yield Distributed</div>
+      <div id="stat-yield" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#4ade80">$0.00</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:2px">All time</div>
+    </div>
+    <div class="stat-card">
+      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Your Rank</div>
+      <div id="stat-rank" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold)">—</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:2px">Connect wallet to see</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" style="animation:fadeUp .6s ease .15s both">
+    <button class="tab active" onclick="switchTab('vault',this)">VAULT</button>
+    <button class="tab" onclick="switchTab('analytics',this)">ANALYTICS</button>
+    <button class="tab" onclick="switchTab('leaderboard',this)">LEADERBOARD</button>
+  </div>
+
+  <!-- ═══════════ VAULT TAB ═══════════ -->
+  <div id="tab-vault" style="animation:fadeUp .6s ease .2s both">
+    <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+
+      <!-- Left: Balance -->
+      <div>
+        <div id="balance-card" class="card" style="padding:28px;margin-bottom:18px">
+
+          <!-- Connect prompt -->
+          <div id="connect-prompt" style="text-align:center;padding:20px 0">
+            <div style="font-size:40px;margin-bottom:16px">◈</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text);margin-bottom:8px">Connect Your Wallet</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.7">Connect MetaMask to access your vault</div>
+            <button onclick="connectWallet()" style="padding:13px 28px;border-radius:10px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#06070a;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.08em;font-weight:600;cursor:pointer">CONNECT METAMASK</button>
+          </div>
+
+          <!-- Balance (shown when connected) -->
+          <div id="balance-content" style="display:none">
+            <div style="font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px;font-weight:500">Your Vault Balance</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:58px;font-weight:300;line-height:1;margin-bottom:6px;color:var(--text)">
+              $<span id="user-balance">0.00</span>
+            </div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:22px">
+              USDX &nbsp;·&nbsp; <span id="tier-label">1-Year</span> Tier &nbsp;·&nbsp;
+              <span id="apy-label" style="color:#60a5fa;font-weight:600">3.80% APY</span>
+            </div>
+
+            <!-- Live yield ticker -->
+            <div style="background:rgba(74,222,128,.03);border:1px solid rgba(74,222,128,.09);border-radius:10px;padding:13px 15px;margin-bottom:18px">
+              <div style="font-size:9px;color:#4ade80;letter-spacing:.1em;margin-bottom:5px;text-transform:uppercase;font-weight:600">⚡ Earning Right Now</div>
+              <div style="font-size:17px"><span id="live-yield" style="color:#4ade80;font-weight:400;font-family:monospace">+0.00000000</span> <span style="color:var(--muted);font-size:12px">USDX</span></div>
+            </div>
+
+            <!-- Auto-compound toggle -->
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:18px">
+              <div>
+                <div style="font-size:13px;color:var(--text);margin-bottom:3px;font-weight:500">Auto-Compound</div>
+                <div style="font-size:11px;color:var(--muted)">Reinvest yield automatically</div>
+              </div>
+              <div id="toggle-wrap" class="toggle-wrap" style="background:rgba(251,191,36,.65)" onclick="toggleAutoCompound()">
+                <div id="toggle-knob" class="toggle-knob" style="left:25px"></div>
+              </div>
+            </div>
+
+            <!-- Projections -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+              <div style="background:rgba(74,222,128,.03);border:1px solid rgba(74,222,128,.08);border-radius:9px;padding:12px">
+                <div style="font-size:9px;color:var(--muted);letter-spacing:.06em;margin-bottom:5px">DAILY</div>
+                <div id="proj-daily" style="color:#4ade80;font-size:15px;font-weight:400">+$0.00</div>
+              </div>
+              <div style="background:rgba(74,222,128,.03);border:1px solid rgba(74,222,128,.08);border-radius:9px;padding:12px">
+                <div style="font-size:9px;color:var(--muted);letter-spacing:.06em;margin-bottom:5px">MONTHLY</div>
+                <div id="proj-monthly" style="color:#4ade80;font-size:15px;font-weight:400">+$0.00</div>
+              </div>
+              <div style="background:rgba(74,222,128,.03);border:1px solid rgba(74,222,128,.08);border-radius:9px;padding:12px">
+                <div style="font-size:9px;color:var(--muted);letter-spacing:.06em;margin-bottom:5px">YEARLY</div>
+                <div id="proj-yearly" style="color:#4ade80;font-size:15px;font-weight:400">+$0.00</div>
+              </div>
+            </div>
+
+            <!-- Goal bar -->
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 18px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <div style="font-size:13px;color:var(--text);font-weight:600">🎯 Savings Goal</div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div id="goal-pct" style="font-size:13px;color:var(--gold);font-weight:600">0.0% complete</div>
+                  <button onclick="openGoalEditor()" style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:10px;color:var(--gold);font-weight:600;letter-spacing:.05em;font-family:'DM Mono',monospace">EDIT</button>
+                </div>
+              </div>
+
+              <!-- Inline goal editor -->
+              <div id="goal-editor" style="display:none;margin-bottom:12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.14);border-radius:8px;padding:12px">
+                <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.06em;font-weight:500">SET YOUR SAVINGS GOAL</div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <span style="color:var(--gold);font-size:15px;font-weight:500;flex-shrink:0">$</span>
+                  <input id="goal-input" type="number" min="1" step="100" placeholder="30000"
+                    style="flex:1;min-width:0;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:8px 10px;color:var(--text);font-size:14px;font-weight:500;outline:none;-webkit-appearance:none"
+                    onkeydown="if(event.key==='Enter')saveGoal()" />
+                  <button onclick="saveGoal()" style="background:var(--gold);border:none;border-radius:6px;padding:8px 14px;cursor:pointer;color:#000;font-size:11px;font-weight:700;letter-spacing:.05em;white-space:nowrap;font-family:'DM Mono',monospace;flex-shrink:0">SAVE</button>
+                  <button onclick="closeGoalEditor()" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:6px;padding:8px 10px;cursor:pointer;color:var(--muted);font-size:13px;line-height:1;flex-shrink:0">✕</button>
+                </div>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                <span id="goal-current" style="font-size:14px;color:var(--text);font-weight:500">$0.00</span>
+                <span style="font-size:14px;color:var(--muted)">Goal: <span id="goal-target-display">$30,000</span></span>
+              </div>
+              <div class="prog" style="margin-bottom:12px"><div id="goal-bar" class="prog-fill" style="width:0%"></div></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.12);border-radius:8px;padding:10px 12px">
+                  <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:500">STILL NEEDED</div>
+                  <div id="goal-remaining" style="font-size:16px;color:var(--gold);font-weight:600">$30,000</div>
+                </div>
+                <div style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.1);border-radius:8px;padding:10px 12px">
+                  <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:500">YIELD / MONTH</div>
+                  <div id="goal-monthly" style="font-size:16px;color:#4ade80;font-weight:400">+$0.00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="card" style="padding:24px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;font-weight:600">Transaction History</div>
+          <div id="tx-history">
+            <div style="text-align:center;padding:20px;font-size:12px;color:var(--dim)">Connect wallet to see your transactions</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Action Panel -->
+      <div>
+        <div class="card" style="padding:28px">
+
+          <!-- USDX only badge -->
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.16);border-radius:12px;margin-bottom:22px">
+            <span style="color:var(--gold);font-size:22px">◈</span>
+            <div>
+              <div style="font-size:14px;color:var(--gold);font-weight:700">USDX</div>
+              <div style="font-size:11px;color:var(--muted);font-weight:500">Only asset accepted in this vault</div>
+            </div>
+          </div>
+
+          <!-- Yield Tiers -->
+          <div style="margin-bottom:22px">
+            <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;font-weight:600">Choose Your Yield Tier</div>
+
+            <div class="tier-opt" id="tier-1yr" onclick="selectTier('1yr')" style="border-color:#60a5fa;background:rgba(96,165,250,.05)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="tier-dot" style="width:10px;height:10px;border-radius:50%;background:#60a5fa;flex-shrink:0"></div>
+                  <div>
+                    <div class="tier-name" style="font-size:14px;color:#60a5fa;font-weight:600">1-Year</div>
+                    <div style="font-size:10px;color:var(--dim)">Locked 365 days</div>
+                  </div>
+                </div>
+                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#60a5fa">3.80%</div>
+              </div>
+            </div>
+
+            <div class="tier-opt" id="tier-3yr" onclick="selectTier('3yr')">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="tier-dot" style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0"></div>
+                  <div>
+                    <div class="tier-name" style="font-size:14px;color:#9ca3af;font-weight:600">3-Year</div>
+                    <div style="font-size:10px;color:var(--dim)">Locked 1095 days</div>
+                  </div>
+                </div>
+                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dim)">4.10%</div>
+              </div>
+            </div>
+
+            <div class="tier-opt" id="tier-5yr" onclick="selectTier('5yr')">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="tier-dot" style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0"></div>
+                  <div>
+                    <div class="tier-name" style="font-size:14px;color:#9ca3af;font-weight:600">5-Year</div>
+                    <div style="font-size:10px;color:var(--dim)">Locked 1825 days — maximum yield</div>
+                  </div>
+                </div>
+                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dim)">4.44%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deposit / Withdraw tabs -->
+          <div style="display:flex;gap:8px;margin-bottom:18px">
+            <button id="action-deposit" onclick="setAction('deposit')" style="flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:rgba(251,191,36,.1);color:var(--gold);border-bottom:2px solid var(--gold);transition:all .2s">DEPOSIT</button>
+            <button id="action-withdraw" onclick="setAction('withdraw')" style="flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:transparent;color:var(--dim);border-bottom:2px solid transparent;transition:all .2s">WITHDRAW</button>
+          </div>
+
+          <div style="margin-bottom:10px">
+            <input class="inp" type="number" id="amount-input" placeholder="0.00" oninput="updatePreview()">
+          </div>
+
+          <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+            <button class="qbtn" onclick="setAmount(500)">$500</button>
+            <button class="qbtn" onclick="setAmount(1000)">$1K</button>
+            <button class="qbtn" onclick="setAmount(5000)">$5K</button>
+            <button class="qbtn" onclick="setAmount(10000)">$10K</button>
+          </div>
+
+          <!-- Preview -->
+          <div id="preview-box" style="display:none;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:15px;margin-bottom:16px">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:.08em;font-weight:600">TRANSACTION PREVIEW</div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;color:var(--muted)">Amount</span>
+              <span id="prev-amount" style="font-size:12px;color:#9ca3af;font-weight:600">$0.00</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <span style="font-size:12px;color:var(--muted)">Tier</span>
+              <span id="prev-tier" style="font-size:12px;color:#9ca3af;font-weight:600">1-Year — 3.80% APY</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="font-size:12px;color:var(--muted)">Est. yearly yield</span>
+              <span id="prev-yield" style="font-size:12px;color:#4ade80;font-weight:600">+$0.00</span>
+            </div>
+          </div>
+
+          <!-- Unaudited warning -->
+          <div style="padding:10px 14px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:8px;margin-bottom:14px;font-size:11px;color:#f87171;line-height:1.65;font-weight:500">
+            ⚠️ Contracts are unaudited at launch. Audit in progress. Deposit amounts you are comfortable with.
+          </div>
+
+          <button id="main-action-btn" class="pbtn pbtn-d" onclick="handleAction()">DEPOSIT USDX AT 3.80% APY</button>
+
+          <!-- Referral -->
+          <div style="margin-top:18px;padding:15px;background:rgba(255,255,255,.02);border-radius:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:12px;color:#c9c4bb;font-weight:600">Referral Boost</span>
+              <div class="badge" style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);color:var(--gold)">+0.5% APY / REFERRAL</div>
+            </div>
+            <div style="font-size:12px;color:var(--dim);margin-bottom:10px;line-height:1.65">Share your link to boost your APY.</div>
+            <div id="ref-link" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:9px 13px;font-size:12px;color:var(--gold);font-family:monospace">
+              Connect wallet to get your referral link
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ ANALYTICS TAB ═══════════ -->
+  <div id="tab-analytics" style="display:none">
+
+    <!-- Preview mode banner -->
+    <div style="
+      display:flex;align-items:center;gap:12px;
+      padding:14px 20px;border-radius:12px;
+      background:rgba(251,191,36,.05);
+      border:1px solid rgba(251,191,36,.2);
+      margin-bottom:20px;
+    ">
+      <span style="font-size:18px">📊</span>
+      <div>
+        <div style="font-size:13px;color:#fbbf24;font-weight:600;margin-bottom:2px">Analytics Preview Mode</div>
+        <div style="font-size:11px;color:#6b7280;line-height:1.6">Charts and data populate automatically when Nexus mainnet launches and real deposits flow in. This is a preview of what your analytics dashboard will look like.</div>
+      </div>
+    </div>
+    <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div>
+        <div class="card" style="padding:26px;margin-bottom:18px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px;font-weight:600">YOUR BALANCE GROWTH</div>
+          <svg class="mini-chart" id="chart-balance" viewBox="0 0 300 80"></svg>
+          <div style="font-size:12px;color:var(--muted);margin-top:10px">Connect wallet to see your personal chart</div>
+        </div>
+        <div class="card" style="padding:26px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px;font-weight:600" id="proj-header">12-MONTH PROJECTION</div>
+          <svg class="mini-chart" id="chart-proj" viewBox="0 0 300 80"></svg>
+          <div style="font-size:12px;color:var(--muted);margin-top:10px" id="proj-note">Deposit USDX to see your projection</div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="padding:26px;margin-bottom:18px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:16px;font-weight:600">YIELD BREAKDOWN</div>
+          <div id="yield-breakdown">
+            <div style="text-align:center;padding:20px;font-size:12px;color:var(--dim)">Connect wallet to see your yield breakdown</div>
+          </div>
+        </div>
+        <div class="card" style="padding:26px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:16px;font-weight:600">TIER COMPARISON — YOUR BALANCE</div>
+          <div id="tier-comparison">
+            <div style="text-align:center;padding:20px;font-size:12px;color:var(--dim)">Deposit USDX to compare tier earnings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ LEADERBOARD TAB ═══════════ -->
+  <div id="tab-leaderboard" style="display:none">
+    <div class="g2" style="display:grid;grid-template-columns:2fr 1fr;gap:20px">
+      <div class="card" style="padding:26px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <div style="font-size:13px;color:var(--text);font-weight:700;letter-spacing:.06em">GLOBAL TVL LEADERBOARD</div>
+          <div class="badge" style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);color:#4ade80;font-size:9px">
+            <div class="blink" style="width:5px;height:5px;border-radius:50%;background:#22c55e"></div>LIVE
+          </div>
+        </div>
+        <div id="leaderboard-rows">
+          <div style="text-align:center;padding:30px;font-size:13px;color:var(--dim)">
+            🏆 Be the first depositor on NexVault.<br>
+            <span style="font-size:11px;color:var(--dim);margin-top:8px;display:block">The leaderboard fills when mainnet launches.</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="padding:22px;margin-bottom:16px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px;font-weight:600">YOUR STATS</div>
+          <div id="user-stats">
+            <div style="font-size:12px;color:var(--dim);text-align:center;padding:16px">Connect wallet to see your stats</div>
+          </div>
+        </div>
+        <div class="card" style="padding:22px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px;font-weight:600">NFT BADGES</div>
+          <div id="badge-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div><!-- end main -->
+
+<!-- Footer -->
+<footer style="border-top:1px solid rgba(255,255,255,.05);padding:28px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:relative;z-index:1;margin-top:40px">
+  <div style="font-size:11px;color:#1a1f2e;letter-spacing:.1em;font-weight:500">© 2026 NEXVAULT · BUILT ON NEXUS.XYZ · SOVEREIGN YIELD BANKING FOR EVERY HUMAN ON EARTH</div>
+  <a href="/" style="font-size:12px;color:#6b7280;text-decoration:none;letter-spacing:.08em;font-weight:500;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);transition:all .2s" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='#6b7280'">← nexvault.one</a>
+  <a href="/terms" style="font-size:12px;color:#6b7280;text-decoration:none;letter-spacing:.08em;font-weight:500;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);transition:all .2s" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='#6b7280'">TERMS</a>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     WALLET CONNECTION
+════════════════════════════════════════════ -->
+<script>
+// ══════════════════════════════════════════════════════
+//  NETWORK CONFIG — testnet & mainnet
+//  Flip ACTIVE_NETWORK to 'testnet' for testing,
+//  then 'mainnet' when Nexus goes live.
+//
+//  NexusEVM is EVM-compatible — contracts deploy unchanged.
+//  Every transaction is automatically ZK-proven by Nexus zkVM v3.0
+//  (Stwo-backed, runs on every Nexus node — no config required).
+//  Docs: https://docs.nexus.xyz/zkvm
+// ══════════════════════════════════════════════════════
+const NETWORKS = {
+  testnet: {
+    label:        'TESTNET',
+    chainId:      0,           // ← fill in Nexus testnet chain ID
+    rpcUrl:       '',          // ← fill in Nexus testnet RPC URL
+    vaultAddress: '',          // ← fill in testnet vault contract address
+    usdxAddress:  '',          // ← fill in testnet USDX contract address
+    explorer:     'https://testnet-explorer.nexus.xyz'
+  },
+  mainnet: {
+    label:        'MAINNET',
+    chainId:      0,           // ← fill in Nexus mainnet chain ID
+    rpcUrl:       '',          // ← fill in Nexus mainnet RPC URL
+    vaultAddress: '',          // ← fill in mainnet vault contract address
+    usdxAddress:  '',          // ← fill in mainnet USDX contract address
+    explorer:     'https://explorer.nexus.xyz'
+  }
+}
+
+// ── CHANGE THIS TO SWITCH BETWEEN TESTNET / MAINNET ──
+let ACTIVE_NETWORK = 'testnet'
+
+function getNetConfig() { return NETWORKS[ACTIVE_NETWORK] }
+
+// Legacy single-value aliases (used by wallet connection code)
+const NEXUS_CHAIN_ID = 1   // kept for backward-compat; real value comes from getNetConfig()
+const NEXUS_RPC_URL  = ''
+const VAULT_ADDRESS  = ''
+const USDX_ADDRESS   = ''
+
+// ── CONTRACT ABIs ─────────────────────────────────────
+const VAULT_ABI = [
+  "function deposit(uint256 amount, uint8 tier, address referrer)",
+  "function withdraw(uint256 depositIndex)",
+  "function claimYield(uint256 depositIndex)",
+  "function compoundForUser(address user, uint256 depositIndex)",
+  "function getDeposit(address user, uint256 index) view returns (tuple(uint128 principal, uint64 depositedAt, uint64 lastYieldAt, uint64 lockEndsAt, uint8 tier, bool active))",
+  "function getDeposits(address user) view returns (tuple(uint128 principal, uint64 depositedAt, uint64 lastYieldAt, uint64 lockEndsAt, uint8 tier, bool active)[])",
+  "function getDepositCount(address user) view returns (uint256)",
+  "function pendingYield(address user, uint256 depositIndex) view returns (uint256)",
+  "function totalPendingYield(address user) view returns (uint256)",
+  "function vaultHealth() view returns (uint256 balance, uint256 principal, uint256 devBalance, uint256 surplus, bool healthy)",
+  "function paused() view returns (bool)",
+  "event Deposited(address indexed user, uint256 indexed depositIndex, uint256 amount, uint8 tier, uint64 lockEndsAt)",
+  "event Withdrawn(address indexed user, uint256 indexed depositIndex, uint256 principal, uint256 userYield, uint256 devCut)"
+]
+const USDX_ABI = [
+  "function approve(address spender, uint256 amount) returns (bool)",
+  "function balanceOf(address owner) view returns (uint256)",
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function decimals() view returns (uint8)"
+]
+
+let _appEthersProvider = null
+let _appEthersSigner   = null
+let _appVaultContract  = null
+let _appUsdxContract   = null
+
+function getAppContracts() {
+  const cfg = getNetConfig()
+  if (!cfg.vaultAddress || !cfg.usdxAddress) return null
+  if (!_appEthersSigner) return null
+  if (!_appVaultContract) _appVaultContract = new ethers.Contract(cfg.vaultAddress, VAULT_ABI, _appEthersSigner)
+  if (!_appUsdxContract)  _appUsdxContract  = new ethers.Contract(cfg.usdxAddress,  USDX_ABI,  _appEthersSigner)
+  return { vault: _appVaultContract, usdx: _appUsdxContract }
+}
+
+const METAMASK_ICON = `<svg width="36" height="36" viewBox="0 0 35 33" xmlns="http://www.w3.org/2000/svg">
+  <polygon fill="#E17726" stroke="#E17726" stroke-width=".25" stroke-linejoin="round" points="32.9582,0.842 19.3685,10.2157 21.7863,4.5924"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="2.0418,0.842 15.5299,10.3052 13.2137,4.5924"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="28.2295,23.5335 24.499,29.2876 31.9923,31.3445 34.1399,23.6518"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="0.8697,23.6518 2.9977,31.3445 10.4911,29.2876 6.7701,23.5335"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="10.0868,14.5149 7.9988,17.7507 15.4129,18.0877 15.1575,10.0308"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="24.9132,14.5149 19.7631,9.9424 19.6077,18.0877 27.0014,17.7507"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="10.4911,29.2876 14.9476,27.1218 11.0978,23.7046"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="20.0426,27.1218 24.499,29.2876 23.9022,23.7046"/>
+  <polygon fill="#D5BFB2" stroke="#D5BFB2" stroke-width=".25" stroke-linejoin="round" points="24.499,29.2876 20.0426,27.1218 20.4087,30.4406 20.3592,31.2294"/>
+  <polygon fill="#D5BFB2" stroke="#D5BFB2" stroke-width=".25" stroke-linejoin="round" points="10.4911,29.2876 14.6408,31.2294 14.6012,30.4406 14.9476,27.1218"/>
+  <polygon fill="#233447" stroke="#233447" stroke-width=".25" stroke-linejoin="round" points="14.7101,21.9463 10.9889,20.8517 13.6077,19.6391"/>
+  <polygon fill="#233447" stroke="#233447" stroke-width=".25" stroke-linejoin="round" points="20.2899,21.9463 21.3923,19.6391 24.0209,20.8517"/>
+  <polygon fill="#CC6228" stroke="#CC6228" stroke-width=".25" stroke-linejoin="round" points="10.4911,29.2876 11.1275,23.5335 6.7701,23.6518"/>
+  <polygon fill="#CC6228" stroke="#CC6228" stroke-width=".25" stroke-linejoin="round" points="23.8726,23.5335 24.499,29.2876 28.2295,23.6518"/>
+  <polygon fill="#CC6228" stroke="#CC6228" stroke-width=".25" stroke-linejoin="round" points="27.0014,17.7507 19.6077,18.0877 20.2998,21.9463 21.4022,19.6391 24.0308,20.8517"/>
+  <polygon fill="#CC6228" stroke="#CC6228" stroke-width=".25" stroke-linejoin="round" points="10.9889,20.8517 13.6077,19.6391 14.7002,21.9463 15.4129,18.0877 7.9988,17.7507"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="7.9988,17.7507 11.0978,23.7046 10.9889,20.8517"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="24.0308,20.8517 23.9022,23.7046 27.0014,17.7507"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="15.4129,18.0877 14.7002,21.9463 15.5792,26.4294 15.7742,20.4925"/>
+  <polygon fill="#E27625" stroke="#E27625" stroke-width=".25" stroke-linejoin="round" points="19.6077,18.0877 19.2315,20.4826 19.4166,26.4294 20.2998,21.9463"/>
+  <polygon fill="#F5841F" stroke="#F5841F" stroke-width=".25" stroke-linejoin="round" points="20.2998,21.9463 19.4166,26.4294 20.0426,27.1218 23.9022,23.7046 24.0308,20.8517"/>
+  <polygon fill="#F5841F" stroke="#F5841F" stroke-width=".25" stroke-linejoin="round" points="10.9889,20.8517 11.0978,23.7046 14.9476,27.1218 15.5792,26.4294 14.7002,21.9463"/>
+  <polygon fill="#C0AC9D" stroke="#C0AC9D" stroke-width=".25" stroke-linejoin="round" points="20.3592,31.2294 20.4087,30.4406 20.0723,30.1432 14.9377,30.1432 14.6012,30.4406 14.6408,31.2294 10.4911,29.2876 11.9,30.4109 14.9178,32.4776 20.0822,32.4776 23.1001,30.4109 24.499,29.2876"/>
+  <polygon fill="#161616" stroke="#161616" stroke-width=".25" stroke-linejoin="round" points="20.0426,27.1218 19.4166,26.4294 15.5792,26.4294 14.9476,27.1218 14.6012,30.4406 14.9377,30.1432 20.0723,30.1432 20.4087,30.4406"/>
+  <polygon fill="#763E1A" stroke="#763E1A" stroke-width=".25" stroke-linejoin="round" points="33.5168,10.906 34.9968,4.1199 32.9582,0.842 20.0426,9.9028 24.9132,14.5149 31.7928,16.5022 33.5763,14.4354 32.8299,13.8975 33.9917,12.8424 33.0848,12.1453 34.2466,11.2778"/>
+  <polygon fill="#763E1A" stroke="#763E1A" stroke-width=".25" stroke-linejoin="round" points="0.0033,4.1199 1.4833,10.906 0.6358,11.2778 1.7976,12.1453 0.9006,12.8424 2.0624,13.8975 1.316,14.4354 3.0995,16.5022 9.9791,14.5149 14.8497,9.9028 2.0418,0.842"/>
+</svg>`
+
+// ═══════════════════════════════════════════════════════
+//  METAMASK-ONLY WALLET CONNECTION
+//  Uses EIP-6963 (modern standard) to find MetaMask by
+//  its unique reverse-domain ID "io.metamask" — this
+//  cannot be spoofed by other wallets (Trust, Coinbase etc.)
+//  Falls back to legacy window.ethereum detection.
+// ═══════════════════════════════════════════════════════
+
+// ── EIP-6963 provider store ───────────────────────────
+const _eip6963Providers = {}  // keyed by rdns
+
+// Start listening for EIP-6963 announcements immediately
+window.addEventListener('eip6963:announceProvider', (event) => {
+  const { info, provider } = event.detail
+  if (info && info.rdns && provider) {
+    _eip6963Providers[info.rdns] = provider
+  }
+})
+
+// Ask all installed wallets to announce themselves
+window.dispatchEvent(new Event('eip6963:requestProvider'))
+
+// ── Find MetaMask provider ────────────────────────────
+// Priority 1: EIP-6963 with exact rdns "io.metamask"
+// Priority 2: window.ethereum.providers[] array (legacy multi-wallet)
+// Priority 3: window.ethereum directly if it's genuinely MetaMask
+function getMetaMaskProvider() {
+
+  // ── Priority 1: EIP-6963 (most reliable) ─────────────
+  if (_eip6963Providers['io.metamask']) {
+    return _eip6963Providers['io.metamask']
+  }
+
+  const eth = window.ethereum
+  if (!eth) return null
+
+  // ── Priority 2: providers array ───────────────────────
+  // When multiple extensions are installed, each pushes into this array
+  if (eth.providers && eth.providers.length) {
+    // Find by EIP-6963 rdns stored on provider (newer MetaMask versions)
+    const byRdns = eth.providers.find(p => p._metamask || p.isMetaMask && p._state)
+    // Safer: find one that explicitly is MetaMask and has _metamask object
+    const mm = eth.providers.find(p => p._metamask !== undefined)
+    if (mm) return mm
+    // Fallback within array: isMetaMask true
+    const mmFallback = eth.providers.find(p => p.isMetaMask)
+    if (mmFallback) return mmFallback
+  }
+
+  // ── Priority 3: single provider ───────────────────────
+  // Trust Wallet ALSO sets isMetaMask=true — detect it by its own flag
+  // MetaMask has a ._metamask property; Trust Wallet does not
+  if (eth.isMetaMask && eth._metamask !== undefined) {
+    return eth
+  }
+
+  return null
+}
+
+// ── Wait up to 1s for EIP-6963 announcements ─────────
+function waitForMetaMask() {
+  return new Promise(resolve => {
+    // Re-request in case page loaded before wallets injected
+    window.dispatchEvent(new Event('eip6963:requestProvider'))
+
+    // If already found via EIP-6963 → resolve immediately
+    if (_eip6963Providers['io.metamask']) {
+      resolve(_eip6963Providers['io.metamask'])
+      return
+    }
+
+    let elapsed = 0
+    const interval = 50
+    const timer = setInterval(() => {
+      elapsed += interval
+      const provider = getMetaMaskProvider()
+      if (provider) {
+        clearInterval(timer)
+        resolve(provider)
+      } else if (elapsed >= 1000) {
+        clearInterval(timer)
+        resolve(null)
+      }
+    }, interval)
+  })
+}
+
+// ── Is mobile device? ─────────────────────────────────
+function isMobile() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent)
+}
+
+// ── Remove any open modal ─────────────────────────────
+function removeWalletModal() {
+  const el = document.getElementById('nv-wallet-modal')
+  if (el) el.remove()
+}
+
+// ── Show "MetaMask not found" modal ───────────────────
+function showNoMetaMaskModal() {
+  removeWalletModal()
+  const mobile     = isMobile()
+  const deepLink   = 'https://metamask.app.link/dapp/nexvault.one/app'
+  const installURL = 'https://metamask.io/download'
+
+  const d = document.createElement('div')
+  d.id = 'nv-wallet-modal'
+  d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.87);backdrop-filter:blur(14px)'
+
+  const inner = mobile ? `
+    <div style="background:#0d0f14;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px 24px;width:340px;max-width:92vw;text-align:center;position:relative">
+      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#6b7280;font-size:22px;cursor:pointer;line-height:1;padding:0">✕</button>
+      <div style="width:52px;height:52px;border-radius:14px;overflow:hidden;margin:0 auto 16px;display:flex;align-items:center;justify-content:center">${METAMASK_ICON}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#f0ece4;margin-bottom:8px">Connect Wallet</div>
+      <div style="font-size:12px;color:#6b7280;line-height:1.8;margin-bottom:22px">Open NexVault inside the MetaMask app browser to connect.</div>
+      <button onclick="window.location.href='${deepLink}'"
+        style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#06070a;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.04em">
+        🦊 &nbsp;OPEN IN METAMASK APP
+      </button>
+      <button onclick="window.open('${installURL}','_blank')"
+        style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#9ca3af;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.04em">
+        GET METAMASK ↗
+      </button>
+    </div>` : `
+    <div style="background:#0d0f14;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px 30px;width:380px;max-width:94vw;text-align:center;position:relative">
+      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#6b7280;font-size:22px;cursor:pointer;line-height:1;padding:0">✕</button>
+      <div style="width:52px;height:52px;border-radius:14px;overflow:hidden;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">${METAMASK_ICON}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#f0ece4;margin-bottom:10px">MetaMask Not Detected</div>
+      <div style="font-size:13px;color:#6b7280;line-height:1.8;margin-bottom:22px">
+        Install the MetaMask browser extension, then refresh this page.
+      </div>
+      <button onclick="window.open('${installURL}','_blank')"
+        style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#06070a;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.04em">
+        🦊 &nbsp;GET METAMASK ↗
+      </button>
+      <button onclick="removeWalletModal()"
+        style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#9ca3af;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.04em">
+        CANCEL
+      </button>
+      <div style="margin-top:14px;font-size:10px;color:#374151;line-height:1.7">After installing, refresh this page and click Connect Wallet.</div>
+    </div>`
+
+  d.innerHTML = inner
+  document.body.appendChild(d)
+  d.addEventListener('click', e => { if (e.target === d) removeWalletModal() })
+}
+
+// ── MAIN CONNECT FUNCTION ─────────────────────────────
+async function openWalletModal() {
+  const btn = document.getElementById('wallet-btn')
+  if (btn) btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite">◌</span><span> CONNECTING...</span>'
+
+  const provider = await waitForMetaMask()
+
+  if (!provider) {
+    if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>◈</span><span>CONNECT WALLET</span>' }
+    showNoMetaMaskModal()
+    return
+  }
+
+  try {
+    const accounts = await provider.request({ method: 'eth_requestAccounts' })
+    if (accounts && accounts.length > 0) {
+      window._activeProvider = provider
+      window.onWalletConnected(accounts[0])
+    } else {
+      if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>◈</span><span>CONNECT WALLET</span>' }
+      showNotif('No accounts — unlock MetaMask and try again', 'err')
+    }
+  } catch (err) {
+    if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>◈</span><span>CONNECT WALLET</span>' }
+    if (err.code === 4001) showNotif('Connection cancelled', 'err')
+    else if (err.code === -32002) showNotif('MetaMask popup is already open — check your extension', 'err')
+    else showNotif('Connection failed — unlock MetaMask and try again', 'err')
+  }
+}
+
+// ── Disconnect ────────────────────────────────────────
+function doDisconnect() {
+  window._activeProvider = null
+  window.onWalletDisconnected()
+  showNotif('Wallet disconnected', 'ok')
+}
+
+// ── Account / chain listeners ─────────────────────────
+;(function attachListeners() {
+  function attach(eth) {
+    try {
+      eth.on('accountsChanged', accounts => {
+        if (!accounts || accounts.length === 0) window.onWalletDisconnected()
+        else window.onWalletConnected(accounts[0])
+      })
+      eth.on('chainChanged', () => window.location.reload())
+    } catch(e) {}
+  }
+
+  if (window.ethereum) attach(window.ethereum)
+  window.addEventListener('eip6963:announceProvider', (event) => {
+    if (event.detail?.info?.rdns === 'io.metamask') {
+      attach(event.detail.provider)
+    }
+  }, { once: true })
+})()
+
+// ── Auto-reconnect on page load ───────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('nexvault_address')
+  if (!saved) return
+  waitForMetaMask().then(provider => {
+    if (!provider) { localStorage.removeItem('nexvault_address'); return }
+    provider.request({ method: 'eth_accounts' }).then(accounts => {
+      if (accounts && accounts.length > 0) {
+        window._activeProvider = provider
+        window.onWalletConnected(accounts[0])
+      } else {
+        localStorage.removeItem('nexvault_address')
+      }
+    }).catch(() => localStorage.removeItem('nexvault_address'))
+  })
+})
+
+// ── Globals ───────────────────────────────────────────
+// ── NETWORK SWITCHING ─────────────────────────────────
+async function switchToNexus() {
+  const provider = window._activeProvider || window.ethereum
+  if (!provider) { showNotif('No wallet found — connect MetaMask first', 'err'); return }
+  const chainHex = '0x' + NEXUS_CHAIN_ID.toString(16)
+  try {
+    await provider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: chainHex }] })
+  } catch (err) {
+    if (err.code === 4902) {
+      try {
+        await provider.request({ method: 'wallet_addEthereumChain', params: [{
+          chainId: chainHex,
+          chainName: 'Nexus Mainnet',
+          rpcUrls: [NEXUS_RPC_URL || 'https://rpc.nexus.xyz'],
+          nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+          blockExplorerUrls: ['https://explorer.nexus.xyz']
+        }]})
+      } catch (addErr) { showNotif('Failed to add Nexus network', 'err') }
+    } else { showNotif('Failed to switch network', 'err') }
+  }
+}
+
+// ── CHAIN VALIDATION ──────────────────────────────────
+async function checkChain(provider) {
+  try {
+    const chainId = await provider.request({ method: 'eth_chainId' })
+    const current = parseInt(chainId, 16)
+    const banner = document.getElementById('net-banner')
+    if (current !== NEXUS_CHAIN_ID) {
+      if (banner) banner.style.display = 'flex'
+      return false
+    } else {
+      if (banner) banner.style.display = 'none'
+      return true
+    }
+  } catch { return true }
+}
+
+window.connectWallet    = openWalletModal
+window.disconnectWallet = doDisconnect
+window.switchNetwork    = switchToNexus
+</script>
+
+<!-- ═══════════════════════════════════════════
+     APP LOGIC
+════════════════════════════════════════════ -->
+<script>
+  // ── STATE ─────────────────────────────────────────────
+  const STATE = {
+    connected: false,
+    address: null,
+    balance: 0,
+    tier: '1yr',
+    apy: 5.5,
+    autoCompound: true,
+    action: 'deposit',
+    yieldStart: null,
+    yieldInterval: null,
+    txHistory: [],
+    totalDeposited: 0,
+    totalYieldEarned: 0,
+  }
+
+  const TIERS = {
+    '1yr': { label: '1-Year',   apy: 3.8,  color: '#60a5fa', lock: 365 },
+    '3yr': { label: '3-Year',   apy: 4.1,  color: '#fbbf24', lock: 1095 },
+    '5yr': { label: '5-Year',   apy: 4.44, color: '#4ade80', lock: 1825 },
+  }
+
+  let GOAL = parseFloat(localStorage.getItem('nexvault_goal') || '30000')
+  const fmt = (n, d=2) => Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})
+
+  // ── WALLET EVENTS ─────────────────────────────────────
+  // ── NETWORK TOGGLE ────────────────────────────────────
+  function toggleNetwork() {
+    ACTIVE_NETWORK = ACTIVE_NETWORK === 'testnet' ? 'mainnet' : 'testnet'
+    const cfg = getNetConfig()
+    const btn = document.getElementById('network-toggle-btn')
+    if (btn) {
+      btn.textContent = cfg.label
+      if (ACTIVE_NETWORK === 'mainnet') {
+        btn.style.borderColor = 'rgba(74,222,128,.35)'
+        btn.style.background  = 'rgba(74,222,128,.08)'
+        btn.style.color       = '#4ade80'
+      } else {
+        btn.style.borderColor = 'rgba(251,191,36,.35)'
+        btn.style.background  = 'rgba(251,191,36,.08)'
+        btn.style.color       = '#fbbf24'
+      }
+    }
+    // Reset contract instances so they re-init with new addresses
+    _appVaultContract = null
+    _appUsdxContract  = null
+    showNotif(`Switched to ${cfg.label}`, 'ok')
+  }
+  window.toggleNetwork = toggleNetwork
+
+  const FOUNDER_ADDRESS = '0x44e06FB3517Ee815BBA5612F783712Ac4f498ba0'
+
+  window.onWalletConnected = async (address) => {
+    // Founder wallet → redirect to dev dashboard
+    if (address.toLowerCase() === FOUNDER_ADDRESS.toLowerCase()) {
+      window.location.href = '/dev-dashboard.html'
+      return
+    }
+
+    STATE.connected = true
+    STATE.address = address
+
+    // Set up ethers provider + signer for contract calls
+    try {
+      const rawProvider = window._activeProvider || window.ethereum
+      _appEthersProvider = new ethers.BrowserProvider(rawProvider)
+      _appEthersSigner   = await _appEthersProvider.getSigner()
+      _appVaultContract  = null  // reset so getAppContracts() rebuilds with signer
+      _appUsdxContract   = null
+    } catch (e) { console.warn('ethers init failed:', e) }
+
+    // Validate chain
+    const provider = window._activeProvider || window.ethereum
+    if (provider) await checkChain(provider)
+
+    // Remember this wallet so page reload auto-reconnects
+    localStorage.setItem('nexvault_address', address)
+
+    const short = address.slice(0,6)+'...'+address.slice(-4)
+    const btn = document.getElementById('wallet-btn')
+    btn.className = 'wallet-btn connected'
+    btn.innerHTML = `<div class="wallet-dot"></div><span>${short}</span>`
+
+    document.getElementById('connect-prompt').style.display = 'none'
+    document.getElementById('balance-content').style.display = 'block'
+
+    document.getElementById('ref-link').textContent = `nexvault.one/ref/${address.slice(0,6)}...${address.slice(-4)}`
+
+    updateUI()
+    startLiveYield()
+    loadUserStats()
+    showNotif('✓ Wallet connected', 'ok')
+  }
+
+  window.onWalletDisconnected = () => {
+    STATE.connected = false
+    STATE.address = null
+    STATE.balance = 0
+
+    // Clear saved wallet
+    localStorage.removeItem('nexvault_address')
+
+    const btn = document.getElementById('wallet-btn')
+    btn.className = 'wallet-btn'
+    btn.innerHTML = '<span>◈</span><span>CONNECT WALLET</span>'
+
+    document.getElementById('connect-prompt').style.display = 'block'
+    document.getElementById('balance-content').style.display = 'none'
+    document.getElementById('ref-link').textContent = 'Connect wallet to get your referral link'
+
+    stopLiveYield()
+    updateUI()
+  }
+
+  // ── TABS ──────────────────────────────────────────────
+  function switchTab(name, el) {
+    ['vault','analytics','leaderboard'].forEach(t => {
+      const el = document.getElementById('tab-'+t)
+      if(el) el.style.display = 'none'
+    })
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'))
+    const target = document.getElementById('tab-'+name)
+    if(target) target.style.display = 'block'
+    if(el) el.classList.add('active')
+
+    if(name === 'analytics') renderAnalytics()
+    if(name === 'leaderboard') renderLeaderboard()
+  }
+
+  // ── TIERS ─────────────────────────────────────────────
+  function selectTier(tier) {
+    STATE.tier = tier
+    STATE.apy = TIERS[tier].apy
+
+    // Reset ALL tiers first
+    Object.keys(TIERS).forEach(t => {
+      const el = document.getElementById('tier-'+t)
+      el.style.borderColor = 'rgba(255,255,255,.07)'
+      el.style.background = 'transparent'
+      // Reset dot
+      const dot = el.querySelector('.tier-dot')
+      if(dot) { dot.style.background = 'rgba(255,255,255,.15)' }
+      // Reset name color
+      const nameEl = el.querySelector('.tier-name')
+      if(nameEl) { nameEl.style.color = '#9ca3af' }
+      // Reset APY color
+      const apyEl = el.querySelector('.tier-apy')
+      if(apyEl) { apyEl.style.color = 'var(--dim)' }
+    })
+
+    // Highlight ONLY selected tier
+    const sel = document.getElementById('tier-'+tier)
+    sel.style.borderColor = TIERS[tier].color
+    sel.style.background = `rgba(${hexToRgb(TIERS[tier].color)},0.05)`
+    const selDot  = sel.querySelector('.tier-dot')
+    const selName = sel.querySelector('.tier-name')
+    const selApy  = sel.querySelector('.tier-apy')
+    if(selDot)  selDot.style.background  = TIERS[tier].color
+    if(selName) selName.style.color      = TIERS[tier].color
+    if(selApy)  selApy.style.color       = TIERS[tier].color
+
+    document.getElementById('tier-label').textContent = TIERS[tier].label
+    document.getElementById('apy-label').textContent  = TIERS[tier].apy+'% APY'
+    document.getElementById('apy-label').style.color  = TIERS[tier].color
+
+    const btn = document.getElementById('main-action-btn')
+    if(STATE.action === 'deposit') btn.textContent = `DEPOSIT USDX AT ${TIERS[tier].apy}% APY`
+
+    updateUI()
+    updatePreview()
+  }
+
+  function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1,3),16)
+    const g = parseInt(hex.slice(3,5),16)
+    const b = parseInt(hex.slice(5,7),16)
+    return `${r},${g},${b}`
+  }
+
+  // ── ACTION (deposit/withdraw) ─────────────────────────
+  function setAction(a) {
+    STATE.action = a
+    const dep = document.getElementById('action-deposit')
+    const wit = document.getElementById('action-withdraw')
+    const btn = document.getElementById('main-action-btn')
+
+    if(a === 'deposit') {
+      dep.style.cssText = 'flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:rgba(251,191,36,.1);color:#fbbf24;border-bottom:2px solid #fbbf24;transition:all .2s'
+      wit.style.cssText = 'flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:transparent;color:#374151;border-bottom:2px solid transparent;transition:all .2s'
+      btn.className = 'pbtn pbtn-d'
+      btn.textContent = `DEPOSIT USDX AT ${STATE.apy}% APY`
+    } else {
+      dep.style.cssText = 'flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:transparent;color:#374151;border-bottom:2px solid transparent;transition:all .2s'
+      wit.style.cssText = 'flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:rgba(239,68,68,.08);color:#f87171;border-bottom:2px solid rgba(239,68,68,.45);transition:all .2s'
+      btn.className = 'pbtn pbtn-w'
+      btn.textContent = 'WITHDRAW USDX'
+    }
+    updatePreview()
+  }
+
+  function setAmount(v) {
+    document.getElementById('amount-input').value = v
+    updatePreview()
+  }
+
+  async function handleAction() {
+    if(!STATE.connected) { showNotif('Connect your wallet first', 'err'); return }
+    const amt = parseFloat(document.getElementById('amount-input').value)
+    if(!amt || amt <= 0) { showNotif('Enter an amount', 'err'); return }
+
+    const btn = document.getElementById('main-action-btn')
+    const contracts = getAppContracts()
+
+    if(STATE.action === 'deposit') {
+      if(contracts) {
+        // ── REAL ON-CHAIN DEPOSIT ─────────────────────────
+        btn.disabled = true
+        btn.textContent = 'APPROVING USDX...'
+        try {
+          const amtParsed = ethers.parseUnits(amt.toString(), 6)
+          const cfg = getNetConfig()
+
+          // Step 1: Check and set ERC-20 allowance
+          const allowance = await contracts.usdx.allowance(STATE.address, cfg.vaultAddress)
+          if (allowance < amtParsed) {
+            showNotif('Step 1/2 — Approving USDX spend...', 'ok')
+            const approveTx = await contracts.usdx.approve(cfg.vaultAddress, amtParsed)
+            await approveTx.wait()
+          }
+
+          // Step 2: Deposit into vault
+          btn.textContent = 'DEPOSITING...'
+          showNotif('Step 2/2 — Depositing to vault...', 'ok')
+          const TIER_IDS = { '1yr': 0, '3yr': 1, '5yr': 2 }
+          const tierId = TIER_IDS[STATE.tier] ?? 0
+          const referrer = ethers.ZeroAddress
+          const depositTx = await contracts.vault.deposit(amtParsed, tierId, referrer)
+          showNotif('⏳ Transaction submitted — confirming...', 'ok')
+          const receipt = await depositTx.wait()
+
+          // Update local state from confirmed tx
+          STATE.balance += amt
+          STATE.totalDeposited += amt
+          STATE.yieldStart = Date.now()
+          STATE.txHistory.unshift({
+            date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+            action: 'Deposit', amount: `+${fmt(amt)}`, type: 'deposit',
+            txHash: receipt.hash
+          })
+          updateUI(); startLiveYield()
+          showNotif(`✓ ${fmt(amt)} USDX deposited on-chain at ${STATE.apy}% APY`)
+          document.getElementById('balance-card').classList.add('gp')
+          setTimeout(()=>document.getElementById('balance-card').classList.remove('gp'), 700)
+        } catch(err) {
+          if(err.code === 4001 || err.code === 'ACTION_REJECTED') {
+            showNotif('Transaction cancelled', 'err')
+          } else {
+            showNotif('Transaction failed: ' + (err.reason || err.message || 'unknown error'), 'err')
+          }
+        } finally {
+          btn.disabled = false
+          btn.textContent = `DEPOSIT USDX AT ${STATE.apy}% APY`
+        }
+      } else {
+        // ── SIMULATION MODE (contracts not deployed yet) ──
+        STATE.balance += amt
+        STATE.totalDeposited += amt
+        STATE.yieldStart = Date.now()
+        STATE.txHistory.unshift({ date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), action:'Deposit', amount:`+${fmt(amt)}`, type:'deposit' })
+        updateUI(); startLiveYield()
+        showNotif(`[SIM] ${fmt(amt)} USDX deposited at ${STATE.apy}% APY — deploy contracts to go live`)
+        document.getElementById('balance-card').classList.add('gp')
+        setTimeout(()=>document.getElementById('balance-card').classList.remove('gp'), 700)
+      }
+
+    } else {
+      // ── WITHDRAW ─────────────────────────────────────────
+      if(contracts) {
+        btn.disabled = true
+        btn.textContent = 'WITHDRAWING...'
+        try {
+          // Use depositId 0 for now — replace with deposit selector UI at mainnet
+          const withdrawTx = await contracts.vault.withdraw(0)
+          showNotif('⏳ Withdraw submitted — confirming...', 'ok')
+          const receipt = await withdrawTx.wait()
+
+          STATE.balance -= amt
+          STATE.txHistory.unshift({
+            date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
+            action: 'Withdraw', amount: `-${fmt(amt)}`, type: 'withdraw',
+            txHash: receipt.hash
+          })
+          updateUI()
+          showNotif(`✓ ${fmt(amt)} USDX withdrawn on-chain`)
+        } catch(err) {
+          if(err.code === 4001 || err.code === 'ACTION_REJECTED') {
+            showNotif('Transaction cancelled', 'err')
+          } else {
+            showNotif('Withdraw failed: ' + (err.reason || err.message || 'unknown error'), 'err')
+          }
+        } finally {
+          btn.disabled = false
+          btn.textContent = 'WITHDRAW USDX'
+        }
+      } else {
+        // ── SIMULATION MODE ───────────────────────────────
+        if(amt > STATE.balance) { showNotif('Insufficient balance', 'err'); return }
+        STATE.balance -= amt
+        STATE.txHistory.unshift({ date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), action:'Withdraw', amount:`-${fmt(amt)}`, type:'withdraw' })
+        updateUI()
+        showNotif(`[SIM] ${fmt(amt)} USDX withdrawn — deploy contracts to go live`)
+      }
+    }
+
+    document.getElementById('amount-input').value = ''
+    document.getElementById('preview-box').style.display = 'none'
+    renderTxHistory()
+  }
+
+  function updatePreview() {
+    const amt = parseFloat(document.getElementById('amount-input').value)
+    const box = document.getElementById('preview-box')
+    if(!amt || amt <= 0) { box.style.display='none'; return }
+    box.style.display='block'
+    document.getElementById('prev-amount').textContent = '$'+fmt(amt)
+    document.getElementById('prev-tier').textContent = TIERS[STATE.tier].label+' — '+STATE.apy+'% APY'
+    document.getElementById('prev-yield').textContent = '+$'+fmt(amt*STATE.apy/100)
+  }
+
+  // ── AUTO-COMPOUND TOGGLE ──────────────────────────────
+  function toggleAutoCompound() {
+    STATE.autoCompound = !STATE.autoCompound
+    const wrap = document.getElementById('toggle-wrap')
+    const knob = document.getElementById('toggle-knob')
+    wrap.style.background = STATE.autoCompound ? 'rgba(251,191,36,0.65)' : 'rgba(255,255,255,0.1)'
+    knob.style.left = STATE.autoCompound ? '25px' : '3px'
+  }
+
+  // ── LIVE YIELD TICKER ─────────────────────────────────
+  function startLiveYield() {
+    stopLiveYield()
+    if(STATE.balance <= 0) return
+    STATE.yieldStart = Date.now()
+    STATE.yieldInterval = setInterval(() => {
+      const secs = (Date.now() - STATE.yieldStart) / 1000
+      const perSec = (STATE.balance * STATE.apy / 100) / 365 / 86400
+      document.getElementById('live-yield').textContent = '+' + fmt(perSec * secs, 8)
+    }, 100)
+  }
+
+  function stopLiveYield() {
+    if(STATE.yieldInterval) { clearInterval(STATE.yieldInterval); STATE.yieldInterval = null }
+  }
+
+  // ── UPDATE UI ─────────────────────────────────────────
+  function updateUI() {
+    if(!STATE.connected) return
+    const b = STATE.balance
+    const apy = STATE.apy
+
+    document.getElementById('user-balance').textContent = fmt(b)
+
+    // Projections
+    document.getElementById('proj-daily').textContent   = '+$'+fmt(b*apy/100/365)
+    document.getElementById('proj-monthly').textContent = '+$'+fmt(b*apy/100/12)
+    document.getElementById('proj-yearly').textContent  = '+$'+fmt(b*apy/100)
+
+    // Goal
+    const pct = Math.min(100,(b/GOAL)*100)
+    document.getElementById('goal-pct').textContent = pct.toFixed(1)+'% complete'
+    document.getElementById('goal-current').textContent = '$'+fmt(b)
+    document.getElementById('goal-bar').style.width = pct+'%'
+    document.getElementById('goal-remaining').textContent = '$'+fmt(Math.max(0,GOAL-b))
+    document.getElementById('goal-monthly').textContent = '+$'+fmt(b*apy/100/12)
+    const td = document.getElementById('goal-target-display')
+    if (td) td.textContent = '$'+fmt(GOAL,0)
+
+    // Stats
+    document.getElementById('stat-tvl').textContent = '$'+fmt(b)
+  }
+
+  function loadUserStats() {
+    // Badges
+    const badges = [
+      { icon:'👑', name:'Vault Genesis', desc:'First 5,000 wallets', earned:true },
+      { icon:'💎', name:'Diamond Hands',   desc:'Hold 90 days',      earned:false },
+      { icon:'🏆', name:'Top 10',          desc:'TVL leaderboard',   earned:false },
+      { icon:'🐳', name:'Whale',           desc:'$100K+ deposited',  earned:false },
+    ]
+    document.getElementById('badge-list').innerHTML = badges.map(b=>`
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:8px;background:${b.earned?'rgba(251,191,36,.04)':'rgba(255,255,255,.02)'};border:1px solid ${b.earned?'rgba(251,191,36,.14)':'rgba(255,255,255,.05)'};margin-bottom:8px">
+        <div style="font-size:20px;opacity:${b.earned?1:.22}">${b.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;color:${b.earned?'#fbbf24':'#4b5563'};font-weight:600">${b.name}</div>
+          <div style="font-size:10px;color:#374151;margin-top:2px">${b.desc}</div>
+        </div>
+        ${b.earned?'<div style="font-size:10px;color:#4ade80;font-weight:700">EARNED</div>':''}
+      </div>
+    `).join('')
+
+    // User stats
+    const addr = STATE.address ? STATE.address.slice(0,6)+'...'+STATE.address.slice(-4) : '—'
+    document.getElementById('user-stats').innerHTML = `
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:12px;color:#4b5563">Wallet</span><span style="font-size:12px;color:#9ca3af;font-family:monospace">${addr}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:12px;color:#4b5563">Balance</span><span style="font-size:12px;color:#9ca3af">$${fmt(STATE.balance)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:12px;color:#4b5563">Tier</span><span style="font-size:12px;color:#9ca3af">${TIERS[STATE.tier].label}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0"><span style="font-size:12px;color:#4b5563">Badge</span><span style="font-size:12px;color:#fbbf24">🏛️ Vault Genesis</span></div>
+    `
+  }
+
+  function renderTxHistory() {
+    const el = document.getElementById('tx-history')
+    if(STATE.txHistory.length === 0) {
+      el.innerHTML = '<div style="text-align:center;padding:20px;font-size:12px;color:var(--dim)">No transactions yet</div>'
+      return
+    }
+    el.innerHTML = STATE.txHistory.slice(0,6).map((h,i)=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:${i<STATE.txHistory.length-1?'1px solid rgba(255,255,255,.04)':'none'}">
+        <div>
+          <div style="font-size:13px;color:#c9c4bb;margin-bottom:2px;font-weight:500">${h.action}</div>
+          <div style="font-size:10px;color:#374151">${h.date}</div>
+        </div>
+        <div style="font-size:14px;font-family:monospace;color:${h.type==='yield'?'#fbbf24':h.type==='compound'?'#a78bfa':'#e8e4dc'};font-weight:600">
+          ${h.amount} <span style="font-size:10px;color:#374151">USDX</span>
+        </div>
+      </div>
+    `).join('')
+  }
+
+  // ── ANALYTICS ─────────────────────────────────────────
+  function renderAnalytics() {
+    // Projection chart — uses actual selected tier APY
+    const bal = STATE.balance || 5000
+    const tierApy = STATE.apy / 100
+    const tierInfo = TIERS[STATE.tier]
+    const projData = Array.from({length:13},(_,i)=>bal*Math.pow(1+tierApy/12,i))
+    drawChart('chart-proj', projData, '#a78bfa')
+
+    document.getElementById('proj-header').textContent =
+      `12-MONTH PROJECTION — ${tierInfo.label.toUpperCase()} TIER (${STATE.apy}% APY)`
+    document.getElementById('proj-note').textContent =
+      `$${fmt(bal)} → $${fmt(projData[12])} compounding at ${STATE.apy}% APY`
+
+    // Yield breakdown
+    document.getElementById('yield-breakdown').innerHTML = [
+      {l:'Total Earned (All Time)', v:'$'+fmt(STATE.totalYieldEarned), c:'#fbbf24'},
+      {l:'Auto-Compounded',          v:'$0.00',                         c:'#a78bfa'},
+      {l:'Manually Claimed',          v:'$0.00',                         c:'#60a5fa'},
+      {l:'Referral Bonuses',          v:'$0.00',                         c:'#4ade80'},
+    ].map(r=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+        <span style="font-size:13px;color:#6b7280;font-weight:500">${r.l}</span>
+        <span style="font-size:14px;color:${r.c};font-family:monospace;font-weight:700">${r.v}</span>
+      </div>
+    `).join('')
+
+    // Tier comparison
+    const b = STATE.balance || 0
+    document.getElementById('tier-comparison').innerHTML = Object.entries(TIERS).map(([k,t])=>`
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+          <span style="font-size:13px;color:${t.color};font-weight:600">${t.label} — ${t.apy}% APY</span>
+          <span style="font-size:13px;color:#c9c4bb;font-family:monospace;font-weight:700">+$${fmt(b*t.apy/100)}/yr</span>
+        </div>
+        <div class="prog"><div style="height:100%;border-radius:2px;background:${t.color};width:${(t.apy/12)*100}%;transition:width 1s"></div></div>
+        <div style="font-size:11px;color:#4b5563;margin-top:5px">+$${fmt(b*t.apy/100/12)}/month</div>
+      </div>
+    `).join('')
+  }
+
+  // ── LEADERBOARD ───────────────────────────────────────
+  function renderLeaderboard() {
+    if(!STATE.connected || STATE.balance === 0) return
+    const addr = STATE.address ? STATE.address.slice(0,6)+'...'+STATE.address.slice(-4) : 'YOU'
+    document.getElementById('leaderboard-rows').innerHTML = `
+      <div style="font-size:11px;color:#4b5563;margin-bottom:16px;text-align:center">You are the first depositor. The leaderboard grows with the vault.</div>
+      <div class="lb-row you-row">
+        <div style="font-size:16px;text-align:center">⭐</div>
+        <div>
+          <div style="font-size:13px;color:#fbbf24;font-family:monospace;font-weight:700">${addr}</div>
+          <div style="font-size:10px;color:#374151">${TIERS[STATE.tier].label} tier</div>
+        </div>
+        <div style="font-size:13px;color:#fbbf24;font-family:monospace;font-weight:700">$${fmt(STATE.balance)}</div>
+        <div class="badge" style="font-size:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:#4b5563">${STATE.apy}%</div>
+      </div>
+    `
+  }
+
+  // ── CHART HELPER ──────────────────────────────────────
+  function drawChart(id, data, color) {
+    const svg = document.getElementById(id)
+    if(!svg) return
+    const w=300, h=80
+    const mn=Math.min(...data), mx=Math.max(...data)
+    const xp=i=>(i/(data.length-1))*w
+    const yp=v=>h-((v-mn)/(mx-mn||1))*(h-12)-6
+    const pts=data.map((v,i)=>`${xp(i)},${yp(v)}`).join(' ')
+    const area=`M0,${h} `+data.map((v,i)=>`L${xp(i)},${yp(v)}`).join(' ')+` L${w},${h} Z`
+    const gid='g'+color.replace('#','')
+    svg.innerHTML=`
+      <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0.02"/>
+      </linearGradient></defs>
+      <path d="${area}" fill="url(#${gid})"/>
+      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${xp(data.length-1)}" cy="${yp(data[data.length-1])}" r="3" fill="${color}"/>
+    `
+  }
+
+  // ── NOTIFICATIONS ─────────────────────────────────────
+  function showNotif(msg, type='ok') {
+    const el = document.getElementById('notif')
+    el.textContent = msg
+    el.style.display = 'block'
+    el.style.background = type==='err' ? 'rgba(239,68,68,.12)' : 'rgba(251,191,36,.09)'
+    el.style.border = `1px solid ${type==='err'?'rgba(239,68,68,.28)':'rgba(251,191,36,.28)'}`
+    el.style.color = type==='err' ? '#f87171' : '#fbbf24'
+    setTimeout(()=>{ el.style.display='none' }, 3200)
+  }
+
+  // ── INIT ──────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTxHistory()
+    selectTier('1yr')
+    drawChart('chart-balance', [0], '#fbbf24')
+    drawChart('chart-proj', Array.from({length:13},(_,i)=>5000*Math.pow(1+0.038/12,i)), '#a78bfa')
+
+    // ── Auto-switch to analytics tab if URL param set ──
+    const params = new URLSearchParams(window.location.search)
+    if(params.get('tab') === 'analytics') {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+      const analyticsBtn = document.querySelector('.tab[onclick*="analytics"]')
+      if(analyticsBtn) analyticsBtn.classList.add('active')
+      switchTab('analytics', null)
+      showNotif('📊 Analytics preview — data populates when mainnet launches', 'ok')
+    }
+  })
+
+  // ── Savings Goal Editor ───────────────────────────────
+  function openGoalEditor() {
+    const editor = document.getElementById('goal-editor')
+    editor.style.display = 'block'
+    const input = document.getElementById('goal-input')
+    input.value = GOAL
+    setTimeout(() => { input.focus(); input.select() }, 50)
+  }
+
+  function closeGoalEditor() {
+    document.getElementById('goal-editor').style.display = 'none'
+  }
+
+  function saveGoal() {
+    const val = parseFloat(document.getElementById('goal-input').value)
+    if (!val || val <= 0) {
+      showNotif('Please enter a valid goal amount', 'err')
+      return
+    }
+    GOAL = val
+    localStorage.setItem('nexvault_goal', String(val))
+    closeGoalEditor()
+    updateUI()
+    showNotif('Savings goal updated', 'ok')
+  }
+</script>
+
+
+</body>
+</html>

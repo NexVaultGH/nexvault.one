@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexVault — Offline</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#05060a" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      background:#05060a;color:#e8e2d6;
+      font-family:'DM Mono',monospace,system-ui,sans-serif;
+      display:flex;align-items:center;justify-content:center;
+      min-height:100vh;padding:24px;text-align:center;
+    }
+    .card{
+      background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.12);
+      border-radius:24px;padding:48px 32px;max-width:400px;width:100%;
+      position:relative;overflow:hidden;
+    }
+    .card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(201,168,76,.4),transparent)
+    }
+    .logo{
+      width:64px;height:64px;border-radius:16px;
+      background:#05060a;border:1.5px solid rgba(201,168,76,.3);
+      display:flex;align-items:center;justify-content:center;
+      font-size:32px;font-weight:700;color:#c9a84c;
+      font-family:Georgia,serif;margin:0 auto 24px;
+    }
+    h1{font-family:Georgia,serif;font-size:24px;font-weight:400;color:#e8e2d6;margin-bottom:10px}
+    p{font-size:12px;color:#5a5650;line-height:1.8;margin-bottom:32px}
+    .btn{
+      display:inline-block;padding:13px 28px;border-radius:12px;border:none;
+      background:linear-gradient(135deg,#c9a84c,#8b6914);color:#05060a;
+      font-family:'DM Mono',monospace,system-ui;font-size:12px;font-weight:700;
+      letter-spacing:.08em;cursor:pointer;text-decoration:none;
+      transition:opacity .2s;
+    }
+    .btn:hover{opacity:.85}
+    .status{
+      display:inline-flex;align-items:center;gap:8px;margin-top:24px;
+      font-size:10px;letter-spacing:.1em;color:#5a5650;
+    }
+    .dot{width:6px;height:6px;border-radius:50%;background:#ef4444;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">V</div>
+    <h1>You're Offline</h1>
+    <p>
+      NexVault requires an internet connection to connect your wallet and interact with the blockchain.
+      Check your connection and try again.
+    </p>
+    <button class="btn" onclick="window.location.reload()">↺ Try Again</button>
+    <div class="status">
+      <span class="dot"></span>
+      NO CONNECTION
+    </div>
+  </div>
+
+  <script>
+    // Auto-reload when connection is restored
+    window.addEventListener('online', () => {
+      window.location.href = '/app'
+    })
+  </script>
+</body>
+</html>

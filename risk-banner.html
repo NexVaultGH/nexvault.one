@@ -1,0 +1,148 @@
+<!--
+  Risk Disclaimer Banner for app.html
+
+  Add this HTML block inside app.html just after the opening <body> tag (or after the nav).
+  It shows a dismissible risk disclaimer on first visit. When the user clicks
+  "I understand the risks", it stores acknowledgment in localStorage and never shows again.
+
+  To integrate: copy the <div id="risk-banner"> block and the <style>/<script> blocks
+  into app.html at the appropriate locations.
+-->
+
+<!-- ── STYLE (add to app.html <style> block or inline) ── -->
+<style>
+  #risk-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: rgba(5, 6, 10, 0.97);
+    border-top: 1px solid rgba(201, 168, 76, 0.25);
+    backdrop-filter: blur(20px);
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: slideUp 0.4s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  #risk-banner.hidden { display: none; }
+
+  .risk-banner-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: #c9a84c;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .risk-banner-items {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900px;
+  }
+
+  .risk-banner-item {
+    font-size: 12px;
+    color: #9ca3af;
+    line-height: 1.7;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: 280px;
+  }
+
+  .risk-banner-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f59e0b;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .risk-banner-btn {
+    padding: 10px 28px;
+    border-radius: 10px;
+    border: 1px solid rgba(201, 168, 76, 0.35);
+    background: rgba(201, 168, 76, 0.1);
+    color: #c9a84c;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .risk-banner-btn:hover {
+    background: rgba(201, 168, 76, 0.2);
+    border-color: rgba(201, 168, 76, 0.5);
+  }
+
+  .risk-banner-terms {
+    font-size: 10px;
+    color: #5a5650;
+    letter-spacing: 0.06em;
+  }
+
+  .risk-banner-terms a {
+    color: #c9a84c;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  }
+
+  @media (max-width: 700px) {
+    #risk-banner { padding: 20px 16px; }
+    .risk-banner-items { flex-direction: column; gap: 12px; }
+    .risk-banner-item { max-width: 100%; }
+  }
+</style>
+
+<!-- ── HTML (add to app.html body) ── -->
+<div id="risk-banner" class="hidden">
+  <div class="risk-banner-title">Risk Disclaimer</div>
+  <div class="risk-banner-items">
+    <div class="risk-banner-item">
+      <div class="risk-banner-dot"></div>
+      <span><strong style="color:#f0ece4">Smart contract risk:</strong> Contracts are thoroughly tested (175/175 passing) but not yet third-party audited. A formal audit is in progress.</span>
+    </div>
+    <div class="risk-banner-item">
+      <div class="risk-banner-dot"></div>
+      <span><strong style="color:#f0ece4">Lock period risk:</strong> Deposits are locked for the chosen tier duration (1 year / 3 years / 5 years). Early withdrawal is impossible — enforced by on-chain code.</span>
+    </div>
+    <div class="risk-banner-item">
+      <div class="risk-banner-dot"></div>
+      <span><strong style="color:#f0ece4">No insurance:</strong> Deposits are not covered by FDIC or any deposit insurance. NexVault is non-custodial software, not a bank.</span>
+    </div>
+  </div>
+  <button class="risk-banner-btn" onclick="acknowledgeRisk()">I UNDERSTAND THE RISKS</button>
+  <div class="risk-banner-terms">By continuing you agree to the <a href="/terms">Terms of Service</a></div>
+</div>
+
+<!-- ── SCRIPT (add to app.html before closing </body>) ── -->
+<script>
+  (function() {
+    if (!localStorage.getItem('nexvault_risk_ack')) {
+      document.getElementById('risk-banner').classList.remove('hidden');
+    }
+  })();
+
+  function acknowledgeRisk() {
+    localStorage.setItem('nexvault_risk_ack', Date.now().toString());
+    const banner = document.getElementById('risk-banner');
+    banner.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    banner.style.opacity = '0';
+    banner.style.transform = 'translateY(100%)';
+    setTimeout(function() { banner.classList.add('hidden'); }, 300);
+  }
+</script>

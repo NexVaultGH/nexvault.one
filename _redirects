@@ -1,0 +1,14 @@
+# www to non-www canonicalization
+https://www.nexvault.one/* https://nexvault.one/:splat 301!
+
+# Clean URLs
+/about    /about.html   200
+/security /security.html 200
+/app      /app.html      200
+/mobile   /nexvault-mobile.html 200
+/dev      /dev-dashboard.html  200
+/news     /news.html           200
+/post     /post.html           200
+/terms    /terms.html          200
+/proof    /proof.html          200
+/whitepaper /whitepaper.html   200

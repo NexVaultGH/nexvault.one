@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News &amp; Insights — NexVault</title>
+  <meta name="description" content="Protocol updates, market analysis, DeFi education, and everything shaping the future of on-chain yield — from the NexVault intelligence desk." />
+  <link rel="canonical" href="https://nexvault.one/news" />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#000000" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nexvault.one/news" />
+  <meta property="og:title" content="News &amp; Insights — NexVault" />
+  <meta property="og:description" content="Protocol updates, market analysis, DeFi education, and everything shaping the future of on-chain yield." />
+  <meta property="og:image" content="https://nexvault.one/og-image.png" />
+  <meta property="og:site_name" content="NexVault" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="News &amp; Insights — NexVault" />
+  <meta name="twitter:description" content="Protocol updates, market analysis, DeFi education, and everything shaping the future of on-chain yield." />
+  <meta name="twitter:image" content="https://nexvault.one/og-image.png" />
+
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="author" content="NexVault" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://nexvault.one/#organization",
+        "name": "NexVault",
+        "url": "https://nexvault.one",
+        "logo": "https://nexvault.one/og-image.png",
+        "description": "The #1 USDX savings vault on Nexus — backed by U.S. Treasury yield."
+      },
+      {
+        "@type": "CollectionPage",
+        "@id": "https://nexvault.one/news",
+        "url": "https://nexvault.one/news",
+        "name": "News & Insights — NexVault",
+        "description": "Protocol updates, market analysis, DeFi education, and everything shaping the future of on-chain yield.",
+        "publisher": { "@id": "https://nexvault.one/#organization" },
+        "inLanguage": "en-US"
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-style.css?v=60">
+
+  <style>
+    /* ── Hero ── */
+    .news-hero {
+      min-height: 50vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 140px 24px 80px;
+    }
+    .news-hero-content { max-width: 680px; }
+
+    /* ── Filter bar ── */
+    .filter-bar {
+      max-width: 900px; margin: 0 auto 48px; padding: 0 24px;
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    }
+    .filter-btn {
+      padding: 6px 16px; border-radius: 20px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-muted); font-family: var(--font); font-size: 11px;
+      letter-spacing: 0.08em; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+    .filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.06); }
+
+    /* ── Tag pills ── */
+    .tag-pill {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-size: 9px; letter-spacing: 0.12em; font-weight: 700;
+    }
+    .tag-protocol { background: rgba(201,168,76,0.10); color: #c9a84c; }
+    .tag-defi     { background: rgba(99,102,241,0.10); color: #818cf8; }
+    .tag-market   { background: rgba(34,197,94,0.08);  color: #4ade80; }
+    .tag-education{ background: rgba(56,189,248,0.08); color: #38bdf8; }
+    .tag-security { background: rgba(239,68,68,0.08);  color: #f87171; }
+    .tag-ai       { background: rgba(168,85,247,0.10); color: #c084fc; }
+
+    /* ── Article list ── */
+    .news-list {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+    }
+
+    .news-item {
+      display: block; padding: 40px 0; border-bottom: 1px solid var(--border);
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .news-item:first-child { border-top: 1px solid var(--border); }
+    .news-item:hover { opacity: 0.75; }
+
+    .news-item-meta {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+
+    .news-item-date {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .news-item-title {
+      font-family: var(--font); font-weight: 300; font-size: clamp(20px, 3vw, 32px);
+      color: var(--text); line-height: 1.25; letter-spacing: -0.01em;
+    }
+
+    /* ── Pagination ── */
+    .pagination {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; margin-top: 64px; padding: 0 24px; flex-wrap: wrap;
+    }
+    .page-btn {
+      width: 40px; height: 40px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-muted); font-family: var(--font-mono); font-size: 12px;
+      font-weight: 500; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .page-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+    .page-btn.active { border-color: var(--gold); color: var(--gold); }
+    .page-btn:disabled { opacity: 0.25; cursor: default; pointer-events: none; }
+    .page-info {
+      font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em;
+      font-family: var(--font-mono); padding: 0 8px;
+    }
+
+    .news-empty {
+      text-align: center; padding: 80px 24px; color: var(--text-muted); font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .news-hero { padding: 120px 20px 60px; min-height: 40vh; }
+      .news-item { padding: 28px 0; }
+      .news-item-title { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="nv-grain"></div>
+
+<!-- Nav -->
+<nav class="nv-nav">
+  <a href="/" class="nv-nav-logo">
+    <div class="nv-nav-logo-mark">V</div>
+    <span class="nv-nav-logo-text">NEXVAULT</span>
+  </a>
+  <div class="nv-nav-right">
+    <button class="nv-nav-menu-btn" onclick="nvOpenSidebar()">MENU</button>
+  </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="nv-sidebar-overlay" onclick="nvCloseSidebar()"></div>
+<div class="nv-sidebar">
+  <div class="nv-sidebar-head"><button class="nv-sidebar-close" onclick="nvCloseSidebar()">CLOSE</button></div>
+  <div class="nv-sidebar-links">
+    <a href="/" class="nv-sidebar-link">Home</a>
+    <a href="/app" class="nv-sidebar-link">The Vault</a>
+    <a href="/about" class="nv-sidebar-link">About</a>
+    <a href="/security" class="nv-sidebar-link">Security</a>
+    <a href="/proof" class="nv-sidebar-link">Proof of Yield</a>
+    <a href="/news" class="nv-sidebar-link active">News</a>
+    <a href="/terms" class="nv-sidebar-link">Terms</a>
+  </div>
+  <div class="nv-sidebar-foot"><a href="/app" class="nv-sidebar-cta">OPEN VAULT</a></div>
+</div>
+
+<!-- Hero -->
+<section class="news-hero">
+  <div class="news-hero-content">
+    <div class="label label-gold fi fi1" style="margin-bottom:20px">NEWS &amp; INSIGHTS</div>
+    <h1 class="hlg fi fi2">News</h1>
+  </div>
+</section>
+
+<!-- Filter Bar -->
+<div class="filter-bar fi fi3">
+  <button class="filter-btn active" data-tag="all">ALL</button>
+  <button class="filter-btn" data-tag="protocol">PROTOCOL</button>
+  <button class="filter-btn" data-tag="defi">DEFI</button>
+  <button class="filter-btn" data-tag="market">MARKET</button>
+  <button class="filter-btn" data-tag="education">EDUCATION</button>
+  <button class="filter-btn" data-tag="security">SECURITY</button>
+  <button class="filter-btn" data-tag="ai">AI</button>
+</div>
+
+<!-- Article List -->
+<div class="news-list" id="news-list"></div>
+
+<!-- Pagination -->
+<div class="pagination" id="pagination"></div>
+
+<!-- Empty state -->
+<div class="news-empty" id="news-empty" style="display:none">No articles found.</div>
+
+<!-- Chat Widget -->
+<div class="nv-chat-trigger" title="NexVault Assistant">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
+</div>
+<div class="nv-chat-panel">
+  <div class="nv-chat-head"><span class="nv-chat-title">NEXVAULT ASSISTANT</span><button class="nv-chat-close-btn">&times;</button></div>
+  <div class="nv-chat-messages"></div>
+  <div class="nv-chat-input-wrap">
+    <input class="nv-chat-input" type="text" placeholder="Ask anything..." id="chat-input" autocomplete="off" />
+    <button class="nv-chat-send" onclick="nvSendChat()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </div>
+  <div class="nv-chat-footer">POWERED BY NEXVAULT</div>
+</div>
+
+<!-- Footer -->
+<footer class="nv-footer">
+  <span>&copy; 2026 NexVault. All rights reserved.</span>
+  <div class="nv-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script>
+// ── Load articles from _posts_data.json ──
+const PER_PAGE = 15;
+let allPosts = [];
+let currentTag = 'all';
+let currentPage = 1;
+
+async function loadPosts() {
+  try {
+    const res = await fetch('/_posts_data.json');
+    allPosts = await res.json();
+    renderPage();
+  } catch (e) {
+    console.error('Failed to load posts:', e);
+    document.getElementById('news-empty').style.display = '';
+  }
+}
+
+function getFiltered() {
+  return allPosts.filter(p => currentTag === 'all' || p.tag === currentTag);
+}
+
+function renderPage() {
+  const filtered = getFiltered();
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const start = (currentPage - 1) * PER_PAGE;
+  const end = start + PER_PAGE;
+  const pageItems = filtered.slice(start, end);
+
+  const list = document.getElementById('news-list');
+  const empty = document.getElementById('news-empty');
+
+  if (!filtered.length) {
+    list.innerHTML = '';
+    empty.style.display = '';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  list.innerHTML = pageItems.map(function(post) {
+    return '<a class="news-item" href="/post?id=' + post.id + '" id="post-' + post.id + '">' +
+      '<div class="news-item-meta">' +
+        '<span class="tag-pill tag-' + post.tag + '">' + post.tag.toUpperCase() + '</span>' +
+        '<span class="news-item-date">' + post.date + '</span>' +
+      '</div>' +
+      '<div class="news-item-title">' + post.title + '</div>' +
+    '</a>';
+  }).join('');
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const pg = document.getElementById('pagination');
+  pg.innerHTML = '';
+  if (totalPages <= 1) return;
+
+  var prev = document.createElement('button');
+  prev.className = 'page-btn'; prev.textContent = '\u2190';
+  if (currentPage === 1) prev.disabled = true;
+  prev.onclick = function() { currentPage--; renderPage(); scrollToList(); };
+  pg.appendChild(prev);
+
+  for (var i = 1; i <= totalPages; i++) {
+    var btn = document.createElement('button');
+    btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+    btn.textContent = i;
+    btn.onclick = (function(p) { return function() { currentPage = p; renderPage(); scrollToList(); }; })(i);
+    pg.appendChild(btn);
+  }
+
+  var next = document.createElement('button');
+  next.className = 'page-btn'; next.textContent = '\u2192';
+  if (currentPage === totalPages) next.disabled = true;
+  next.onclick = function() { currentPage++; renderPage(); scrollToList(); };
+  pg.appendChild(next);
+
+  var info = document.createElement('span');
+  info.className = 'page-info';
+  info.textContent = 'PAGE ' + currentPage + ' OF ' + totalPages;
+  pg.appendChild(info);
+}
+
+function scrollToList() {
+  document.getElementById('news-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Filter buttons ──
+document.querySelectorAll('.filter-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentTag = btn.dataset.tag;
+    currentPage = 1;
+    renderPage();
+    scrollToList();
+  });
+});
+
+// ── Init ──
+loadPosts();
+</script>
+<script src="/nv-core.js?v=60"></script>
+</body>
+</html>
