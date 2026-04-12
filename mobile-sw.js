@@ -1,12 +1,15 @@
 'use strict'
 
-const CACHE = 'nexvault-mobile-v1'
+const CACHE = 'nexvault-mobile-v2'
 const OFFLINE = '/nexvault-mobile.html'
 
 // Assets to pre-cache on install
 const PRECACHE = [
   '/app.html',
   '/nexvault-mobile.html',
+  '/nv-style.css',
+  '/nv-core.js',
+  '/nv-canvas.js',
   '/favicon.svg',
   '/favicon.ico',
   '/icon-192.png',
