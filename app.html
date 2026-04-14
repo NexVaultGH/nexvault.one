@@ -679,6 +679,9 @@
 <!-- Ethers v6 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
 
+<!-- WalletConnect — pre-bundled locally (no CDN dependency issues) -->
+<script src="/wc-provider.js"></script>
+
 <!-- WalletConnect QR — custom QR display with step-by-step status -->
 <script>
 var _wcProvider = null
@@ -745,15 +748,14 @@ window.connectViaWalletConnect = async function() {
   showWCLoadingModal()
 
   try {
-    // Step 1: Dynamic import
-    updateWCStatus('LOADING MODULE...')
-    console.log('[WC] Step 1: importing module...')
-    var mod = await import('https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.17.0/+esm')
-    var EthereumProvider = mod.EthereumProvider || mod.default
-    console.log('[WC] Step 2: module loaded, EthereumProvider:', !!EthereumProvider)
+    // Step 1: Use locally bundled WalletConnect (no CDN dependency issues)
+    updateWCStatus('LOADING...')
+    console.log('[WC] Step 1: using local WC bundle')
+    var EthereumProvider = window.WCEthereumProvider
+    console.log('[WC] Step 2: EthereumProvider:', !!EthereumProvider)
 
     if (!EthereumProvider) {
-      throw new Error('EthereumProvider not found in module')
+      throw new Error('WalletConnect bundle not loaded — check wc-provider.js')
     }
 
     // Step 2: Initialize provider (try primary project ID, then fallback)
