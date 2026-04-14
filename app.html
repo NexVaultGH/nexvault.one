@@ -759,35 +759,20 @@ window.connectViaWalletConnect = async function() {
     // Step 2: Initialize provider (try primary project ID, then fallback)
     updateWCStatus('CONNECTING TO RELAY...')
     console.log('[WC] Step 3: initializing provider...')
-    var projectIds = [
-      '44a4b0d66bd62948f4ca92a7d6b3c7d2',
-      'b56e18d47c72ab683b10814f5c45b72d'
-    ]
-    var initError = null
-    for (var pi = 0; pi < projectIds.length; pi++) {
-      try {
-        console.log('[WC] Trying project ID:', projectIds[pi])
-        _wcProvider = await EthereumProvider.init({
-          projectId: projectIds[pi],
-          chains: [1],
-          optionalChains: [1],
-          showQrModal: false,
-          metadata: {
-            name: 'NexVault',
-            description: 'USDX Savings Protocol — Sovereign Yield Banking',
-            url: 'https://nexvault.one',
-            icons: ['https://nexvault.one/icon-192.png'],
-          },
-        })
-        console.log('[WC] Step 4: provider initialized with ID:', projectIds[pi])
-        initError = null
-        break
-      } catch (ie) {
-        console.warn('[WC] Project ID failed:', projectIds[pi], ie.message)
-        initError = ie
-      }
-    }
-    if (initError) throw initError
+    console.log('[WC] Step 3: initializing with project ID...')
+    _wcProvider = await EthereumProvider.init({
+      projectId: '44a4b0d66bd62948f4ca92a7d6b3c7d2',
+      chains: [1],
+      optionalChains: [1],
+      showQrModal: false,
+      metadata: {
+        name: 'NexVault',
+        description: 'USDX Savings Protocol — Sovereign Yield Banking',
+        url: 'https://nexvault.one',
+        icons: ['https://nexvault.one/icon-192.png'],
+      },
+    })
+    console.log('[WC] Step 4: provider initialized')
 
     // Step 3: Listen for URI and show QR
     updateWCStatus('GENERATING QR CODE...')
