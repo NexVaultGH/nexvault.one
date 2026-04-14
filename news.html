@@ -56,9 +56,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/nv-style.css?v=60">
-
   <style>
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,.06);background:rgba(5,6,10,.8);backdrop-filter:blur(20px)}
+    .nav-logo{display:flex;align-items:center;gap:12px}
+    .nav-logomark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#c9a84c,#8b6914);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#05060a}
+    .nav-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;letter-spacing:.12em;color:#e8e2d6}
+    .nav-pill-link{padding:4px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.06);color:#c9a84c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:600;text-decoration:none;transition:all .2s;white-space:nowrap}
+    .nav-pill-link:hover{background:rgba(201,168,76,.14)}
+    .nav-launch-btn{padding:8px 18px;border-radius:9px;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:#c9a84c;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;font-weight:600;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+    .nav-launch-btn:hover{background:rgba(201,168,76,.15)}
+    .dot-live{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.4)}
+    footer{text-align:center;padding:40px 20px;font-size:11px;color:#5a5650;letter-spacing:.1em;border-top:1px solid rgba(255,255,255,.04)}
+
     /* ── Hero ── */
     .news-hero {
       min-height: 50vh; display: flex; align-items: center; justify-content: center;
@@ -153,33 +162,22 @@
 
 <div class="nv-grain"></div>
 
-<!-- Nav -->
-<nav class="nv-nav">
-  <a href="/" class="nv-nav-logo">
-    <div class="nv-nav-logo-mark">V</div>
-    <span class="nv-nav-logo-text">NEXVAULT</span>
-  </a>
-  <div class="nv-nav-right">
-    <button class="nv-nav-menu-btn" onclick="nvOpenSidebar()">MENU</button>
+<nav>
+  <div class="nav-logo">
+    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <div class="nav-logomark">V</div>
+      <span class="nav-name">NEXVAULT</span>
+    </a>
+    <a href="/whitepaper" class="nav-pill-link">WHITEPAPER</a>
+    <a href="/about" class="nav-pill-link">ABOUT US</a>
+    <a href="/security" class="nav-pill-link">SECURITY</a>
+    <a href="/nexcredit" class="nav-pill-link">NEXCREDIT</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div class="dot-live"></div>
+    <a href="/app" class="nav-launch-btn">◈ OPEN VAULT</a>
   </div>
 </nav>
-
-<!-- Sidebar -->
-<div class="nv-sidebar-overlay" onclick="nvCloseSidebar()"></div>
-<div class="nv-sidebar">
-  <div class="nv-sidebar-head"><button class="nv-sidebar-close" onclick="nvCloseSidebar()">CLOSE</button></div>
-  <div class="nv-sidebar-links">
-    <a href="/" class="nv-sidebar-link">Home</a>
-    <a href="/app" class="nv-sidebar-link">The Vault</a>
-    <a href="/about" class="nv-sidebar-link">About</a>
-    <a href="/security" class="nv-sidebar-link">Security</a>
-    <a href="/nexcredit" class="nv-sidebar-link">NexCredit</a>
-    <a href="/proof" class="nv-sidebar-link">Proof of Yield</a>
-    <a href="/news" class="nv-sidebar-link active">News</a>
-    <a href="/terms" class="nv-sidebar-link">Terms</a>
-  </div>
-  <div class="nv-sidebar-foot"><a href="/app" class="nv-sidebar-cta">OPEN VAULT</a></div>
-</div>
 
 <!-- Hero -->
 <section class="news-hero">
@@ -209,31 +207,7 @@
 <!-- Empty state -->
 <div class="news-empty" id="news-empty" style="display:none">No articles found.</div>
 
-<!-- Chat Widget -->
-<div class="nv-chat-trigger" title="NexVault Assistant">
-  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
-</div>
-<div class="nv-chat-panel">
-  <div class="nv-chat-head"><span class="nv-chat-title">NEXVAULT ASSISTANT</span><button class="nv-chat-close-btn">&times;</button></div>
-  <div class="nv-chat-messages"></div>
-  <div class="nv-chat-input-wrap">
-    <input class="nv-chat-input" type="text" placeholder="Ask anything..." id="chat-input" autocomplete="off" />
-    <button class="nv-chat-send" onclick="nvSendChat()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
-  </div>
-  <div class="nv-chat-footer">POWERED BY NEXVAULT</div>
-</div>
-
-<!-- Footer -->
-<footer class="nv-footer">
-  <span>&copy; 2026 NexVault. All rights reserved.</span>
-  <div class="nv-footer-links">
-    <a href="/about">About</a>
-    <a href="/security">Security</a>
-    <a href="/proof">Proof</a>
-    <a href="/news">News</a>
-    <a href="/terms">Terms</a>
-  </div>
-</footer>
+<footer>© 2026 NEXVAULT · BUILT ON NEXUS.XYZ</footer>
 
 <script>
 // ── Load articles from _posts_data.json ──
@@ -338,6 +312,5 @@ document.querySelectorAll('.filter-btn').forEach(function(btn) {
 // ── Init ──
 loadPosts();
 </script>
-<script src="/nv-core.js?v=60"></script>
 </body>
 </html>
