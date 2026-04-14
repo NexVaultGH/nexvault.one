@@ -3,1625 +3,394 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VAULT — USDX Savings Protocol · Early Access</title>
-  <meta name="description" content="The #1 USDX savings vault on Nexus. Earn up to 4.44% APY on locked USDX savings — backed by U.S. Treasury yield. Three tiers: 1-Year, 3-Year, 5-Year." />
-
-  <!-- Netlify Identity (optional, for auth) -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <title>NexVault — Sovereign Yield Banking</title>
+  <meta name="description" content="The #1 USDX savings vault on Nexus blockchain. Earn up to 4.44% APY on locked USDX — backed by U.S. Treasury yield." />
+  <link rel="canonical" href="https://nexvault.one/" />
+  <meta name="google-site-verification" content="w6j1yf2iL753-yaJLzIwAtbcaU-MSm8DlPpkkuMe21Q" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="application-name" content="NexVault" />
+  <meta name="robots" content="index, follow" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NexVault" />
+  <link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="/icon-144.png" />
+  <link rel="apple-touch-icon" sizes="128x128" href="/icon-128.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nexvault.one/" />
+  <meta property="og:title" content="NexVault — Sovereign Yield Banking" />
+  <meta property="og:description" content="Earn up to 4.44% APY on locked USDX — backed by U.S. Treasury yield." />
+  <meta property="og:image" content="https://nexvault.one/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NexVault" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="NexVault — Sovereign Yield Banking" />
+  <meta name="twitter:description" content="Earn up to 4.44% APY on locked USDX." />
+  <meta name="twitter:image" content="https://nexvault.one/og-image.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-style.css?v=60">
 
   <style>
-    :root {
-      --gold: #c9a84c;
-      --gold-bright: #f0c040;
-      --gold-dim: rgba(201,168,76,0.15);
-      --bg: #05060a;
-      --bg2: #080b10;
-      --text: #e8e2d6;
-      --muted: #5a5650;
-      --border: rgba(201,168,76,0.12);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── Canvas Background ── */
-    #bg-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* ── Grain overlay ── */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.4;
-    }
-
-    /* ── Nav ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 22px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(201,168,76,0.06);
-      background: rgba(5,6,10,0.7);
-      backdrop-filter: blur(20px);
-    }
-
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .nav-logomark {
-      width: 34px; height: 34px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #c9a84c, #8b6914);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 17px;
-      font-weight: 700;
-      color: #05060a;
-    }
-
-    .nav-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px;
-      font-weight: 400;
-      letter-spacing: .12em;
-      color: var(--text);
-    }
-
-    .nav-pill-link {
-      padding: 4px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(201,168,76,.2);
-      background: rgba(201,168,76,.06);
-      color: #c9a84c;
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: .1em;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all .2s;
-      white-space: nowrap;
-    }
-    .nav-pill-link:hover { background: rgba(201,168,76,.14); }
-
-    .nav-launch-btn {
-      padding: 8px 18px;
-      border-radius: 9px;
-      border: 1px solid rgba(201,168,76,0.35);
-      background: rgba(201,168,76,0.08);
-      color: #c9a84c;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      letter-spacing: .08em;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all .2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      white-space: nowrap;
-    }
-    .nav-launch-btn:hover { background: rgba(201,168,76,0.15); }
-
-    .hamburger {
-      display: none; flex-direction: column; justify-content: center;
-      gap: 5px; cursor: pointer; padding: 6px;
-      border-radius: 6px; background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.08); margin-left: 8px;
-    }
-    .hamburger span { display: block; width: 20px; height: 2px; background: var(--gold); border-radius: 2px; }
-    .mobile-menu {
-      display: none; position: fixed; top: 56px; left: 0; right: 0;
-      background: rgba(5,6,10,.97); backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(201,168,76,.12);
-      flex-direction: column; align-items: stretch;
-      padding: 12px 16px 16px; gap: 6px; z-index: 999;
-    }
-    .mobile-menu a {
-      display: block; padding: 12px 16px; color: var(--text);
-      text-decoration: none; font-size: 13px; font-weight: 600;
-      letter-spacing: .08em; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.03); transition: background .15s;
-    }
-    .mobile-menu a:hover { background: rgba(201,168,76,.08); color: var(--gold); }
-    .mobile-menu a.launch { background: rgba(201,168,76,.1); border-color: rgba(201,168,76,.2); color: var(--gold); text-align: center; margin-top: 4px; }
-    .mobile-menu.open { display: flex; }
-
-    .dot-live {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #4ade80;
-      animation: blink 1.8s infinite;
-      flex-shrink: 0;
-    }
-
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
-
-    /* ── Main content ── */
-    main {
-      position: relative;
-      z-index: 2;
-    }
-
-    /* ── Hero ── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 120px 24px 80px;
-    }
-
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 18px;
-      border-radius: 30px;
-      border: 1px solid var(--border);
-      background: var(--gold-dim);
-      font-size: 11px;
-      letter-spacing: .2em;
-      color: var(--gold);
-      margin-bottom: 36px;
-      opacity: 0;
-      animation: fadeUp .8s ease .2s forwards;
-    }
-
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(52px, 8vw, 110px);
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -.02em;
-      color: #f5f0e8;
-      margin-bottom: 12px;
-      opacity: 0;
-      animation: fadeUp .9s ease .35s forwards;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold);
-      background: linear-gradient(135deg, #f0c040, #c9a84c, #8b6914);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-subtitle {
-      font-family: 'Instrument Serif', serif;
-      font-size: clamp(20px, 3vw, 30px);
-      font-style: italic;
-      color: var(--muted);
-      margin-bottom: 20px;
-      opacity: 0;
-      animation: fadeUp .9s ease .5s forwards;
-    }
-
-    .hero-desc {
-      max-width: 540px;
-      font-size: 14px;
-      line-height: 1.8;
-      color: #4a4640;
-      margin-bottom: 56px;
-      opacity: 0;
-      animation: fadeUp .9s ease .6s forwards;
-    }
-
-    /* ── Stats row ── */
-    .stats-row {
-      display: flex;
-      gap: 1px;
-      margin-bottom: 64px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      background: var(--border);
-      opacity: 0;
-      animation: fadeUp .9s ease .7s forwards;
-    }
-
-    .stat-item {
-      flex: 1;
-      padding: 22px 28px;
-      background: rgba(8,11,16,0.95);
-      text-align: center;
-      min-width: 130px;
-    }
-
-    .stat-val {
-      font-family: 'Playfair Display', serif;
-      font-size: 30px;
-      color: var(--gold);
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #7a7570;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      font-weight: 500;
-    }
-
-    /* ── Form card ── */
-    .form-wrap {
-      width: 100%;
-      max-width: 520px;
-      opacity: 0;
-      animation: fadeUp 1s ease .85s forwards;
-    }
-
-    .form-card {
-      background: rgba(10,12,18,0.9);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 40px 36px;
-      backdrop-filter: blur(30px);
-      box-shadow: 0 0 80px rgba(201,168,76,0.04), 0 40px 80px rgba(0,0,0,0.5);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .form-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
-    }
-
-    .form-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-weight: 500;
-      color: #f0ece4;
-      margin-bottom: 6px;
-      text-align: center;
-    }
-
-    .form-sub {
-      font-size: 14px;
-      color: #6b6560;
-      text-align: center;
-      margin-bottom: 28px;
-      line-height: 1.7;
-      font-weight: 400;
-    }
-
-    /* Waitlist counter */
-    .waitlist-count {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 28px;
-      padding: 10px 18px;
-      background: rgba(201,168,76,0.05);
-      border: 1px solid rgba(201,168,76,0.1);
-      border-radius: 30px;
-    }
-
-    .waitlist-avatars {
-      display: flex;
-    }
-
-    .avatar {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      border: 2px solid var(--bg);
-      margin-left: -8px;
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-    }
-
-    .avatar:first-child { margin-left: 0; }
-
-    .waitlist-text {
-      font-size: 13px;
-      color: var(--gold);
-      letter-spacing: .04em;
-      font-weight: 500;
-    }
-
-    .section-eyebrow {
-      font-size: 12px;
-      letter-spacing: .2em;
-      color: var(--gold);
-      text-align: center;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .tier-label {
-      font-size: 12px;
-      letter-spacing: .1em;
-      color: #7a7570;
-      margin-bottom: 10px;
-      display: block;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-      margin-bottom: 14px;
-    }
-
-    .input-label {
-      font-size: 12px;
-      letter-spacing: .1em;
-      color: #7a7570;
-      margin-bottom: 8px;
-      display: block;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .input-wrap {
-      position: relative;
-    }
-
-    .input-icon {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 16px;
-      pointer-events: none;
-    }
-
-    .field {
-      width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 11px;
-      padding: 14px 16px 14px 44px;
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      font-size: 14px;
-      transition: border-color .2s, box-shadow .2s;
-      outline: none;
-    }
-
-    .field::placeholder { color: #2a2720; }
-
-    .field:focus {
-      border-color: rgba(201,168,76,0.35);
-      box-shadow: 0 0 0 3px rgba(201,168,76,0.06);
-    }
-
-    .or-divider {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin: 16px 0;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: .1em;
-    }
-
-    .or-divider::before, .or-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(255,255,255,0.06);
-    }
-
-    /* Input group */
-    .input-group {
-      margin-bottom: 14px;
-    }
-
-    .tier-pill {
-      flex: 1;
-      padding: 12px 8px;
-      border-radius: 9px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: transparent;
-      color: #6b6560;
-      font-family: 'DM Mono', monospace;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all .2s;
-      text-align: center;
-      line-height: 1.4;
-      font-weight: 500;
-    }
-
-    .tier-pill:hover {
-      border-color: rgba(201,168,76,0.25);
-      color: var(--gold);
-    }
-
-    .tier-pill.active {
-      border-color: var(--gold);
-      background: rgba(201,168,76,0.08);
-      color: var(--gold);
-    }
-
-    .tier-pill .tier-apy {
-      display: block;
-      font-size: 19px;
-      font-weight: 600;
-      color: inherit;
-      margin-bottom: 3px;
-    }
-
-    .tier-pill .tier-name {
-      display: block;
-      font-size: 12px;
-      opacity: .7;
-    }
-
-    /* Submit button */
-    .submit-btn {
-      width: 100%;
-      padding: 17px;
-      border-radius: 12px;
-      border: none;
-      background: linear-gradient(135deg, #c9a84c, #8b6914);
-      color: #05060a;
-      font-family: 'DM Mono', monospace;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: .12em;
-      cursor: pointer;
-      transition: all .25s;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .submit-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #f0c040, #c9a84c);
-      opacity: 0;
-      transition: opacity .25s;
-    }
-
-    .submit-btn:hover::before { opacity: 1; }
-    .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(201,168,76,0.25); }
-    .submit-btn span { position: relative; z-index: 1; }
-
-    .form-note {
-      font-size: 13px;
-      color: #5a5650;
-      text-align: center;
-      line-height: 1.75;
-      font-weight: 400;
-    }
-
-    .form-note a { color: var(--gold); text-decoration: none; }
-
-    /* Success state */
-    .success-state {
-      display: none;
-      text-align: center;
-      padding: 20px 0;
-    }
-
-    .success-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-      animation: popIn .5s cubic-bezier(0.34,1.56,0.64,1);
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
-    }
-
-    .success-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 24px;
-      color: var(--gold);
-      margin-bottom: 10px;
-    }
-
-    .success-sub {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-
-    .success-position {
-      display: inline-block;
-      padding: 10px 24px;
-      background: rgba(201,168,76,0.08);
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      font-size: 13px;
-      color: var(--gold);
-      letter-spacing: .06em;
-    }
-
-    /* ── How it works ── */
-    .section {
-      padding: 100px 24px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .section-eyebrow {
-      font-size: 11px;
-      letter-spacing: .2em;
-      color: var(--gold);
-      text-align: center;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(32px, 5vw, 52px);
-      font-weight: 500;
-      text-align: center;
-      color: #f0ece4;
-      margin-bottom: 60px;
-      line-height: 1.15;
-    }
-
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow: hidden;
-      background: var(--border);
-      margin-bottom: 80px;
-    }
-
-    .step {
-      background: rgba(8,11,16,0.97);
-      padding: 36px 30px;
-      position: relative;
-    }
-
-    .step-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 56px;
-      font-weight: 700;
-      color: rgba(201,168,76,0.08);
-      line-height: 1;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .step-title {
-      font-size: 17px;
-      color: #e8e2d6;
-      font-weight: 600;
-      margin-bottom: 12px;
-      letter-spacing: .02em;
-    }
-
-    .step-desc {
-      font-size: 14px;
-      color: #7a7570;
-      line-height: 1.8;
-      font-weight: 400;
-    }
-
-    /* ── Tiers section ── */
-    .tiers-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-bottom: 40px;
-    }
-
-    .tier-card {
-      border-radius: 16px;
-      padding: 30px 26px;
-      border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(8,11,16,0.8);
-      position: relative;
-      transition: transform .25s, border-color .25s;
-    }
-
-    .tier-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(201,168,76,0.2);
-    }
-
-    .tier-card.featured {
-      border-color: rgba(201,168,76,0.3);
-      background: rgba(201,168,76,0.03);
-    }
-
-    .tier-card.featured::before {
-      content: 'BEST YIELD';
-      position: absolute;
-      top: -1px; right: 20px;
-      padding: 4px 12px;
-      background: linear-gradient(135deg, #c9a84c, #8b6914);
-      border-radius: 0 0 8px 8px;
-      font-size: 9px;
-      letter-spacing: .15em;
-      color: #05060a;
-      font-weight: 700;
-    }
-
-    .tier-card-name {
-      font-size: 14px;
-      letter-spacing: .12em;
-      color: #8a8480;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      font-weight: 600;
-    }
-
-    .tier-card-apy {
-      font-family: 'Playfair Display', serif;
-      font-size: 52px;
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .tier-card-label {
-      font-size: 14px;
-      color: #6b6560;
-      margin-bottom: 24px;
-      font-weight: 500;
-    }
-
-    .tier-card-monthly {
-      padding: 14px 16px;
-      background: rgba(201,168,76,0.05);
-      border: 1px solid rgba(201,168,76,0.1);
-      border-radius: 9px;
-      margin-bottom: 10px;
-    }
-
-    .tier-card-monthly-label {
-      font-size: 12px;
-      color: #8a8480;
-      letter-spacing: .1em;
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
-
-    .tier-card-monthly-val {
-      font-size: 18px;
-      color: #4ade80;
-      font-weight: 600;
-    }
-
-    .tier-card-lock {
-      font-size: 14px;
-      color: #6b6560;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      font-weight: 500;
-    }
-
-    /* ── Smart contract section ── */
-    .contract-section {
-      padding: 80px 24px;
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .contract-box {
-      background: rgba(8,11,16,0.9);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 48px 40px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .contract-box::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .contract-icon {
-      font-size: 40px;
-      margin-bottom: 20px;
-    }
-
-    .contract-features {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .contract-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 30px;
-      color: #f0ece4;
-      margin-bottom: 14px;
-      font-weight: 500;
-    }
-
-    .contract-desc {
-      font-size: 15px;
-      color: #6b6560;
-      line-height: 1.85;
-      max-width: 520px;
-      margin: 0 auto 30px;
-      font-weight: 400;
-    }
-
-    .contract-feat {
-      padding: 9px 18px;
-      background: rgba(201,168,76,0.06);
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      font-size: 13px;
-      color: var(--gold);
-      letter-spacing: .06em;
-      font-weight: 500;
-    }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid rgba(201,168,76,0.08);
-      padding: 40px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .footer-copy {
-      font-size: 13px;
-      color: #5a5650;
-      letter-spacing: .06em;
-      font-weight: 500;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-link {
-      font-size: 13px;
-      color: #5a5650;
-      text-decoration: none;
-      letter-spacing: .06em;
-      transition: color .2s;
-      font-weight: 500;
-    }
-
-    .footer-link:hover { color: var(--gold); }
-
-    /* ── Animations ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .g3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      border: 1px solid rgba(201,168,76,0.1);
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(201,168,76,0.08);
-      margin-bottom: 48px;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 700px) {
-      nav {
-        padding: 12px 16px;
-        flex-wrap: nowrap;
-        gap: 8px;
-      }
-      .nav-logo { gap: 6px; }
-      .nav-logomark { width: 28px; height: 28px; font-size: 14px; flex-shrink: 0; }
-      .nav-name { font-size: 13px; letter-spacing: .08em; }
-      .nav-pill-link { display: none; }
-      .nav-launch-btn { font-size: 11px; padding: 7px 12px; }
-      .hamburger { display: flex !important; }
-      .mobile-menu { display: none; }
-      .mobile-menu.open { display: flex; }
-      .stats-row { flex-direction: column; gap: 0; }
-      .steps-grid { grid-template-columns: 1fr; }
-      .tiers-grid { grid-template-columns: 1fr; }
-      .form-card { padding: 24px 18px; }
-      footer { flex-direction: column; text-align: center; }
-      .footer-links { justify-content: center; }
-      .g3 { grid-template-columns: 1fr !important; }
-      .contract-box { padding: 32px 20px; }
+    /* ── Hero Portal ── */
+    .hero-wrap { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+    .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-overlay { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+    .hero-overlay > * { pointer-events: auto; }
+    .hero-tagline { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.25em; color: rgba(201,168,76,0.6); text-transform: uppercase; margin-bottom: 20px; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(44px, 8vw, 88px); font-weight: 400; text-align: center; line-height: 1.05; margin-bottom: 24px; color: rgba(255,255,255,0.92); }
+    .hero-title em { font-style: italic; color: #c9a84c; }
+    .hero-sub { font-size: 17px; color: rgba(255,255,255,0.45); text-align: center; max-width: 520px; line-height: 1.8; margin-bottom: 40px; font-family: 'DM Mono', monospace; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .hero-scroll { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .hero-scroll-text { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.25em; color: rgba(255,255,255,0.25); }
+    .hero-scroll-line { width: 1px; height: 32px; position: relative; overflow: hidden; }
+    .hero-scroll-line::after { content: ''; position: absolute; top: -100%; left: 0; width: 1px; height: 100%; background: #c9a84c; animation: scrollPulse 2s infinite; }
+    @keyframes scrollPulse { 0%{top:-100%} 50%{top:0%} 100%{top:100%} }
+
+    /* ── Logo floating in hero ── */
+    .hero-logo { position: absolute; top: 28px; left: 32px; z-index: 10; display: flex; align-items: center; gap: 12px; }
+    .hero-logo-mark { width: 40px; height: 40px; border-radius: 8px; border: 1.5px solid rgba(201,168,76,0.4); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 600; color: #c9a84c; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); }
+    .hero-logo-text { font-family: 'DM Mono', monospace; font-weight: 600; font-size: 15px; letter-spacing: 0.15em; color: rgba(255,255,255,0.8); }
+
+    /* ── Download buttons ── */
+    .dl-wrap { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .dl-btn { display: none; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.5); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-decoration: none; transition: all 0.3s; }
+    .dl-btn:hover { border-color: rgba(201,168,76,0.3); color: #c9a84c; background: rgba(201,168,76,0.05); }
+
+    /* ── Interactive counter ── */
+    .live-counter { position: absolute; top: 28px; right: 32px; z-index: 10; display: flex; align-items: center; gap: 20px; }
+    .counter-item { text-align: right; }
+    .counter-val { font-family: 'Playfair Display', serif; font-size: 22px; color: #c9a84c; font-weight: 400; }
+    .counter-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+    .counter-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
+
+    /* ── Form styles ── */
+    .form-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 400; margin-bottom: 10px; color: rgba(255,255,255,0.85); }
+    .form-sub { font-size: 14px; color: rgba(255,255,255,0.35); margin-bottom: 32px; line-height: 1.8; }
+    .input-group { margin-bottom: 20px; }
+    .input-label { display: block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); margin-bottom: 8px; text-transform: uppercase; }
+    .field { width: 100%; padding: 14px 0; background: transparent; border: none; border-bottom: 1.5px solid rgba(255,255,255,0.08); color: #fff; font-family: 'DM Mono', monospace; font-size: 15px; transition: border-color 0.3s; outline: none; }
+    .field:focus { border-color: rgba(201,168,76,0.4); }
+    .field::placeholder { color: rgba(255,255,255,0.15); }
+    .tier-label { display: block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); margin-bottom: 12px; text-transform: uppercase; }
+    .tier-pills { display: flex; gap: 10px; margin-bottom: 28px; }
+    .tier-pill { flex: 1; padding: 14px 10px; border-radius: 8px; text-align: center; border: 1.5px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); cursor: pointer; transition: all 0.3s; color: #fff; }
+    .tier-pill:hover { border-color: rgba(255,255,255,0.12); }
+    .tier-pill.active { border-color: rgba(201,168,76,0.35); background: rgba(201,168,76,0.06); }
+    .tier-apy { display: block; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 400; }
+    .tier-name { display: block; font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; margin-top: 4px; }
+    .submit-btn { width: 100%; padding: 16px 0; border: none; border-radius: 8px; background: rgba(201,168,76,0.2); color: #c9a84c; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: background 0.3s; }
+    .submit-btn:hover { background: rgba(201,168,76,0.3); }
+    .form-note { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.2); text-align: center; margin-top: 16px; line-height: 1.7; }
+    .success-state { display: none; text-align: center; padding: 24px 0; }
+    .success-icon { font-size: 48px; margin-bottom: 16px; }
+    .success-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 400; margin-bottom: 12px; }
+    .success-sub { font-size: 14px; color: rgba(255,255,255,0.35); line-height: 1.8; }
+    .success-position { font-family: 'DM Mono', monospace; font-size: 12px; color: #c9a84c; margin-top: 14px; letter-spacing: 0.08em; }
+
+    @media(max-width:768px) {
+      .hero-title { font-size: clamp(32px,10vw,56px); }
+      .hero-sub { font-size: 14px; }
+      .tier-pills { flex-direction: column; }
+      .live-counter { display: none; }
+      .hero-logo-text { display: none; }
     }
   </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- HERO — Interactive wormhole portal                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="hero-wrap">
+  <canvas class="hero-canvas" id="hero-canvas"></canvas>
 
-<!-- ── Nav ──────────────────────────────────────── -->
-<nav>
-  <div class="nav-logo">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <div class="nav-logomark">V</div>
-      <span class="nav-name">NEXVAULT</span>
-    </a>
-    <a href="/nexvault-whitepaper.pdf" target="_blank" class="nav-pill-link">↓ WHITEPAPER</a>
-    <a href="/about" class="nav-pill-link">ABOUT US</a>
-    <a href="/security" class="nav-pill-link">SECURITY</a>
-    <a href="/nexcredit" class="nav-pill-link">NEXCREDIT</a>
+  <!-- Logo top-left -->
+  <div class="hero-logo">
+    <div class="hero-logo-mark">V</div>
+    <span class="hero-logo-text">NEXVAULT</span>
   </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <div class="dot-live" style="width:8px;height:8px;flex-shrink:0"></div>
-    <a href="/app" class="nav-launch-btn">◈ LAUNCH APP</a>
-    <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
-      <span></span><span></span><span></span>
+
+  <!-- Top-right nav pills -->
+  <div class="nv-top" style="z-index:200">
+    <a href="/app" class="nv-top-pill">Vault</a>
+    <div class="nv-top-sep"></div>
+    <a href="/security" class="nv-top-pill">Security</a>
+    <div class="nv-top-sep"></div>
+    <a href="/proof" class="nv-top-pill">Proof</a>
+    <div class="nv-top-sep"></div>
+    <a href="/news" class="nv-top-pill">News</a>
+    <div class="nv-top-sep"></div>
+    <a href="/about" class="nv-top-pill">About</a>
+  </div>
+
+  <!-- Center content -->
+  <div class="hero-overlay">
+    <div class="hero-tagline reveal">USDX Savings Protocol</div>
+    <h1 class="hero-title reveal">Sovereign<br><em>Yield Banking</em></h1>
+    <p class="hero-sub reveal">Non-custodial savings vault earning up to 4.44% APY backed by U.S. Treasury yield. Your keys. Your vault. Your future.</p>
+    <div class="hero-ctas reveal">
+      <a href="/app" class="nv-btn nv-btn-gold">Open Vault</a>
+      <a href="#how-it-works" class="nv-btn nv-btn-outline">How It Works</a>
+    </div>
+    <div class="dl-wrap reveal">
+      <a id="dl-windows" class="dl-btn" href="https://github.com/NexVaultGH/nexvault-desktop/releases/latest/download/NexVault.Setup.1.1.0.exe">Download for Windows</a>
+      <a id="dl-mobile" class="dl-btn" href="/mobile">Get Mobile App</a>
     </div>
   </div>
-</nav>
 
-<!-- Mobile menu -->
-<div class="mobile-menu" id="mobile-menu">
-  <a href="/nexvault-whitepaper.pdf" target="_blank">↓ WHITEPAPER</a>
-  <a href="/about">ABOUT US</a>
-  <a href="/security">SECURITY</a>
-  <a href="/nexcredit">NEXCREDIT</a>
-  <a href="/app" class="launch">◈ LAUNCH APP</a>
+  <div class="hero-scroll">
+    <span class="hero-scroll-text">SCROLL</span>
+    <div class="hero-scroll-line"></div>
+  </div>
 </div>
 
-<!-- ── Hero ─────────────────────────────────────── -->
-<main>
-<section class="hero">
-
-  <div class="hero-eyebrow">
-    ◈ USDX SAVINGS PROTOCOL
+<!-- Chat widget -->
+<div class="nv-chat-trigger" title="NexVault Assistant">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/></svg>
+</div>
+<div class="nv-chat-panel">
+  <div class="nv-chat-head"><span class="nv-chat-title">NEXVAULT ASSISTANT</span><button class="nv-chat-close-btn">&times;</button></div>
+  <div class="nv-chat-messages"></div>
+  <div class="nv-chat-input-wrap">
+    <input class="nv-chat-input" type="text" placeholder="Ask anything..." id="chat-input" autocomplete="off" />
+    <button class="nv-chat-send" onclick="nvSendChat()"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
   </div>
+  <div class="nv-chat-footer">NEXVAULT</div>
+</div>
 
-  <h1 class="hero-title">
-    The <em>Vault</em><br>That Pays You
-  </h1>
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SCROLLABLE CONTENT                                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="nv-content">
 
-  <p class="hero-subtitle">Your yield. Your keys. Your vault.</p>
+<!-- Stats bar -->
+<div class="nv-stats-grid reveal" style="margin-top:0;border-radius:0">
+  <div class="nv-stat-card"><div class="nv-stat-val">4.44%</div><div class="nv-stat-lbl">Max APY</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val" style="color:#4ade80">174</div><div class="nv-stat-lbl">Passing Tests</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val" style="color:#60a5fa">24/7</div><div class="nv-stat-lbl">Yield Accrual</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val" style="color:#a78bfa">5,000</div><div class="nv-stat-lbl">Genesis Badges</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val" style="color:#4ade80">0</div><div class="nv-stat-lbl">Admin Keys</div></div>
+  <div class="nv-stat-card"><div class="nv-stat-val">GYDS</div><div class="nv-stat-lbl">Yield Source</div></div>
+</div>
 
-  <p class="hero-desc">
-    Earn up to 4.44% APY backed by U.S. Treasury yield
-    through the Global Yield Distribution System — no grants, no governance,
-    no middlemen. Your money works while you sleep.
-  </p>
+<hr class="nv-sect-divider">
 
+<!-- What Is NexVault -->
+<div class="nv-sect" id="what">
+  <div class="nv-split">
+    <div>
+      <div class="nv-sect-label reveal">What Is NexVault</div>
+      <h2 class="nv-sect-title reveal">A vault that pays you<br><em>every second</em></h2>
+      <p class="nv-sect-desc reveal">NexVault is a non-custodial USDX savings protocol on the Nexus blockchain. You deposit USDX stablecoins into an immutable smart contract, choose a lock period, and earn fixed yield automatically. No bank. No middleman. No permission needed.</p>
+      <p class="nv-sect-desc reveal" style="margin-top:18px">Your yield is generated through GYDS (Global Yield Distribution System), which channels real U.S. Treasury yield on-chain. Every yield event is recorded, verifiable, and transparent.</p>
+    </div>
+    <div>
+      <div class="nv-features reveal">
+        <div class="nv-feature"><div class="nv-feature-icon">&#9670;</div><div class="nv-feature-text"><h4>Non-Custodial</h4><p>Your funds stay in the smart contract. Only your wallet can withdraw.</p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon">&#9678;</div><div class="nv-feature-text"><h4>Fixed APY</h4><p>Your rate is locked at deposit time for the full term. No surprises.</p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon">&#9733;</div><div class="nv-feature-text"><h4>Equal Access</h4><p>Same rate for $50 or $50 million. No minimums. No premium tiers.</p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon">&#10003;</div><div class="nv-feature-text"><h4>Open Source</h4><p>Every line of contract code is public on GitHub. Verify everything.</p></div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- ── Form ── -->
-  <div class="form-wrap">
-    <div class="form-card">
+<hr class="nv-sect-divider">
 
-      <h2 class="form-title">Reserve Your Spot</h2>
-      <p class="form-sub">Mainnet is coming. Early members lock in priority access and the Vault Genesis NFT badge.</p>
+<!-- How It Works -->
+<div class="nv-sect" id="how-it-works">
+  <div class="nv-sect-label reveal">How It Works</div>
+  <h2 class="nv-sect-title reveal">Three steps to<br><em>sovereign yield</em></h2>
+  <div class="nv-steps reveal">
+    <div class="nv-step">
+      <div class="nv-step-num">01</div>
+      <div class="nv-step-title">Connect Your Wallet</div>
+      <div class="nv-step-desc">Install MetaMask on desktop or mobile. Connect to NexVault. Your wallet is your identity, your key, and your proof of ownership.</div>
+    </div>
+    <div class="nv-step">
+      <div class="nv-step-num">02</div>
+      <div class="nv-step-title">Deposit USDX & Choose Tier</div>
+      <div class="nv-step-desc">Enter any amount of USDX. Select a 1-Year, 3-Year, or 5-Year lock period. Longer locks earn higher APY.</div>
+    </div>
+    <div class="nv-step">
+      <div class="nv-step-num">03</div>
+      <div class="nv-step-title">Earn Yield Automatically</div>
+      <div class="nv-step-desc">Yield accrues every second, powered by GYDS. When your lock period ends, withdraw your principal plus all earned yield.</div>
+    </div>
+  </div>
+</div>
 
-      <!-- Netlify form — works automatically on Netlify hosting -->
-      <form
-        name="vault-waitlist"
-        method="POST"
-        data-netlify="true"
-        data-netlify-honeypot="bot-field"
-        id="waitlist-form"
-        onsubmit="handleSubmit(event)"
-      >
-        <!-- Hidden fields for Netlify -->
-        <input type="hidden" name="form-name" value="vault-waitlist" />
-        <p style="display:none"><input name="bot-field" /></p>
+<hr class="nv-sect-divider">
 
-        <!-- Email -->
-        <div class="input-group">
-          <label class="input-label" for="email">Email Address <span style="color:var(--gold)">*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">✉</span>
-            <input
-              class="field"
-              type="email"
-              id="email"
-              name="email"
-              placeholder="youremail@gmail.com"
-              required
-            />
-          </div>
-        </div>
+<!-- Yield Tiers -->
+<div class="nv-sect" id="tiers">
+  <div class="nv-sect-label reveal">Yield Tiers</div>
+  <h2 class="nv-sect-title reveal">More commitment,<br><em>more reward</em></h2>
+  <p class="nv-sect-desc reveal">Three tiers. One principle: the longer you lock, the more you earn. Every depositor gets the same rate regardless of deposit size.</p>
+  <div class="nv-tier-grid reveal">
+    <div class="nv-tier-card">
+      <div class="nv-tier-apy" style="color:#60a5fa">3.80%</div>
+      <div class="nv-tier-name">1-YEAR LOCK</div>
+      <div class="nv-tier-detail">365-day lock period<br>Fixed APY from day one<br>Withdraw at unlock<br>Full yield + principal returned</div>
+    </div>
+    <div class="nv-tier-card">
+      <div class="nv-tier-apy" style="color:#a78bfa">4.10%</div>
+      <div class="nv-tier-name">3-YEAR LOCK</div>
+      <div class="nv-tier-detail">1,095-day lock period<br>Higher yield for commitment<br>Most popular tier<br>Balance of flexibility and return</div>
+    </div>
+    <div class="nv-tier-card featured">
+      <div class="nv-tier-apy" style="color:#c9a84c">4.44%</div>
+      <div class="nv-tier-name">5-YEAR LOCK</div>
+      <div class="nv-tier-detail">1,825-day lock period<br>Maximum yield rate<br>For long-term conviction<br>Highest return available</div>
+    </div>
+  </div>
+</div>
 
-        <!-- Wallet -->
-        <div class="input-group" style="margin-bottom:22px;">
-          <label class="input-label" for="wallet">Wallet Address <span style="color:var(--gold)">*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon" style="font-size:14px;">◈</span>
-            <input
-              class="field"
-              type="text"
-              id="wallet"
-              name="wallet"
-              placeholder="0x..."
-              required
-            />
-          </div>
-        </div>
+<hr class="nv-sect-divider">
 
-        <!-- Tier preference -->
-        <label class="tier-label">Preferred Yield Tier</label>
+<!-- The Mission -->
+<div class="nv-sect" id="mission">
+  <div class="nv-split">
+    <div>
+      <div class="nv-sect-label reveal">The Mission</div>
+      <h2 class="nv-sect-title reveal">Access to yield is<br><em>a human right</em></h2>
+      <p class="nv-sect-desc reveal">The financial system was not designed for everyone. Billions of people have no access to a savings account that outpaces inflation.</p>
+      <p class="nv-sect-desc reveal" style="margin-top:18px">NexVault enforces equality at the protocol level. The same 4.44% APY available to an institutional depositor is available to a first-time depositor anywhere on earth with a smartphone and a wallet.</p>
+    </div>
+    <div>
+      <div class="nv-features reveal">
+        <div class="nv-feature"><div class="nv-feature-icon" style="color:#c9a84c">&#9670;</div><div class="nv-feature-text"><h4>174 Contract Tests</h4><p>Full coverage. Every flow verified. <a href="/security" style="color:#c9a84c;text-decoration:underline">View Security</a></p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon" style="color:#c9a84c">&#9678;</div><div class="nv-feature-text"><h4>On-Chain Proof</h4><p>Every yield event verifiable. <a href="/proof" style="color:#c9a84c;text-decoration:underline">View Proof</a></p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon" style="color:#c9a84c">&#9733;</div><div class="nv-feature-text"><h4>5,000 Genesis Badges</h4><p>First depositors earn a soulbound NFT. <a href="/about" style="color:#c9a84c;text-decoration:underline">Learn More</a></p></div></div>
+        <div class="nv-feature"><div class="nv-feature-icon" style="color:#c9a84c">&#10003;</div><div class="nv-feature-text"><h4>Open Source</h4><p>Every line of code is public. <a href="https://github.com/NexVaultGH/nexvault-contracts" style="color:#c9a84c;text-decoration:underline" target="_blank">GitHub</a></p></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="nv-sect-divider">
+
+<!-- CTA -->
+<div class="nv-cta-section reveal">
+  <div class="nv-cta-glow"></div>
+  <div class="nv-sect-label" style="position:relative;margin-bottom:16px">Early Access Open</div>
+  <h2 class="nv-sect-title" style="position:relative;text-align:center;margin:0 auto 28px">Ready to enter<br><em>the vault?</em></h2>
+  <p style="font-size:16px;color:rgba(255,255,255,0.35);text-align:center;max-width:440px;margin:0 auto 32px;line-height:1.8;position:relative;font-family:'DM Mono',monospace">Join the first generation of depositors. Earn yield from day one. Claim your Genesis Badge before all 5,000 are minted.</p>
+  <div style="display:flex;gap:16px;justify-content:center;position:relative">
+    <a href="/app" class="nv-btn nv-btn-gold">Open Vault</a>
+    <a href="#reserve" class="nv-btn nv-btn-outline">Reserve Spot</a>
+  </div>
+</div>
+
+<hr class="nv-sect-divider">
+
+<!-- Waitlist Form -->
+<div class="nv-form-section" id="reserve">
+  <div class="nv-form-card">
+    <div class="form-title reveal">Reserve Your Spot</div>
+    <p class="form-sub reveal">Early members lock in priority access and the Vault Genesis NFT badge when mainnet launches.</p>
+    <form name="vault-waitlist" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" id="waitlist-form" onsubmit="handleSubmit(event)">
+      <input type="hidden" name="form-name" value="vault-waitlist" />
+      <p style="display:none"><input name="bot-field" /></p>
+      <div class="input-group reveal"><label class="input-label" for="email">Email</label><input class="field" type="email" id="email" name="email" placeholder="you@email.com" required /></div>
+      <div class="input-group reveal"><label class="input-label" for="wallet">Wallet Address</label><input class="field" type="text" id="wallet" name="wallet" placeholder="0x..." required /></div>
+      <div class="reveal">
+        <label class="tier-label">Preferred Tier</label>
         <div class="tier-pills">
-          <button type="button" class="tier-pill" onclick="selectTier(this,'1-year')">
-            <span class="tier-apy">3.80%</span>
-            <span class="tier-name">1-Year</span>
-          </button>
-          <button type="button" class="tier-pill" onclick="selectTier(this,'3-year')">
-            <span class="tier-apy">4.10%</span>
-            <span class="tier-name">3-Year</span>
-          </button>
-          <button type="button" class="tier-pill active" onclick="selectTier(this,'5-year')">
-            <span class="tier-apy">4.44%</span>
-            <span class="tier-name">5-Year</span>
-          </button>
+          <button type="button" class="tier-pill" onclick="selectTier(this,'1-year')"><span class="tier-apy">3.80%</span><span class="tier-name">1-Year</span></button>
+          <button type="button" class="tier-pill" onclick="selectTier(this,'3-year')"><span class="tier-apy">4.10%</span><span class="tier-name">3-Year</span></button>
+          <button type="button" class="tier-pill active" onclick="selectTier(this,'5-year')"><span class="tier-apy">4.44%</span><span class="tier-name">5-Year</span></button>
         </div>
         <input type="hidden" name="tier" id="selected-tier" value="5-year" />
-
-        <button type="submit" class="submit-btn">
-          <span>SECURE MY EARLY ACCESS →</span>
-        </button>
-
-        <p class="form-note">
-          No spam. No selling your data. Ever.<br>
-          You'll be notified the moment mainnet launches.
-          <br><a href="#how-it-works">Learn how it works ↓</a>
-        </p>
-
-        <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);text-align:center">
-          <div style="font-size:11px;color:#5a5650;margin-bottom:12px;letter-spacing:.08em">ALREADY HAVE A WALLET?</div>
-          <a href="/app?tab=analytics" style="
-            display:inline-flex;align-items:center;gap:8px;
-            padding:13px 28px;border-radius:10px;
-            border:1px solid rgba(201,168,76,0.3);
-            background:rgba(201,168,76,0.06);
-            color:#c9a84c;font-family:'DM Mono',monospace;
-            font-size:13px;letter-spacing:.08em;font-weight:600;
-            text-decoration:none;transition:all .25s;
-          " onmouseover="this.style.background='rgba(201,168,76,0.12)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(201,168,76,0.06)';this.style.transform='translateY(0)'">
-            ◈ &nbsp;OPEN VAULT DASHBOARD →
-          </a>
-          <div style="font-size:10px;color:#374151;margin-top:10px;letter-spacing:.06em">Preview mode — analytics live when Nexus mainnet launches</div>
-        </div>
-      </form>
-
-      <!-- Success state (shown after submit) -->
-      <div class="success-state" id="success-state">
-        <div class="success-icon">🏆</div>
-        <div class="success-title">You're on the list.</div>
-        <p class="success-sub">
-          Welcome to Vault. Your position is locked in.<br>
-          You'll receive priority access and the Vault Genesis<br>
-          NFT badge the moment mainnet goes live.
-        </p>
-        <div class="success-position" id="success-position">
-          You are among our earliest members
-        </div>
       </div>
-
+      <button type="submit" class="submit-btn reveal">Secure Early Access</button>
+      <p class="form-note">No spam. You'll be notified when mainnet launches.</p>
+    </form>
+    <div class="success-state" id="success-state">
+      <div class="success-icon">&#127942;</div>
+      <div class="success-title">You're on the list.</div>
+      <p class="success-sub">Your position is locked in. You'll receive priority access and the Genesis Badge the moment mainnet goes live.</p>
+      <div class="success-position" id="success-position">You are among our earliest members</div>
     </div>
   </div>
+</div>
 
-</section>
-
-<!-- ── How it Works ──────────────────────────────── -->
-<section class="section" id="how-it-works">
-  <div class="section-eyebrow">HOW IT WORKS</div>
-  <h2 class="section-title reveal">Three steps to<br><em style="font-style:italic;color:var(--gold)">passive yield</em></h2>
-
-  <div class="steps-grid reveal">
-    <div class="step">
-      <span class="step-num">01</span>
-      <div class="step-title">Connect & Deposit USDX</div>
-      <p class="step-desc">Connect your wallet and deposit any amount of USDX. No minimum. No KYC. Non-custodial — your keys, your coins at all times.</p>
-    </div>
-    <div class="step">
-      <span class="step-num">02</span>
-      <div class="step-title">Choose Your Yield Tier</div>
-      <p class="step-desc">Choose your tier at deposit — your yield rate is locked for the duration of that deposit. Three tiers are available: 1-Year lock earns 3.80%, 3-Year lock earns 4.10%, and 5-Year lock earns 4.44% — matching the 10-year U.S. Treasury rate. All deposits are locked until the chosen term expires.</p>
-    </div>
-    <div class="step">
-      <span class="step-num">03</span>
-      <div class="step-title">Earn Automatically</div>
-      <p class="step-desc">Yield accrues every second via the GYDS protocol. Auto-compound to maximize returns, or claim manually. Contracts are open source and tested. A third-party audit is being funded post-launch — deposit amounts you are comfortable with until the audit report is published.</p>
-    </div>
+<!-- Footer -->
+<footer class="nv-footer">
+  <span>&copy; 2026 NexVault</span>
+  <div class="nv-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/terms">Terms</a>
   </div>
-</section>
-
-<!-- ── Yield Tiers ────────────────────────────────── -->
-<section class="section" style="padding-top:0;">
-  <div class="section-eyebrow">YIELD TIERS</div>
-  <h2 class="section-title reveal">More commitment,<br><em style="font-style:italic;color:var(--gold)">more reward</em></h2>
-
-  <div class="tiers-grid reveal">
-    <div class="tier-card">
-      <div class="tier-card-name">1-Year Lock</div>
-      <div class="tier-card-apy">3.80<span style="font-size:28px">%</span></div>
-      <div class="tier-card-label">Annual Percentage Yield</div>
-    </div>
-    <div class="tier-card">
-      <div class="tier-card-name">3-Year Lock</div>
-      <div class="tier-card-apy">4.10<span style="font-size:28px">%</span></div>
-      <div class="tier-card-label">Annual Percentage Yield</div>
-    </div>
-    <div class="tier-card featured">
-      <div class="tier-card-name">5-Year Lock</div>
-      <div class="tier-card-apy">4.44<span style="font-size:28px">%</span></div>
-      <div class="tier-card-label">Annual Percentage Yield</div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Mission Section ───────────────────────────── -->
-<section style="padding: 80px 24px; max-width: 860px; margin: 0 auto; text-align: center;" class="reveal">
-
-  <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 16px;border-radius:30px;border:1px solid rgba(201,168,76,0.2);background:rgba(201,168,76,0.06);font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:24px;font-weight:600;">
-    OUR MISSION
-  </div>
-
-  <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);font-weight:500;color:#f0ece4;line-height:1.2;margin-bottom:24px;">
-    Sovereign Yield Banking<br>
-    <em style="font-style:italic;background:linear-gradient(135deg,#f0c040,#c9a84c,#8b6914);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">for Every Human on Earth</em>
-  </h2>
-
-  <p style="font-size:16px;color:#6b6560;line-height:1.95;margin-bottom:40px;max-width:640px;margin-left:auto;margin-right:auto;font-weight:400;">
-    This mission did not start with one person or one idea. It belongs to all of us — every depositor, every builder, every person who believes there is a better way to move wealth through the world without asking permission from a system designed to keep it out of reach.
-  </p>
-
-  <!-- Three pillars -->
-  <div class="g3">
-
-    <div style="background:#07080c;padding:32px 24px;text-align:center;">
-      <div style="font-size:28px;margin-bottom:14px;">🔍</div>
-      <div style="font-family:'Playfair Display',serif;font-size:17px;color:#f0ece4;margin-bottom:10px;font-weight:500;">Transparency First</div>
-      <p style="font-size:13px;color:#5a5650;line-height:1.75;font-weight:400;">We will always tell you exactly what is built, what is not, what is audited and what is not. No hidden risks. No fine print. Transparency is not a feature — it is our foundation.</p>
-    </div>
-
-    <div style="background:#07080c;padding:32px 24px;text-align:center;">
-      <div style="font-size:28px;margin-bottom:14px;">⛓️</div>
-      <div style="font-family:'Playfair Display',serif;font-size:17px;color:#f0ece4;margin-bottom:10px;font-weight:500;">Trustless by Design</div>
-      <p style="font-size:13px;color:#5a5650;line-height:1.75;font-weight:400;">Your funds are controlled by code, not people. No admin can move your money. No government can freeze it. No bank can deny you access. The contract is the only authority that matters.</p>
-    </div>
-
-    <div style="background:#07080c;padding:32px 24px;text-align:center;">
-      <div style="font-size:28px;margin-bottom:14px;">🌍</div>
-      <div style="font-family:'Playfair Display',serif;font-size:17px;color:#f0ece4;margin-bottom:10px;font-weight:500;">Built for the World</div>
-      <p style="font-size:13px;color:#5a5650;line-height:1.75;font-weight:400;">A person with $50 and a phone in Phnom Penh earns the same yield as a fund manager in New York. No minimum balance. No citizenship requirement. No permission needed. Just deposit and earn.</p>
-    </div>
-
-  </div>
-
-  <!-- Transparency pledge -->
-  <div style="background:rgba(8,11,16,0.95);border:1px solid rgba(201,168,76,0.15);border-radius:18px;padding:40px 36px;position:relative;overflow:hidden;">
-
-    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>
-
-    <div style="font-size:32px;margin-bottom:18px;">🤝</div>
-
-    <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:#f0ece4;margin-bottom:16px;font-weight:500;">
-      Our Transparency Pledge
-    </h3>
-
-    <p style="font-size:14px;color:#6b6560;line-height:1.95;margin-bottom:24px;max-width:580px;margin-left:auto;margin-right:auto;">
-      Transparency is our #1 priority — and it will always be here, by your side through it all. We will publish our smart contract code openly. We will disclose our audit status honestly. We will share our earnings model clearly. When we make mistakes we will say so. When we upgrade the protocol we will explain why. This vault is not ours — it belongs to every person who deposits into it. We are only its builders.
-    </p>
-
-    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
-      <div style="padding:8px 18px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:30px;font-size:12px;color:var(--gold);font-weight:500;">✓ Open source contracts</div>
-      <div style="padding:8px 18px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:30px;font-size:12px;color:var(--gold);font-weight:500;">✓ Public audit report when complete</div>
-      <div style="padding:8px 18px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:30px;font-size:12px;color:var(--gold);font-weight:500;">✓ Honest risk disclosure always</div>
-      <div style="padding:8px 18px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:30px;font-size:12px;color:var(--gold);font-weight:500;">✓ Community-first decisions</div>
-      <div style="padding:8px 18px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:30px;font-size:12px;color:var(--gold);font-weight:500;">✓ No hidden fees ever</div>
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ── Smart Contract / Trust ────────────────────── -->
-<section class="contract-section reveal">
-  <div class="contract-box">
-    <div class="contract-icon">🔧</div>
-    <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:30px;border:1px solid rgba(201,168,76,0.25);background:rgba(201,168,76,0.07);font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:20px;font-weight:600;">
-      ⏳ &nbsp;AUDIT — COMING SOON
-    </div>
-    <h2 class="contract-title">Built to be Trustless</h2>
-    <p class="contract-desc">
-      Full transparency — NexVault will launch on Nexus mainnet before a formal third-party audit is complete.
-      Our contracts are written, tested, and open source. No admin can touch user funds.
-      A professional security audit is actively being funded and will be published publicly once complete.
-      Deposit only what you are comfortable with during this pre-audit period.
-    </p>
-    <div style="padding:14px 22px;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:12px;margin-bottom:26px;font-size:13px;color:#f87171;line-height:1.8;font-weight:500;">
-      ⚠️ &nbsp;Smart contracts are unaudited at launch &nbsp;·&nbsp; Use at your own risk &nbsp;·&nbsp; Audit report will be published publicly
-    </div>
-
-    <!-- Certik coming soon badge -->
-    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:26px">
-      <!-- Certik logo — slightly dimmed, no overlay -->
-      <div style="
-        display:flex;align-items:center;gap:12px;
-        padding:16px 28px;border-radius:14px;
-        background:rgba(74,144,226,.07);
-        border:1px solid rgba(74,144,226,.22);
-        filter:grayscale(0.4);
-        opacity:0.62;
-        user-select:none;pointer-events:none;
-      ">
-        <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="50,4 96,28 96,72 50,96 4,72 4,28" fill="none" stroke="#4A90E2" stroke-width="5"/>
-          <polygon points="50,16 84,34 84,66 50,84 16,66 16,34" fill="#4A90E2" opacity="0.2"/>
-          <text x="50" y="60" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="24" font-weight="900" fill="#4A90E2">CK</text>
-        </svg>
-        <div>
-          <div style="font-family:Arial Black,sans-serif;font-size:18px;font-weight:900;color:#4A90E2;letter-spacing:.06em">CERTIK</div>
-          <div style="font-size:9px;color:#6b7280;letter-spacing:.12em;margin-top:2px;font-weight:500">SECURITY AUDIT</div>
-        </div>
-      </div>
-      <!-- Coming soon label — below badge, dark and subtle -->
-      <div style="
-        padding:5px 18px;border-radius:20px;
-        background:rgba(255,255,255,.04);
-        border:1px solid rgba(255,255,255,.08);
-        font-size:10px;letter-spacing:.18em;
-        color:#374151;font-weight:600;
-        text-transform:uppercase;
-      ">⏳ &nbsp;COMING SOON</div>
-    </div>
-
-    <div class="contract-features">
-      <div class="contract-feat">✓ Smart Contract — Written & Tested</div>
-      <div class="contract-feat">⏳ Audit — Post-Launch (Funded from earnings)</div>
-      <div class="contract-feat">✓ Non-Custodial</div>
-      <div class="contract-feat">✓ No Admin Keys Over Funds</div>
-      <div class="contract-feat">✓ Open Source at Launch</div>
-      <div class="contract-feat">✓ GYDS Powered</div>
-    </div>
-  </div>
-</section>
-
-<!-- ── NexCredit Section ───────────────────────────── -->
-<section style="padding:80px 24px;max-width:960px;margin:0 auto;" class="reveal">
-
-  <div style="text-align:center;margin-bottom:56px">
-    <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 16px;border-radius:30px;border:1px solid rgba(201,168,76,0.2);background:rgba(201,168,76,0.06);font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:24px;font-weight:600;">
-      ON-CHAIN CREDIT
-    </div>
-    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);font-weight:500;color:#f0ece4;line-height:1.2;margin-bottom:20px;">
-      Your Vault History.<br>
-      <em style="font-style:italic;background:linear-gradient(135deg,#f0c040,#c9a84c,#8b6914);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Your Credit Score.</em>
-    </h2>
-    <p style="font-size:16px;color:#9ca3af;max-width:600px;margin:0 auto;line-height:1.75;">
-      NexCredit transforms your NexVault deposit history into a verifiable on-chain credit score. 
-      Private by design — only you can see your score.
-    </p>
-  </div>
-
-  <!-- Score tier cards -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px;">
-
-    <div style="border-radius:16px;padding:26px 22px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.8);text-align:center;">
-      <div style="font-size:28px;font-family:'Cormorant Garamond',serif;color:#6b7280;margin-bottom:8px;">—</div>
-      <div style="font-size:11px;letter-spacing:.12em;color:#4b5563;font-weight:600;margin-bottom:6px;">NO HISTORY</div>
-      <div style="font-size:11px;color:#374151;">0 points</div>
-    </div>
-
-    <div style="border-radius:16px;padding:26px 22px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.8);text-align:center;">
-      <div style="font-size:28px;font-family:'Cormorant Garamond',serif;color:#9ca3af;margin-bottom:8px;">150</div>
-      <div style="font-size:11px;letter-spacing:.12em;color:#9ca3af;font-weight:600;margin-bottom:6px;">BUILDING</div>
-      <div style="font-size:11px;color:#6b7280;">$5K+ deposited</div>
-    </div>
-
-    <div style="border-radius:16px;padding:26px 22px;border:1px solid rgba(96,165,250,0.15);background:rgba(96,165,250,0.04);text-align:center;">
-      <div style="font-size:28px;font-family:'Cormorant Garamond',serif;color:#60a5fa;margin-bottom:8px;">300</div>
-      <div style="font-size:11px;letter-spacing:.12em;color:#60a5fa;font-weight:600;margin-bottom:6px;">ESTABLISHED</div>
-      <div style="font-size:11px;color:#6b7280;">$5K+, 3YR lock, 6mo</div>
-    </div>
-
-    <div style="border-radius:16px;padding:26px 22px;border:1px solid rgba(167,139,250,0.15);background:rgba(167,139,250,0.04);text-align:center;">
-      <div style="font-size:28px;font-family:'Cormorant Garamond',serif;color:#a78bfa;margin-bottom:8px;">500</div>
-      <div style="font-size:11px;letter-spacing:.12em;color:#a78bfa;font-weight:600;margin-bottom:6px;">TRUSTED</div>
-      <div style="font-size:11px;color:#6b7280;">$25K+, 3YR lock, 1yr</div>
-    </div>
-
-    <div style="border-radius:16px;padding:26px 22px;border:1px solid rgba(201,168,76,0.2);background:rgba(201,168,76,0.05);text-align:center;">
-      <div style="font-size:28px;font-family:'Cormorant Garamond',serif;color:#fbbf24;margin-bottom:8px;">700</div>
-      <div style="font-size:11px;letter-spacing:.12em;color:#fbbf24;font-weight:600;margin-bottom:6px;">SENIOR</div>
-      <div style="font-size:11px;color:#6b7280;">$25K+, 5YR lock, 2yr</div>
-    </div>
-
-    <div style="border-radius:16px;padding:26px 22px;border:1px solid rgba(74,222,128,0.2);background:rgba(74,222,128,0.04);text-align:center;position:relative;overflow:hidden;">
-      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(74,222,128,0.06),transparent 70%);pointer-events:none"></div>
-      <div style="font-size:28px;font-family:'Cormorant Garamond',serif;color:#4ade80;margin-bottom:8px;">850</div>
-      <div style="font-size:11px;letter-spacing:.12em;color:#4ade80;font-weight:600;margin-bottom:6px;">ELITE ✦</div>
-      <div style="font-size:11px;color:#6b7280;">$100K+, 5YR lock, 3yr</div>
-    </div>
-
-  </div>
-
-  <!-- Four scoring categories -->
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:48px;">
-
-    <div style="padding:28px;border-radius:16px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-      <div style="font-size:9px;letter-spacing:.15em;color:var(--gold);font-weight:600;margin-bottom:12px;text-transform:uppercase;">Deposit Strength</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:#f0ece4;margin-bottom:8px;">250 pts</div>
-      <p style="font-size:13px;color:#6b7280;line-height:1.7;margin:0;">
-        Determined by your total active USDX deposited. 
-        Thresholds at $5K, $25K, and $100K. 
-        Idle capital earns nothing here — only active deposits count.
-      </p>
-    </div>
-
-    <div style="padding:28px;border-radius:16px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-      <div style="font-size:9px;letter-spacing:.15em;color:var(--gold);font-weight:600;margin-bottom:12px;text-transform:uppercase;">Lock Commitment</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:#f0ece4;margin-bottom:8px;">250 pts</div>
-      <p style="font-size:13px;color:#6b7280;line-height:1.7;margin:0;">
-        The 5-Year lock is the only path to Elite. 
-        1-Year gives 20 pts. 3-Year gives 80 pts. 
-        5-Year gives the full 250. Commitment is rewarded.
-      </p>
-    </div>
-
-    <div style="padding:28px;border-radius:16px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-      <div style="font-size:9px;letter-spacing:.15em;color:var(--gold);font-weight:600;margin-bottom:12px;text-transform:uppercase;">Protocol Loyalty</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:#f0ece4;margin-bottom:8px;">250 pts</div>
-      <p style="font-size:13px;color:#6b7280;line-height:1.7;margin:0;">
-        60 days minimum to earn any loyalty points. 
-        Full 250 requires 3 consecutive years with an active deposit. 
-        This cannot be rushed — only time builds it.
-      </p>
-    </div>
-
-    <div style="padding:28px;border-radius:16px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-      <div style="font-size:9px;letter-spacing:.15em;color:var(--gold);font-weight:600;margin-bottom:12px;text-transform:uppercase;">Behavioral Excellence</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:#f0ece4;margin-bottom:8px;">250 pts</div>
-      <p style="font-size:13px;color:#6b7280;line-height:1.7;margin:0;">
-        Compound 3+ times, hold 5+ lifetime deposits, refer 3 depositors, 
-        hold a Genesis Badge with $5K+, and maintain 2 simultaneous active deposits. 
-        All five independent — stack them all.
-      </p>
-    </div>
-
-  </div>
-
-  <!-- Privacy statement -->
-  <div style="text-align:center;padding:32px;border-radius:16px;border:1px solid rgba(201,168,76,0.1);background:rgba(201,168,76,0.03);">
-    <div style="font-size:13px;color:#9ca3af;line-height:1.8;max-width:520px;margin:0 auto;">
-      <span style="color:var(--gold);font-weight:600;">🔒 Fully Private.</span> 
-      Your NexCredit score is visible only to you. 
-      It is never sold, shared, or exposed to any third party. 
-      No fees to check your own score. Ever.
-    </div>
-    <a href="/app" style="display:inline-block;margin-top:20px;padding:12px 28px;border-radius:10px;border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.08);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--gold);text-decoration:none;font-weight:600;transition:all .2s;">
-      CHECK YOUR SCORE →
-    </a>
-  </div>
-
-</section>
-
-</main>
-
-<footer>
-  <div class="footer-copy">© 2026 NEXVAULT · BUILT ON NEXUS.XYZ</div>
-  <div class="footer-links">
-    <a class="footer-link" href="/security">Security</a>
-    <a class="footer-link" href="/nexcredit">NexCredit</a>
-    <a class="footer-link" href="/about">About</a>
-    <a class="footer-link" href="/terms">Terms</a>
-  </div</div>
 </footer>
 
+</div>
+
+<!-- Scripts -->
+<script src="/nv-canvas.js?v=60"></script>
+<script src="/nv-core.js?v=60"></script>
 <script>
-  // ── Animated particle background ──────────────────
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
+  // Device detection
+  (function() {
+    var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) && !/Windows NT/i.test(navigator.userAgent);
+    if (isMobile) document.getElementById('dl-mobile').style.display = 'inline-flex';
+    else document.getElementById('dl-windows').style.display = 'inline-flex';
+  })();
 
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
+  // Init wormhole
+  document.addEventListener('DOMContentLoaded', function() { NVScene.createScene('hero-canvas'); });
 
-  function initParticles() {
-    particles = [];
-    const count = Math.floor((W * H) / 18000);
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        r: Math.random() * 1.2 + 0.2,
-        vx: (Math.random() - .5) * 0.15,
-        vy: (Math.random() - .5) * 0.15,
-        o: Math.random() * 0.4 + 0.05,
-      });
-    }
-  }
-
-  function drawParticles() {
-    ctx.clearRect(0, 0, W, H);
-
-    // Radial glow
-    const grd = ctx.createRadialGradient(W*.5, H*.4, 0, W*.5, H*.4, W*.6);
-    grd.addColorStop(0, 'rgba(201,168,76,0.04)');
-    grd.addColorStop(1, 'transparent');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, W, H);
-
-    particles.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(201,168,76,${p.o})`;
-      ctx.fill();
-    });
-
-    // Draw connecting lines
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i+1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(201,168,76,${0.06 * (1 - dist/120)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(drawParticles);
-  }
-
-  window.addEventListener('resize', () => { resize(); initParticles(); });
-  resize(); initParticles(); drawParticles();
-
-  // ── Waitlist counter (localStorage) ──────────────
-  // ── Waitlist counter ──────────────────────────────
-  let count = parseInt(localStorage.getItem('vault_waitlist') || '0');
-
-  function updateCountDisplay() {
-    // No public counter displayed — tracking internally only
-  }
-
-  updateCountDisplay();
-
-  // ── Tier pill selection ───────────────────────────
+  // Tier selection
   function selectTier(btn, val) {
-    document.querySelectorAll('.tier-pill').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tier-pill').forEach(function(p) { p.classList.remove('active'); });
     btn.classList.add('active');
     document.getElementById('selected-tier').value = val;
   }
 
-  // ── Form submit ───────────────────────────────────
-  // ── Real email domain validation ──────────────────────
-  const BLOCKED_DOMAINS = [
-    'mailinator.com','guerrillamail.com','tempmail.com','throwaway.email',
-    'yopmail.com','sharklasers.com','guerrillamailblock.com','grr.la',
-    'guerrillamail.info','guerrillamail.biz','guerrillamail.de','guerrillamail.net',
-    'guerrillamail.org','spam4.me','trashmail.com','trashmail.me','trashmail.net',
-    'trashmail.io','dispostable.com','mailnull.com','spamgourmet.com',
-    'maildrop.cc','fakeinbox.com','temp-mail.org','getairmail.com',
-    'discard.email','spamfree24.org','20minutemail.com','10minutemail.com',
-    'tempinbox.com','spambox.us','spamthisplease.com','binkmail.com',
-    'bobmail.info','chammy.info','devnullmail.com','letthemeatspam.com',
-    'mailfreeonline.com','mrresearch.info','spamhereplease.com','spamthisplease.com',
-    'thisisnotmyrealemail.com','webm4il.info','wegwerfmail.de','wegwerfmail.net',
-    'wegwerfmail.org','meltmail.com','anonymbox.com','antispam24.de',
-    'deadaddress.com','despam.it','e4ward.com','emailsensei.com',
-    'mailexpire.com','mailfreeonline.com','mailnew.com','mailscrap.com',
-    'mailslite.com','mailtome.de','mailzilla.org','mega.zik.dj',
-    'moncourrier.fr.nf','monemail.fr.nf','monmail.fr.nf','no-spam.ws',
-    'nobulk.com','nogmailspam.info','nospamfor.us','nospammail.net',
-    'nowmymail.com','objectmail.com','obobbo.com','oneoffemail.com',
-    'pookmail.com','privacy.net','proxymail.eu','rcpt.at','rklips.com',
-    'rmqkr.net','safe-mail.net','safetymail.info','sandelf.de','sharedmailbox.org',
-    'shortmail.net','spam.la','spamavert.com','spambob.com','spambob.net',
-    'spambob.org','spamcon.org','spamday.com','spamex.com','spamfree.eu',
-    'spamgob.com','spamherelots.com','spamify.com','spamspot.com','spamstack.net',
-    'suremail.info','teleworm.us','thanksnospam.info','thismail.net',
-    'throwam.com','tradermail.info','trash-amil.com','trashmail.at',
-    'trashmail.io','trashmailer.com','trbvm.com','turual.com','tyldd.com',
-    'uggsrock.com','umail.net','uroid.com','veryrealemail.com','vidchart.com',
-    'viditag.com','viewcastmedia.com','viewcastmedia.net','viewcastmedia.org',
-    'fakeemail.com','fakemail.com','fakemail.net','dispostable.net',
-    'tempail.com','tmpmail.net','tmpmail.org','throwam.com','spamgourmet.net',
-    'mail-temp.com','tmpeml.com','1secmail.com','1secmail.net','1secmail.org',
-    'mohmal.com','inboxbear.com','33mail.com','filzmail.com','bspamfree.org',
-    'discard.email','spamdecoy.net','haltospam.com','ieatspam.eu','ieatspam.info',
-  ]
-
-  const REAL_EMAIL_REGEX = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/
-
-  function validateEmail(email) {
-    if (!email) return 'Email address is required.'
-    if (!REAL_EMAIL_REGEX.test(email)) return 'Please enter a valid email address.'
-
-    const domain = email.split('@')[1].toLowerCase()
-
-    if (BLOCKED_DOMAINS.includes(domain)) {
-      return 'Temporary or disposable email addresses are not allowed. Please use your real email.'
-    }
-
-    // Must have a real TLD — no single character domains
-    const parts = domain.split('.')
-    if (parts[parts.length - 1].length < 2) {
-      return 'Please enter a valid email address.'
-    }
-
-    // Block obviously fake local parts like "asdfjkl" or random strings
-    const localPart = email.split('@')[0].toLowerCase()
-    if (localPart.length < 2) return 'Please enter a valid email address.'
-
-    // Check for keyboard mash patterns (5+ consecutive same chars or no vowels in 6+ char string)
-    if (/(.)\1{4,}/.test(localPart)) {
-      return 'Please enter a real email address.'
-    }
-
-    return null // valid
+  // Form validation
+  var BLOCKED_DOMAINS = ['mailinator.com','guerrillamail.com','tempmail.com','throwaway.email','yopmail.com','sharklasers.com','1secmail.com','fakeemail.com','fakemail.com','trashmail.com'];
+  var EMAIL_RE = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+  function validateEmail(e) {
+    if (!e) return 'Email is required.';
+    if (!EMAIL_RE.test(e)) return 'Enter a valid email.';
+    var d = e.split('@')[1].toLowerCase();
+    if (BLOCKED_DOMAINS.indexOf(d) >= 0) return 'Use a real email address.';
+    return null;
   }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const email  = document.getElementById('email').value.trim();
-    const wallet = document.getElementById('wallet').value.trim();
-
-    const emailError = validateEmail(email);
-    if (emailError) {
-      showFormError(emailError);
-      document.getElementById('email').focus();
-      return;
-    }
-
-    if (!wallet) {
-      showFormError('Please enter your wallet address to continue.');
-      document.getElementById('wallet').focus();
-      return;
-    }
-
-    if (!wallet.startsWith('0x') || wallet.length < 42) {
-      showFormError('Please enter a valid wallet address starting with 0x (42+ characters).');
-      document.getElementById('wallet').focus();
-      return;
-    }
-
+  function handleSubmit(ev) {
+    ev.preventDefault();
+    var email = document.getElementById('email').value.trim();
+    var wallet = document.getElementById('wallet').value.trim();
+    var err = validateEmail(email);
+    if (err) { showFormError(err); return; }
+    if (!wallet || !wallet.startsWith('0x') || wallet.length < 42) { showFormError('Enter a valid wallet address (0x...).'); return; }
     hideFormError();
-
-    const formData = new FormData();
-    formData.append('form-name', 'vault-waitlist');
-    formData.append('email',  email);
-    formData.append('wallet', wallet);
-    formData.append('tier',   document.getElementById('selected-tier').value);
-
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(formData).toString()
-    })
-    .then(() => {
-      document.getElementById('waitlist-form').style.display = 'none';
-      document.getElementById('success-state').style.display = 'block';
-      document.getElementById('success-position').textContent = 'You are among our earliest members';
-    })
-    .catch(() => {
-      document.getElementById('waitlist-form').style.display = 'none';
-      document.getElementById('success-state').style.display = 'block';
-      document.getElementById('success-position').textContent = 'You are among our earliest members';
-    });
+    var fd = new FormData();
+    fd.append('form-name','vault-waitlist'); fd.append('email',email); fd.append('wallet',wallet); fd.append('tier',document.getElementById('selected-tier').value);
+    fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(fd).toString() })
+    .then(function(){ document.getElementById('waitlist-form').style.display='none'; document.getElementById('success-state').style.display='block'; })
+    .catch(function(){ showFormError('Something went wrong. Try again.'); });
   }
-
   function showFormError(msg) {
-    let el = document.getElementById('form-error');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'form-error';
-      el.style.cssText = 'padding:10px 16px;border-radius:8px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);color:#f87171;font-size:12px;margin-bottom:14px;text-align:center;line-height:1.6';
-      document.getElementById('waitlist-form').insertBefore(el, document.querySelector('.submit-btn'));
-    }
-    el.textContent = msg;
-    el.style.display = 'block';
+    var el = document.getElementById('form-error');
+    if (!el) { el = document.createElement('div'); el.id='form-error'; el.style.cssText='padding:10px 16px;border-radius:8px;background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.12);color:#f87171;font-size:12px;margin-bottom:14px;text-align:center'; document.getElementById('waitlist-form').insertBefore(el, document.querySelector('.submit-btn')); }
+    el.textContent = msg; el.style.display = 'block';
   }
-
-  function hideFormError() {
-    const el = document.getElementById('form-error');
-    if (el) el.style.display = 'none';
-  }
-
-  // ── Scroll reveal ─────────────────────────────────
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.15 });
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // ── Mobile menu ──────────────────────────────────────
-  function toggleMobileMenu() {
-    const menu   = document.getElementById('mobile-menu')
-    const burger = document.getElementById('hamburger')
-    const isOpen = menu.classList.toggle('open')
-    burger.style.background = isOpen ? 'rgba(201,168,76,.15)' : 'rgba(255,255,255,.05)'
-  }
-  document.addEventListener('click', function(e) {
-    const menu   = document.getElementById('mobile-menu')
-    const burger = document.getElementById('hamburger')
-    if (!menu.contains(e.target) && !burger.contains(e.target)) {
-      menu.classList.remove('open')
-      burger.style.background = 'rgba(255,255,255,.05)'
-    }
-  })
-  document.querySelectorAll('.mobile-menu a').forEach(a => {
-    a.addEventListener('click', () => {
-      document.getElementById('mobile-menu').classList.remove('open')
-      document.getElementById('hamburger').style.background = 'rgba(255,255,255,.05)'
-    })
-  })
+  function hideFormError() { var el = document.getElementById('form-error'); if (el) el.style.display = 'none'; }
 </script>
-
+<script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </body>
 </html>
