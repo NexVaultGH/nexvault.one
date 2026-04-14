@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NexVault — Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#c9a84c;--gold2:#8b6914;--bg:#05060a;
+  --card:rgba(255,255,255,.025);--border:rgba(255,255,255,.07);
+  --text:#f0ece4;--muted:#6b7280;--dim:#374151;
+  --green:#4ade80;--red:#f87171;--yellow:#fbbf24;--purple:#a78bfa;--blue:#60a5fa;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden}
+
+/* AUTH */
+#auth-screen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px}
+.auth-card{background:rgba(8,9,13,.98);border:1px solid rgba(201,168,76,.18);border-radius:24px;padding:48px 40px;width:100%;max-width:420px;text-align:center;position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.55),transparent)}
+.auth-logo{width:58px;height:58px;border-radius:14px;background:linear-gradient(135deg,#c9a84c,#8b6914);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:600;color:#05060a;margin:0 auto 20px}
+.auth-title{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--text);margin-bottom:6px}
+.auth-sub{font-size:11px;color:var(--muted);letter-spacing:.1em;margin-bottom:32px}
+.auth-btn{width:100%;padding:15px;border-radius:12px;border:none;background:linear-gradient(135deg,#c9a84c,#8b6914);color:#05060a;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:10px}
+.auth-btn:hover{opacity:.88}
+.auth-btn:disabled{opacity:.4;cursor:not-allowed}
+.auth-status{font-size:12px;color:var(--muted);margin-top:16px;min-height:18px;line-height:1.5}
+.auth-err{color:var(--red)}
+.auth-ok{color:var(--green)}
+
+/* APP */
+#app{display:none}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:rgba(5,6,10,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.tb-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#c9a84c,#8b6914);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:#05060a}
+.tb-name{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text);letter-spacing:.08em}
+.tb-badge{font-size:9px;padding:3px 10px;border-radius:20px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.18);color:var(--gold);letter-spacing:.12em;font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.addr-pill{font-size:11px;padding:6px 14px;border-radius:20px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);color:var(--green);font-family:monospace}
+.lock-btn{padding:7px 16px;border-radius:8px;font-size:11px;letter-spacing:.07em;font-weight:600;border:1px solid rgba(239,68,68,.2);background:rgba(239,68,68,.06);color:var(--red);font-family:'DM Mono',monospace;cursor:pointer;transition:all .2s}
+.lock-btn:hover{background:rgba(239,68,68,.12)}
+
+/* LAYOUT */
+.page{max-width:1140px;margin:0 auto;padding:100px 24px 60px}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text);margin-bottom:16px;font-weight:400;display:flex;align-items:center;gap:10px}
+.gold-line{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.2),transparent);margin:36px 0}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px}
+.card-label{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.card-value{font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1.1;margin-bottom:4px}
+.card-sub{font-size:11px;color:var(--dim)}
+
+/* GRIDS */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* BUTTONS */
+.btn{padding:11px 20px;border-radius:10px;font-size:12px;font-weight:600;letter-spacing:.07em;font-family:'DM Mono',monospace;cursor:pointer;transition:all .2s;border:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn-full{width:100%}
+.btn-gold{background:linear-gradient(135deg,#c9a84c,#8b6914);color:#05060a}
+.btn-gold:hover{opacity:.88;transform:translateY(-1px)}
+.btn-gold:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.btn-red{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2)!important;color:var(--red)}
+.btn-red:hover{background:rgba(239,68,68,.14)}
+.btn-ghost{background:rgba(255,255,255,.04);border:1px solid var(--border)!important;color:var(--muted)}
+.btn-ghost:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.btn-blue{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2)!important;color:var(--blue)}
+.btn-blue:hover{background:rgba(96,165,250,.14)}
+.btn-purple{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2)!important;color:var(--purple)}
+.btn-purple:hover{background:rgba(167,139,250,.14)}
+
+/* STATUS */
+.status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:10px;letter-spacing:.1em;font-weight:600}
+.s-ok{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);color:var(--green)}
+.s-warn{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:var(--yellow)}
+.s-err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--red)}
+.s-dim{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted)}
+.sdot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sdot-live{animation:pulse 1.8s infinite}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:10px 14px;font-size:10px;color:var(--muted);letter-spacing:.1em;font-weight:600;border-bottom:1px solid var(--border)}
+.tbl td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.03);color:#9ca3af;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.015)}
+
+/* PROGRESS */
+.prog{height:6px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:8px}
+.prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#c9a84c,#fbbf24);transition:width .6s ease}
+
+/* MONO box */
+.mono{font-family:monospace;font-size:11px;color:#9ca3af;background:rgba(255,255,255,.03);padding:9px 12px;border-radius:7px;border:1px solid var(--border);word-break:break-all;line-height:1.6}
+
+/* FEED */
+.feed-item{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.03)}
+.feed-item:last-child{border-bottom:none}
+.feed-empty{padding:24px;text-align:center;font-size:12px;color:var(--dim)}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);padding:11px 24px;border-radius:40px;font-size:12px;font-weight:500;letter-spacing:.04em;z-index:9999;display:none;white-space:nowrap;pointer-events:none}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:24px}
+.modal-box{background:#0b0c11;border:1px solid var(--border);border-radius:20px;padding:32px;width:100%;max-width:480px;position:relative}
+.modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.4),transparent);border-radius:20px 20px 0 0}
+
+/* INFO BOX */
+.info-box{padding:14px 18px;border-radius:10px;font-size:12px;line-height:1.7}
+.info-gold{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.12);color:#9ca3af}
+.info-red{background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12);color:#f87171}
+.info-green{background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.12);color:#9ca3af}
+
+@media(max-width:700px){
+  .grid-4,.grid-3{grid-template-columns:1fr 1fr}
+  .grid-2{grid-template-columns:1fr}
+  .topbar{padding:12px 16px}
+  .page{padding:90px 16px 40px}
+  .auth-card{padding:36px 22px}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">V</div>
+    <div class="auth-title">Command Center</div>
+    <div class="auth-sub">NEXVAULT · PRIVATE · VAULT OWNER ONLY</div>
+    <button class="auth-btn" id="auth-btn" onclick="startAuth()">
+      <svg width="18" height="18" viewBox="0 0 35 33" fill="none"><path d="M32.955 0.842L17.5 10.784L14.589 4.592L32.955 0.842Z" fill="#E27625"/><path d="M2.045 0.842L17.368 10.895L14.589 4.592L2.045 0.842Z" fill="#E27625"/><path d="M28.139 23.525L24.026 29.731L32.03 31.931L34.33 23.655L28.139 23.525Z" fill="#E27625"/><path d="M0.686 23.655L2.971 31.931L10.975 29.731L6.877 23.525L0.686 23.655Z" fill="#E27625"/><path d="M10.547 14.515L8.274 17.864L16.214 18.217L15.939 9.607L10.547 14.515Z" fill="#E27625"/><path d="M24.453 14.515L18.999 9.501L18.786 18.217L26.726 17.864L24.453 14.515Z" fill="#E27625"/><path d="M10.975 29.731L15.74 27.394L11.642 23.705L10.975 29.731Z" fill="#E27625"/><path d="M19.26 27.394L24.026 29.731L23.358 23.705L19.26 27.394Z" fill="#E27625"/></svg>
+      Connect with MetaMask
+    </button>
+    <div class="auth-status" id="auth-status">Owner wallet required to proceed</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="tb-logo">V</div>
+      <span class="tb-name">NEXVAULT</span>
+      <span class="tb-badge">COMMAND CENTER</span>
+    </div>
+    <div class="topbar-right">
+      <div class="addr-pill" id="addr-display">—</div>
+      <div id="network-pill" class="status s-warn" style="font-size:10px"><span class="sdot"></span>NOT DEPLOYED</div>
+      <button class="lock-btn" onclick="lockSession()">🔒 Lock</button>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- ═══ 1. NETWORK STATUS ═══ -->
+    <div class="section-title">Network Status</div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:6px;font-weight:600">VAULT CONTRACT</div>
+            <span class="status s-warn" id="net-vault"><span class="sdot"></span>NOT DEPLOYED</span>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:6px;font-weight:600">GYDS CONNECTION</div>
+            <span class="status s-warn" id="net-gyds"><span class="sdot"></span>AWAITING MAINNET</span>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:6px;font-weight:600">USDX TOKEN</div>
+            <span class="status s-warn" id="net-usdx"><span class="sdot"></span>AWAITING MAINNET</span>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:6px;font-weight:600">AUDIT</div>
+            <span class="status s-err"><span class="sdot"></span>UNAUDITED</span>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:6px;font-weight:600">DEPOSITS</div>
+            <span class="status s-ok" id="net-deposits"><span class="sdot sdot-live"></span>OPEN</span>
+          </div>
+        </div>
+        <button class="btn btn-red" id="pause-btn" onclick="togglePause()">⏸ Emergency Pause</button>
+      </div>
+    </div>
+
+    <div class="gold-line"></div>
+
+    <!-- ═══ 2. PROTOCOL STATS ═══ -->
+    <div class="section-title">Protocol Stats</div>
+    <div class="grid-4" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-label">Total Value Locked</div>
+        <div class="card-value" style="color:var(--gold)" id="d-tvl">$0.00</div>
+        <div class="card-sub">All active deposits</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Total Depositors</div>
+        <div class="card-value" style="color:var(--blue)" id="d-depositors">0</div>
+        <div class="card-sub">Unique wallets</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Vault Genesis Badges</div>
+        <div class="card-value" style="color:var(--yellow)" id="d-badges">0 / 5,000</div>
+        <div class="card-sub" id="d-badges-pct">0% minted</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Yield Distributed</div>
+        <div class="card-value" style="color:var(--green)" id="d-yield">$0.00</div>
+        <div class="card-sub">All time to depositors</div>
+      </div>
+    </div>
+
+    <!-- TVL by tier -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-label" style="margin-bottom:16px">TVL Breakdown by Tier</div>
+      <table class="tbl">
+        <thead>
+          <tr><th>Tier</th><th>APY</th><th>TVL</th><th>% of Total</th><th>Monthly GYDS (est.)</th><th>Your Cut (10%)</th></tr>
+        </thead>
+        <tbody id="tvl-breakdown">
+          <tr><td>Flexible</td><td style="color:var(--blue)">5.5%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
+          <tr><td>90-Day Lock</td><td style="color:var(--purple)">11.0%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
+          <tr><td>1-Year Lock</td><td style="color:var(--yellow)">14.0%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
+          <tr><td>2-Year Lock</td><td style="color:var(--green)">18.0%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
+          <tr style="border-top:1px solid rgba(201,168,76,.12)">
+            <td colspan="4" style="color:var(--gold);font-weight:600">TOTAL</td>
+            <td style="color:var(--text);font-weight:600" id="tbl-monthly">$0.00</td>
+            <td style="color:var(--green);font-weight:700" id="tbl-cut">$0.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="gold-line"></div>
+
+    <!-- ═══ 3. GYDS EARNINGS ═══ -->
+    <div class="section-title">GYDS Earnings</div>
+
+    <div class="grid-3" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-label">Pending Dev Earnings</div>
+        <div class="card-value" style="color:var(--green)" id="d-pending">$0.00</div>
+        <div class="card-sub" style="margin-bottom:16px">Ready to collect on-chain</div>
+        <div class="info-box info-gold" style="margin-bottom:14px;font-size:11px">
+          Calls <code style="color:var(--gold)">withdrawDevEarnings()</code> on USDXVault — transfers directly to your owner wallet.
+        </div>
+        <button class="btn btn-gold btn-full" onclick="collectEarnings()" id="collect-btn">⚡ Collect Dev Earnings</button>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Reinvestment Fund (5%)</div>
+        <div class="card-value" style="color:var(--purple)" id="d-reinvest">$0.00</div>
+        <div class="card-sub" style="margin-bottom:12px">Locked in dedicated wallet</div>
+        <div class="mono" style="margin-bottom:14px;font-size:10px" id="reinvest-addr-display">— add reinvestment wallet address —</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-purple" style="flex:1" onclick="transferToReinvest()">↗ Transfer</button>
+          <button class="btn btn-ghost" style="flex:1" onclick="copyReinvestAddr()">⧉ Copy Address</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Projected Monthly</div>
+        <div class="card-value" style="color:var(--yellow)" id="d-monthly">$0.00</div>
+        <div class="card-sub" style="margin-bottom:12px">At current TVL · ≈ 0.1%/month</div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Code4rena audit target — $5,000</div>
+        <div class="prog"><div class="prog-fill" id="c4-prog" style="width:0%"></div></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px" id="c4-label">$0 accumulated</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:10px;margin-bottom:6px">Certik audit target — $25,000</div>
+        <div class="prog"><div class="prog-fill" id="certik-prog" style="width:0%"></div></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px" id="certik-label">$0 accumulated</div>
+      </div>
+    </div>
+
+    <div class="gold-line"></div>
+
+    <!-- ═══ 4. WAITLIST ═══ -->
+    <div class="section-title">Waitlist</div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+        <div style="display:flex;gap:28px;flex-wrap:wrap">
+          <div>
+            <div class="card-label">Total Signups</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--text)" id="wl-count">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">via nexvault.one waitlist form</div>
+          </div>
+          <div>
+            <div class="card-label">Netlify Form</div>
+            <div style="font-size:13px;color:var(--text);margin-top:6px">vault-waitlist</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px" id="wl-status">Enter Netlify token to load count</div>
+          </div>
+          <div>
+            <div class="card-label">Netlify API Token</div>
+            <input id="netlify-token" type="password" placeholder="paste token here" style="margin-top:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;width:220px;outline:none"/>
+            <button class="btn btn-ghost" style="margin-top:8px;padding:7px 16px;font-size:11px" onclick="loadWaitlist()">Load Count</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-gold" onclick="showEmailDraft()">✉ Draft Launch Email</button>
+          <button class="btn btn-ghost" onclick="window.open('https://app.netlify.com','_blank')">Open Netlify ↗</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gold-line"></div>
+
+    <!-- ═══ 5. VAULT GENESIS LEADERBOARD ═══ -->
+    <div class="section-title">🏛️ Vault Genesis Leaderboard
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);font-weight:400">First 5,000 depositors · NFT badge minted automatically</span>
+    </div>
+
+    <!-- Badge progress banner -->
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+        <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:center">
+          <div>
+            <div class="card-label">Badges Minted</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--yellow)" id="lb-minted">0</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">of 5,000 maximum</div>
+          </div>
+          <div>
+            <div class="card-label">Remaining</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--green)" id="lb-remaining">5,000</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">badges available</div>
+          </div>
+          <div>
+            <div class="card-label">Status</div>
+            <span class="status s-ok" id="lb-status"><span class="sdot sdot-live"></span>OPEN — MINTING ACTIVE</span>
+          </div>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:6px;font-weight:600">BADGE SUPPLY USED</div>
+          <div class="prog" style="height:10px"><div class="prog-fill" id="lb-prog" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px" id="lb-pct">0% minted</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard table -->
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="font-size:11px;color:var(--muted)">Ordered by first deposit — position = badge number</div>
+          <input id="lb-search" type="text" placeholder="Search wallet 0x..." style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;width:200px;outline:none" oninput="filterLeaderboard(this.value)"/>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" style="padding:7px 14px;font-size:11px" onclick="refreshLeaderboard()">↺ Refresh</button>
+          <button class="btn btn-gold" style="padding:7px 14px;font-size:11px" onclick="exportLeaderboard()">↓ Export CSV</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="tbl" id="lb-table">
+          <thead>
+            <tr>
+              <th style="width:60px">POSITION</th>
+              <th>WALLET ADDRESS</th>
+              <th>TIER</th>
+              <th>AMOUNT</th>
+              <th>DEPOSIT TIME</th>
+              <th>BADGE STATUS</th>
+              <th>EMAIL (waitlist)</th>
+            </tr>
+          </thead>
+          <tbody id="lb-body">
+          </tbody>
+        </table>
+      </div>
+      <div id="lb-empty" style="padding:32px;text-align:center;font-size:12px;color:var(--dim)">
+        No deposits yet — leaderboard populates automatically when vault is live on mainnet.<br>
+        <span style="font-size:11px;color:rgba(55,65,81,.6);margin-top:6px;display:block">Connect ethers.js to read Deposited + BadgeMinted events from USDXVault and VaultGenesisBadge contracts.</span>
+      </div>
+      <div class="info-box info-gold" style="margin-top:14px;font-size:11px">
+        💡 <strong style="color:var(--gold)">How badges work:</strong> The smart contract mints automatically on each wallet's first deposit. You do not need to send badges manually — the contract handles it. This leaderboard reads on-chain events to show you who has been minted and their position number.
+      </div>
+    </div>
+
+    <div class="gold-line"></div>
+
+    <!-- ═══ 6. RECENT DEPOSITS FEED ═══ -->
+    <div class="section-title">Recent Deposits Feed</div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div style="font-size:11px;color:var(--muted)">All deposits in reverse chronological order</div>
+        <button class="btn btn-ghost" style="padding:7px 16px;font-size:11px" onclick="refreshFeed()">↺ Refresh</button>
+      </div>
+      <div id="deposits-feed">
+        <div class="feed-empty">No deposits yet — feed populates when vault is deployed and first deposit is made</div>
+      </div>
+      <div class="info-box info-gold" style="margin-top:14px;font-size:11px">
+        At mainnet: connect ethers.js to read <code style="color:var(--gold)">Deposited</code> events from USDXVault and render here in real time.
+      </div>
+    </div>
+
+    <div class="gold-line"></div>
+
+    <!-- ═══ 6. CONTRACT CONFIGURATION ═══ -->
+    <div class="section-title">Contract Configuration</div>
+    <div class="grid-2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-label">Vault Contract (USDXVault)</div>
+        <div class="mono" id="cfg-vault">Not deployed — fill after mainnet deploy</div>
+      </div>
+      <div class="card">
+        <div class="card-label">USDX Token</div>
+        <div class="mono" id="cfg-usdx">Waiting for Nexus mainnet</div>
+      </div>
+      <div class="card">
+        <div class="card-label">GYDS Contract</div>
+        <div class="mono" id="cfg-gyds">Waiting for Nexus mainnet</div>
+      </div>
+      <div class="card">
+        <div class="card-label">VaultGenesisBadge</div>
+        <div class="mono" id="cfg-badge">Not deployed</div>
+      </div>
+      <div class="card">
+        <div class="card-label">ReferralRegistry</div>
+        <div class="mono" id="cfg-registry">Not deployed</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Reinvestment Wallet</div>
+        <div class="mono" id="cfg-reinvest">— set REINVEST_WALLET constant in script —</div>
+      </div>
+    </div>
+
+    <div class="gold-line"></div>
+
+    <!-- ═══ 7. LAUNCH CHECKLIST ═══ -->
+    <div class="section-title">Launch Checklist</div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div style="font-size:12px;color:var(--muted)" id="cl-summary">0 / 10 complete</div>
+        <button class="btn btn-ghost" style="padding:6px 14px;font-size:11px" onclick="resetChecklist()">Reset All</button>
+      </div>
+      <table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Note</th><th>Status</th><th></th></tr></thead>
+      <tbody id="checklist-body"></tbody></table>
+    </div>
+
+    <div class="gold-line"></div>
+
+    <!-- ═══ 8. AUDIT FUNDING ═══ -->
+    <div class="section-title">Audit Funding Tracker</div>
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div><div class="card-label">Code4rena Community Audit</div><div style="font-size:20px;color:var(--text);font-family:'Cormorant Garamond',serif" id="c4-amount">$0 / $5,000</div></div>
+          <span class="status s-warn"><span class="sdot"></span>PLANNED</span>
+        </div>
+        <div class="prog"><div class="prog-fill" id="c4-bar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px">First external security review — recommended before removing deposit caps</div>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div><div class="card-label">Certik Formal Audit</div><div style="font-size:20px;color:var(--text);font-family:'Cormorant Garamond',serif" id="certik-amount">$0 / $25,000</div></div>
+          <span class="status s-warn"><span class="sdot"></span>PLANNED</span>
+        </div>
+        <div class="prog"><div class="prog-fill" id="certik-bar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px">Primary audit — removes deposit caps and unlocks institutional depositors</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding-top:8px">
+      <div style="font-size:10px;color:var(--dim);letter-spacing:.1em">NEXVAULT COMMAND CENTER · PRIVATE · DO NOT SHARE THIS URL</div>
+      <div style="font-size:10px;color:rgba(55,65,81,.4);margin-top:5px;letter-spacing:.06em">nexvault.one/vault-command</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Transfer modal -->
+<div id="transfer-modal" style="display:none" class="modal-bg" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text);margin-bottom:6px">Transfer to Reinvestment Wallet</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:20px">Sends 5% of accumulated dev earnings to the dedicated reinvestment wallet</div>
+    <div class="card-label">Reinvestment Wallet</div>
+    <div class="mono" style="margin-bottom:16px" id="modal-reinvest-addr">— no wallet set —</div>
+    <div class="card-label" style="margin-top:12px">Amount to Transfer</div>
+    <input id="transfer-amount" type="number" placeholder="0.00" style="width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-family:'DM Mono',monospace;font-size:14px;margin-top:6px;outline:none;margin-bottom:6px"/>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:18px">Calls <code style="color:var(--gold)">transfer(reinvestWallet, amount)</code> on USDX token from your owner wallet</div>
+    <div class="info-box info-red" style="margin-bottom:18px;font-size:11px">⚠️ Not yet available — vault not deployed. This button will be active at mainnet.</div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" style="flex:1" onclick="document.getElementById('transfer-modal').style.display='none'">Cancel</button>
+      <button class="btn btn-gold" style="flex:1" disabled>Transfer (unavailable)</button>
+    </div>
+  </div>
+</div>
+
+<!-- Email draft modal -->
+<div id="email-modal" style="display:none" class="modal-bg" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box" style="max-width:560px">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text);margin-bottom:6px">Launch Email Draft</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Copy and send to your full waitlist export from Netlify Forms</div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:12px;color:#9ca3af;line-height:1.9;white-space:pre-wrap;max-height:340px;overflow-y:auto" id="email-body-preview"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" style="flex:1" onclick="document.getElementById('email-modal').style.display='none'">Close</button>
+      <button class="btn btn-gold" style="flex:1" onclick="copyEmailBody()">⧉ Copy Email</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══ CONFIG — fill these at mainnet ═══════════════════
+const OWNER_WALLET   = '0x44e06fb3517ee815bba5612f783712ac4f498ba0'
+const REINVEST_WALLET = '' // ← paste your reinvestment wallet address here
+const VAULT_ADDRESS   = '' // ← paste after deploying USDXVault.sol
+const USDX_ADDRESS    = '' // ← paste from Nexus mainnet
+const GYDS_ADDRESS    = '' // ← paste from Nexus mainnet
+const BADGE_ADDRESS   = '' // ← paste after deploying VaultGenesisBadge.sol
+const REGISTRY_ADDRESS = '' // ← paste after deploying ReferralRegistry.sol
+
+// ═══ GET METAMASK PROVIDER ════════════════════════════
+function getMetaMaskProvider() {
+  if (!window.ethereum) return null
+  if (window.ethereum.providers?.length) {
+    return window.ethereum.providers.find(p => p.isMetaMask && !p.isBraveWallet && !p.isTrust && !p.isCoinbaseWallet) || null
+  }
+  if (window.ethereum.isMetaMask && !window.ethereum.isTrust && !window.ethereum.isCoinbaseWallet) {
+    return window.ethereum
+  }
+  return null
+}
+
+// ═══ AUTH ════════════════════════════════════════════
+async function startAuth() {
+  const btn = document.getElementById('auth-btn')
+  const status = document.getElementById('auth-status')
+  btn.disabled = true
+  btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite">◌</span> Connecting...'
+  status.className = 'auth-status'
+  status.textContent = 'Requesting MetaMask...'
+
+  const provider = getMetaMaskProvider()
+
+  if (!provider) {
+    btn.disabled = false
+    btn.innerHTML = 'Connect with MetaMask'
+    status.className = 'auth-status auth-err'
+    status.textContent = 'MetaMask not found — install and try again'
+    return
+  }
+
+  try {
+    const accounts = await provider.request({ method: 'eth_requestAccounts' })
+    const address = accounts[0]
+    if (address.toLowerCase() === OWNER_WALLET.toLowerCase()) {
+      status.className = 'auth-status auth-ok'
+      status.textContent = '✓ Owner wallet verified — loading dashboard...'
+      setTimeout(() => {
+        document.getElementById('auth-screen').style.display = 'none'
+        document.getElementById('app').style.display = 'block'
+        document.getElementById('addr-display').textContent = address.slice(0,6)+'...'+address.slice(-4)
+        initDashboard()
+      }, 500)
+    } else {
+      btn.disabled = false
+      btn.innerHTML = 'Connect with MetaMask'
+      status.className = 'auth-status auth-err'
+      status.textContent = `⛔ Access denied — ${address.slice(0,6)}...${address.slice(-4)}`
+    }
+  } catch(err) {
+    btn.disabled = false
+    btn.innerHTML = 'Connect with MetaMask'
+    status.className = 'auth-status auth-err'
+    status.textContent = err.code === 4001 ? 'Cancelled — try again' : 'Connection error — try again'
+  }
+}
+
+function lockSession() {
+  document.getElementById('app').style.display = 'none'
+  document.getElementById('auth-screen').style.display = 'flex'
+  document.getElementById('auth-btn').disabled = false
+  document.getElementById('auth-btn').innerHTML = 'Connect with MetaMask'
+  document.getElementById('auth-status').className = 'auth-status'
+  document.getElementById('auth-status').textContent = 'Owner wallet required to proceed'
+  toast('Session locked', 'ok')
+}
+
+// ═══ INIT ════════════════════════════════════════════
+function initDashboard() {
+  fillContractAddresses()
+  renderChecklist()
+  renderFeed([])
+  setReinvestDisplay()
+  initLeaderboard()
+  // Simulated zeros — replace with ethers.js reads at mainnet
+  updateStats({ tvl: 0, depositors: 0, badges: 0, yieldAmt: 0, pending: 0, auditFund: 0 })
+}
+
+function fillContractAddresses() {
+  setMono('cfg-vault',     VAULT_ADDRESS    || 'Not deployed — fill VAULT_ADDRESS constant')
+  setMono('cfg-usdx',      USDX_ADDRESS     || 'Waiting for Nexus mainnet')
+  setMono('cfg-gyds',      GYDS_ADDRESS     || 'Waiting for Nexus mainnet')
+  setMono('cfg-badge',     BADGE_ADDRESS    || 'Not deployed')
+  setMono('cfg-registry',  REGISTRY_ADDRESS || 'Not deployed')
+  setMono('cfg-reinvest',  REINVEST_WALLET  || '— set REINVEST_WALLET constant in script —')
+
+  const allSet = VAULT_ADDRESS && USDX_ADDRESS && GYDS_ADDRESS
+  const netPill = document.getElementById('network-pill')
+  if (allSet) {
+    netPill.className = 'status s-ok'
+    netPill.innerHTML = '<span class="sdot sdot-live"></span>MAINNET LIVE'
+    setStatus('net-vault', 'ok', 'DEPLOYED')
+    setStatus('net-usdx',  'ok', 'CONNECTED')
+    setStatus('net-gyds',  GYDS_ADDRESS ? 'ok' : 'warn', GYDS_ADDRESS ? 'CONNECTED' : 'NOT SET')
+  }
+}
+
+function setReinvestDisplay() {
+  const addr = REINVEST_WALLET || '— not set —'
+  setEl('reinvest-addr-display', addr)
+  setEl('modal-reinvest-addr', addr)
+}
+
+// ═══ STATS ═══════════════════════════════════════════
+function updateStats({ tvl, depositors, badges, yieldAmt, pending, auditFund }) {
+  const monthly = tvl * 0.001
+  const cut     = monthly * 0.1
+  const reinvest = cut * 0.05
+  const badgePct = ((badges / 5000) * 100).toFixed(1)
+
+  setEl('d-tvl',        '$' + fmt(tvl))
+  setEl('d-depositors', depositors.toString())
+  setEl('d-badges',     badges + ' / 5,000')
+  setEl('d-badges-pct', badgePct + '% minted')
+  setEl('d-yield',      '$' + fmt(yieldAmt || 0))
+  setEl('d-pending',    '$' + fmt(pending  || 0))
+  setEl('d-monthly',    '$' + fmt(monthly))
+  setEl('d-reinvest',   '$' + fmt(reinvest))
+  setEl('tbl-monthly',  '$' + fmt(monthly))
+  setEl('tbl-cut',      '$' + fmt(cut))
+
+  // Tier breakdown (simulated even split — replace with real reads)
+  renderTierBreakdown(tvl)
+
+  // Audit progress
+  const af = auditFund || 0
+  const c4pct = Math.min(af / 5000 * 100, 100)
+  const cpct  = Math.min(af / 25000 * 100, 100)
+  setProg('c4-prog',    c4pct)
+  setProg('certik-prog', cpct)
+  setProg('c4-bar',     c4pct)
+  setProg('certik-bar', cpct)
+  setEl('c4-label',      '$' + fmt(af) + ' accumulated')
+  setEl('certik-label',  '$' + fmt(af) + ' accumulated')
+  setEl('c4-amount',     '$' + fmt(af) + ' / $5,000')
+  setEl('certik-amount', '$' + fmt(af) + ' / $25,000')
+}
+
+function renderTierBreakdown(tvl) {
+  // Simulated — at mainnet replace with per-tier on-chain reads
+  const tiers = [
+    { name:'Flexible',     apy:'5.5%',  color:'var(--blue)',   share: 0.25 },
+    { name:'90-Day Lock',  apy:'11.0%', color:'var(--purple)', share: 0.30 },
+    { name:'1-Year Lock',  apy:'14.0%', color:'var(--yellow)', share: 0.25 },
+    { name:'2-Year Lock',  apy:'18.0%', color:'var(--green)',  share: 0.20 },
+  ]
+  const tbody = document.getElementById('tvl-breakdown')
+  const monthly_total = tvl * 0.001
+  const rows = tiers.map(t => {
+    const tierTVL = tvl * t.share
+    const pct = tvl > 0 ? (t.share * 100).toFixed(1) + '%' : '—'
+    const tierMonthly = tierTVL * 0.001
+    const cut = tierMonthly * 0.1
+    return `<tr>
+      <td>${t.name}</td>
+      <td style="color:${t.color}">${t.apy}</td>
+      <td>$${fmt(tierTVL, 0)}</td>
+      <td>${pct}</td>
+      <td>$${fmt(tierMonthly)}</td>
+      <td style="color:var(--gold)">$${fmt(cut)}</td>
+    </tr>`
+  })
+  const cut = monthly_total * 0.1
+  rows.push(`<tr style="border-top:1px solid rgba(201,168,76,.12)">
+    <td colspan="4" style="color:var(--gold);font-weight:600">TOTAL</td>
+    <td style="color:var(--text);font-weight:600">$${fmt(monthly_total)}</td>
+    <td style="color:var(--green);font-weight:700">$${fmt(cut)}</td>
+  </tr>`)
+  tbody.innerHTML = rows.join('')
+}
+
+// ═══ NETWORK STATUS ═══════════════════════════════════
+function setStatus(id, type, label) {
+  const el = document.getElementById(id)
+  if (!el) return
+  const map = { ok:'s-ok', warn:'s-warn', err:'s-err', dim:'s-dim' }
+  el.className = 'status ' + (map[type] || 's-dim')
+  el.innerHTML = `<span class="sdot${type==='ok'?' sdot-live':''}"></span>${label}`
+}
+
+// ═══ PAUSE ════════════════════════════════════════════
+let vaultPaused = false
+function togglePause() {
+  vaultPaused = !vaultPaused
+  const btn = document.getElementById('pause-btn')
+  if (vaultPaused) {
+    btn.className = 'btn btn-ghost'; btn.textContent = '▶ Resume Deposits'
+    setStatus('net-deposits', 'err', 'PAUSED')
+    toast('⚠️ Vault paused — no new deposits. Withdrawals still open.', 'warn')
+  } else {
+    btn.className = 'btn btn-red'; btn.textContent = '⏸ Emergency Pause'
+    setStatus('net-deposits', 'ok', 'OPEN')
+    toast('✓ Vault resumed — deposits open', 'ok')
+  }
+}
+
+// ═══ COLLECT EARNINGS ═════════════════════════════════
+function collectEarnings() {
+  if (!VAULT_ADDRESS) {
+    toast('Vault not deployed — fill VAULT_ADDRESS constant first', 'warn')
+    return
+  }
+  toast('⚡ Connect ethers.js to call withdrawDevEarnings() at mainnet', 'warn')
+}
+
+// ═══ TRANSFER TO REINVEST ═════════════════════════════
+function transferToReinvest() {
+  document.getElementById('transfer-modal').style.display = 'flex'
+}
+
+function copyReinvestAddr() {
+  const addr = REINVEST_WALLET
+  if (!addr) { toast('Set REINVEST_WALLET constant first', 'warn'); return }
+  navigator.clipboard.writeText(addr)
+    .then(() => toast('✓ Reinvestment wallet address copied', 'ok'))
+    .catch(() => toast(addr, 'ok'))
+}
+
+// ═══ WAITLIST ════════════════════════════════════════
+async function loadWaitlist() {
+  const token = document.getElementById('netlify-token').value.trim()
+  if (!token) { toast('Paste your Netlify personal access token first', 'warn'); return }
+
+  setEl('wl-status', 'Loading...')
+  try {
+    // Get site ID first
+    const sitesRes = await fetch('https://api.netlify.com/api/v1/sites?per_page=100', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    const sites = await sitesRes.json()
+    const site = sites.find(s => s.name && s.name.includes('nexvault'))
+    if (!site) { setEl('wl-status', 'Site not found — check token'); toast('nexvault site not found in Netlify account', 'err'); return }
+
+    const formsRes = await fetch(`https://api.netlify.com/api/v1/sites/${site.id}/forms`, {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    const forms = await formsRes.json()
+    const form = forms.find(f => f.name && f.name.toLowerCase().includes('waitlist'))
+    if (!form) { setEl('wl-status', 'Form not found'); toast('vault-waitlist form not found', 'err'); return }
+
+    setEl('wl-count', form.submission_count.toString())
+    setEl('wl-status', `Last submission: ${form.submission_count > 0 ? 'check Netlify' : 'none yet'}`)
+    toast(`✓ ${form.submission_count} waitlist signups loaded`, 'ok')
+  } catch(err) {
+    setEl('wl-status', 'Error — check token and try again')
+    toast('Failed to load waitlist — check Netlify token', 'err')
+  }
+}
+
+// ═══ DEPOSITS FEED ════════════════════════════════════
+function renderFeed(deposits) {
+  const feed = document.getElementById('deposits-feed')
+  if (!deposits || deposits.length === 0) {
+    feed.innerHTML = '<div class="feed-empty">No deposits yet — feed populates when vault is deployed and first deposit is made</div>'
+    return
+  }
+  feed.innerHTML = deposits.map(d => `
+    <div class="feed-item">
+      <div>
+        <div style="font-size:12px;color:var(--text);font-weight:600">${d.wallet}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${d.tier} · ${d.time}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:13px;color:var(--gold);font-family:'Cormorant Garamond',serif">$${fmt(d.amount)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${d.apy} APY</div>
+      </div>
+    </div>
+  `).join('')
+}
+
+function refreshFeed() {
+  toast('Feed refresh — connect ethers.js to read Deposited events at mainnet', 'warn')
+}
+
+// ═══ EMAIL DRAFT ═════════════════════════════════════
+const emailBody = `Subject: NexVault is Live — Vault Genesis Badge Waiting
+
+The wait is over.
+
+NexVault is now live on Nexus mainnet — the first dedicated USDX savings vault, open to everyone.
+
+Vault Genesis NFT badge is available for the first 5,000 depositors.
+Once minted, it is permanent on-chain proof that you were here at the beginning.
+
+Deposit USDX and earn:
+
+  5.5% APY  — Flexible (1 withdrawal per 24 hours)
+  11.0% APY — 90-Day Lock
+  14.0% APY — 1-Year Lock
+  18.0% APY — 2-Year Lock
+
+No minimum deposit. No KYC. Non-custodial.
+Your yield. Your keys. Your vault.
+
+→ nexvault.one/app
+
+— The NexVault Team`
+
+function showEmailDraft() {
+  document.getElementById('email-body-preview').textContent = emailBody
+  document.getElementById('email-modal').style.display = 'flex'
+}
+
+function copyEmailBody() {
+  navigator.clipboard.writeText(emailBody)
+    .then(() => { toast('✓ Email copied to clipboard', 'ok') })
+    .catch(() => toast('Copy failed — select text manually', 'warn'))
+}
+
+// ═══ CHECKLIST ═══════════════════════════════════════
+const CHECKLIST = [
+  { task:'Deploy ReferralRegistry.sol',                    note:'Step 1 — save address' },
+  { task:'Deploy VaultGenesisBadge.sol',                   note:'Step 2 — requires Registry address' },
+  { task:'Deploy USDXVault.sol',                           note:'Step 3 — requires Registry + Badge' },
+  { task:'Deploy AutoCompounder.sol',                      note:'Step 4 — requires Vault address' },
+  { task:'registry.setVaultAuthorization(vaultAddress)',   note:'Links registry to vault' },
+  { task:'badge.setMinterAuthorization(vaultAddress)',     note:'Allows vault to mint badges' },
+  { task:'vault.setCompoundOperator(autoCompounderAddress)', note:'Authorizes AutoCompounder to compound' },
+  { task:'vault.setGYDS(gydsAddress)',                     note:'Registers GYDS — enables receiveYield()' },
+  { task:'vault.setReinvestWallet(walletAddress)',         note:'Sets 5% reinvestment wallet' },
+  { task:'Confirm gydsActive() returns true on-chain',    note:'Verify GYDS is wired correctly' },
+  { task:'Fill all addresses into app.html',               note:'Config block — VAULT, USDX, GYDS addresses' },
+  { task:'Restore vault-command.html auth (remove bypass)', note:'Re-enable MetaMask owner check' },
+  { task:'Deploy updated app.html to Netlify',             note:'30 seconds — drag to Netlify' },
+  { task:'Email waitlist + post in Nexus Discord',         note:'Fire simultaneously' },
+  { task:'Deploy NexCredit.sol (pass vault + badge + registry)', note:'On-chain credit scoring — fill NEXCREDIT_ADDRESS in app.html after deploy' },
+]
+
+function renderChecklist() {
+  const saved = JSON.parse(localStorage.getItem('nv-checklist') || '{}')
+  const tbody = document.getElementById('checklist-body')
+  const total = CHECKLIST.length
+  const done  = Object.values(saved).filter(Boolean).length
+  setEl('cl-summary', `${done} / ${total} complete`)
+
+  tbody.innerHTML = CHECKLIST.map((item, i) => {
+    const isDone = saved[i] === true
+    return `<tr>
+      <td style="color:var(--dim);font-size:11px">${i+1}</td>
+      <td style="color:${isDone ? 'var(--green)' : 'var(--text)'};${isDone ? 'text-decoration:line-through;opacity:.6' : ''}">${item.task}</td>
+      <td style="color:var(--dim);font-size:11px">${item.note}</td>
+      <td><span class="status ${isDone ? 's-ok' : 's-dim'}"><span class="sdot"></span>${isDone ? 'DONE' : 'PENDING'}</span></td>
+      <td><button onclick="toggleCheck(${i})" style="padding:4px 12px;border-radius:6px;font-size:10px;font-family:'DM Mono',monospace;font-weight:600;cursor:pointer;border:1px solid ${isDone ? 'rgba(239,68,68,.2)' : 'rgba(74,222,128,.2)'};background:${isDone ? 'rgba(239,68,68,.04)' : 'rgba(74,222,128,.04)'};color:${isDone ? 'var(--red)' : 'var(--green)'}">${isDone ? '✕ Undo' : '✓ Done'}</button></td>
+    </tr>`
+  }).join('')
+}
+
+function toggleCheck(i) {
+  const saved = JSON.parse(localStorage.getItem('nv-checklist') || '{}')
+  saved[i] = !saved[i]
+  localStorage.setItem('nv-checklist', JSON.stringify(saved))
+  renderChecklist()
+}
+
+function resetChecklist() {
+  if (!confirm('Reset all checklist items?')) return
+  localStorage.removeItem('nv-checklist')
+  renderChecklist()
+  toast('Checklist reset', 'ok')
+}
+
+// ═══ LEADERBOARD ═════════════════════════════════════
+let LEADERBOARD_DATA = [] // populated from on-chain events at mainnet
+
+function initLeaderboard() {
+  // At mainnet replace this with ethers.js event reads:
+  // const filter = vaultContract.filters.Deposited()
+  // const events = await vaultContract.queryFilter(filter)
+  // Then cross-reference BadgeMinted events from badge contract
+  // For now render empty state
+  renderLeaderboard(LEADERBOARD_DATA)
+}
+
+function renderLeaderboard(data) {
+  const tbody = document.getElementById('lb-body')
+  const empty = document.getElementById('lb-empty')
+  const table = document.getElementById('lb-table')
+
+  const minted   = data.filter(d => d.badgeMinted).length
+  const remaining = 5000 - minted
+  const pct = (minted / 5000 * 100).toFixed(1)
+
+  setEl('lb-minted',    minted.toString())
+  setEl('lb-remaining', remaining.toLocaleString())
+  setEl('lb-pct',       pct + '% of supply minted')
+  setProg('lb-prog',    parseFloat(pct))
+
+  if (remaining === 0) {
+    document.getElementById('lb-status').className = 'status s-err'
+    document.getElementById('lb-status').innerHTML = '<span class="sdot"></span>SOLD OUT — ALL 5,000 MINTED'
+  }
+
+  if (!data || data.length === 0) {
+    table.style.display = 'none'
+    empty.style.display = 'block'
+    return
+  }
+
+  table.style.display = 'table'
+  empty.style.display = 'none'
+
+  tbody.innerHTML = data.map((d, i) => {
+    const pos = i + 1
+    const isBadged = d.badgeMinted
+    const isGenesis = pos <= 5000
+    const posColor = pos <= 100 ? 'var(--yellow)' : pos <= 1000 ? 'var(--gold)' : 'var(--text)'
+    return `<tr>
+      <td style="font-family:'Cormorant Garamond',serif;font-size:18px;color:${posColor};font-weight:600">
+        #${pos}${pos <= 10 ? ' 🏛️' : ''}
+      </td>
+      <td style="font-family:monospace;font-size:11px;color:var(--blue)">
+        ${d.wallet}
+        <button onclick="navigator.clipboard.writeText('${d.wallet}').then(()=>toast('Copied','ok'))"
+          style="margin-left:6px;padding:2px 7px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:9px;cursor:pointer">⧉</button>
+      </td>
+      <td><span style="color:${tierColor(d.tier)}">${d.tier}</span></td>
+      <td style="color:var(--gold)">$${fmt(d.amount, 0)}</td>
+      <td style="font-size:11px;color:var(--muted)">${d.time}</td>
+      <td>
+        <span class="status ${isBadged ? 's-ok' : 's-warn'}">
+          <span class="sdot"></span>${isBadged ? '🏛️ MINTED' : 'PENDING'}
+        </span>
+      </td>
+      <td style="font-size:11px;color:var(--muted)">${d.email || '—'}</td>
+    </tr>`
+  }).join('')
+}
+
+function tierColor(tier) {
+  if (!tier) return 'var(--muted)'
+  if (tier.includes('Flexible')) return 'var(--blue)'
+  if (tier.includes('90')) return 'var(--purple)'
+  if (tier.includes('1-Year')) return 'var(--yellow)'
+  if (tier.includes('2-Year')) return 'var(--green)'
+  return 'var(--muted)'
+}
+
+function filterLeaderboard(query) {
+  if (!query) { renderLeaderboard(LEADERBOARD_DATA); return }
+  const q = query.toLowerCase()
+  const filtered = LEADERBOARD_DATA.filter(d =>
+    d.wallet.toLowerCase().includes(q) ||
+    (d.email && d.email.toLowerCase().includes(q))
+  )
+  renderLeaderboard(filtered)
+}
+
+function refreshLeaderboard() {
+  toast('Leaderboard refresh — connect ethers.js to read on-chain events at mainnet', 'warn')
+  // At mainnet: call your ethers.js read function here and pass results to renderLeaderboard()
+}
+
+function exportLeaderboard() {
+  if (!LEADERBOARD_DATA.length) {
+    toast('No data to export yet', 'warn')
+    return
+  }
+  const headers = ['Position','Wallet','Tier','Amount','Time','Badge Minted','Email']
+  const rows = LEADERBOARD_DATA.map((d, i) => [
+    i + 1, d.wallet, d.tier, d.amount, d.time,
+    d.badgeMinted ? 'Yes' : 'No', d.email || ''
+  ])
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n')
+  const blob = new Blob([csv], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'nexvault-genesis-leaderboard.csv'
+  a.click()
+  URL.revokeObjectURL(url)
+  toast('✓ Leaderboard exported as CSV', 'ok')
+}
+
+// ── HOW TO WIRE AT MAINNET ─────────────────────────────
+// 1. Install ethers.js via CDN or npm
+// 2. Connect to Nexus RPC:
+//    const provider = new ethers.JsonRpcProvider(NEXUS_RPC_URL)
+//    const vaultContract = new ethers.Contract(VAULT_ADDRESS, VAULT_ABI, provider)
+//    const badgeContract = new ethers.Contract(BADGE_ADDRESS, BADGE_ABI, provider)
+//
+// 3. Read all Deposited events:
+//    const depositEvents = await vaultContract.queryFilter('Deposited')
+//
+// 4. Read all BadgeMinted events:
+//    const badgeEvents = await badgeContract.queryFilter('BadgeMinted')
+//    const mintedWallets = new Set(badgeEvents.map(e => e.args.recipient.toLowerCase()))
+//
+// 5. Build leaderboard array sorted by block number (= deposit order):
+//    LEADERBOARD_DATA = depositEvents
+//      .filter((e, i, arr) => arr.findIndex(x => x.args.user === e.args.user) === i) // first deposit per wallet
+//      .sort((a, b) => a.blockNumber - b.blockNumber)
+//      .map((e, i) => ({
+//        wallet: e.args.user,
+//        tier: ['Flexible','90-Day','1-Year','2-Year'][e.args.tier],
+//        amount: Number(ethers.formatUnits(e.args.amount, 6)),
+//        time: new Date((await provider.getBlock(e.blockNumber)).timestamp * 1000).toLocaleString(),
+//        badgeMinted: mintedWallets.has(e.args.user.toLowerCase()),
+//        email: '' // cross-reference from your Netlify waitlist export
+//      }))
+//    renderLeaderboard(LEADERBOARD_DATA)
+function setEl(id, val)   { const e = document.getElementById(id); if(e) e.textContent = val }
+function setMono(id, val) { const e = document.getElementById(id); if(e) e.textContent = val }
+function setProg(id, pct) { const e = document.getElementById(id); if(e) e.style.width = Math.min(pct,100).toFixed(1)+'%' }
+function fmt(n, d=2) { return Number(n||0).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}) }
+
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast')
+  const c = { ok:'rgba(74,222,128,.12)', warn:'rgba(251,191,36,.12)', err:'rgba(239,68,68,.12)' }
+  const b = { ok:'rgba(74,222,128,.3)',  warn:'rgba(251,191,36,.3)',  err:'rgba(239,68,68,.3)'  }
+  const x = { ok:'var(--green)',         warn:'var(--yellow)',        err:'var(--red)'           }
+  t.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);padding:11px 24px;border-radius:40px;font-size:12px;font-weight:500;letter-spacing:.04em;z-index:9999;white-space:nowrap;pointer-events:none;background:${c[type]};border:1px solid ${b[type]};color:${x[type]};display:block`
+  t.textContent = msg
+  clearTimeout(t._t)
+  t._t = setTimeout(() => t.style.display = 'none', 3200)
+}
+</script>
+</body>
+</html>
