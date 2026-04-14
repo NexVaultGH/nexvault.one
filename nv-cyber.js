@@ -85,7 +85,7 @@
       if(p.y > H + 10) p.y = -10;
 
       const alpha = 0.3 + Math.sin(t * 2 + p.phase) * 0.2;
-      const color = p.color === 'cyan' ? `rgba(0,240,255,${alpha})` : `rgba(255,0,255,${alpha * 0.7})`;
+      const color = p.color === 'cyan' ? `rgba(0,240,255,${alpha})` : `rgba(201,168,76,${alpha * 0.7})`;
 
       // Glow
       gl.beginPath();
@@ -121,7 +121,7 @@
   function drawMouseGlow(){
     const grd = gl.createRadialGradient(mx * W, my * H, 0, mx * W, my * H, 300);
     grd.addColorStop(0, 'rgba(0,240,255,0.03)');
-    grd.addColorStop(0.5, 'rgba(255,0,255,0.01)');
+    grd.addColorStop(0.5, 'rgba(201,168,76,0.01)');
     grd.addColorStop(1, 'transparent');
     gl.fillStyle = grd;
     gl.fillRect(0, 0, W, H);

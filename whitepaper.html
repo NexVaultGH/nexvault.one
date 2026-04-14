@@ -114,8 +114,8 @@
 
     /* ── Disclaimer ── */
     .wp-disclaimer {
-      background: rgba(255,0,255,.03);
-      border: 1px solid rgba(255,0,255,.15);
+      background: rgba(201,168,76,.03);
+      border: 1px solid rgba(201,168,76,.15);
       border-radius: 6px;
       padding: 24px 28px;
       margin-bottom: 56px;
@@ -136,7 +136,7 @@
       font-weight: 600;
       letter-spacing: .1em;
       margin-bottom: 10px;
-      text-shadow: 0 0 8px rgba(255,0,255,.3);
+      text-shadow: 0 0 8px rgba(201,168,76,.3);
     }
     .wp-disclaimer p {
       font-size: 12px;
@@ -214,7 +214,7 @@
     .wp-text a:hover { text-shadow: 0 0 6px rgba(0,240,255,.3); }
     .wp-divider {
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,240,255,.15), rgba(255,0,255,.15), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,.15), rgba(201,168,76,.15), transparent);
       margin: 0 auto 56px;
       border: none;
     }
@@ -266,16 +266,16 @@
       transform: translateY(-3px);
     }
     .wp-tier-card.featured {
-      border-color: rgba(255,0,255,.2);
-      background: rgba(255,0,255,.03);
+      border-color: rgba(201,168,76,.2);
+      background: rgba(201,168,76,.03);
     }
     .wp-tier-card.featured::before {
       background: linear-gradient(90deg, transparent, var(--magenta), transparent);
       opacity: .5;
     }
     .wp-tier-card.featured:hover {
-      border-color: rgba(255,0,255,.35);
-      box-shadow: 0 0 25px rgba(255,0,255,.1);
+      border-color: rgba(201,168,76,.35);
+      box-shadow: 0 0 25px rgba(201,168,76,.1);
     }
     .wp-tier-apy {
       font-family: var(--font-display);
@@ -709,7 +709,7 @@
         <div class="wp-tier-detail">1,095-day lock period. Mid-range commitment for longer TVL stability and higher GYDS earnings per dollar.</div>
       </div>
       <div class="wp-tier-card featured">
-        <div class="wp-tier-apy" style="color:var(--magenta);text-shadow:0 0 14px rgba(255,0,255,.5);">4.44%</div>
+        <div class="wp-tier-apy" style="color:var(--magenta);text-shadow:0 0 14px rgba(201,168,76,.5);">4.44%</div>
         <div class="wp-tier-name">5-YEAR LOCK</div>
         <div class="wp-tier-detail">1,825-day lock period. Maximum commitment tier matching the 10-year U.S. Treasury yield of 4.44%.</div>
       </div>
@@ -753,7 +753,7 @@
   <div class="wp-section rv" id="contracts">
     <div class="wp-section-num">SECTION 9</div>
     <div class="wp-section-title">Smart Contract Architecture</div>
-    <p class="wp-text">NexVault is built on four Solidity contracts deployed on NexusEVM &mdash; fully EVM-compatible with standard Hardhat and ethers.js tooling. All contracts are open source at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</p>
+    <p class="wp-text">NexVault is built on five Solidity contracts deployed on NexusEVM &mdash; fully EVM-compatible with standard Hardhat and ethers.js tooling. All contracts are open source at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</p>
 
     <div class="wp-contract">
       <div class="wp-contract-name">ReferralRegistry.sol &mdash; Deploy 1st</div>
@@ -770,6 +770,10 @@
     <div class="wp-contract">
       <div class="wp-contract-name">AutoCompounder.sol &mdash; Deploy 4th</div>
       <div class="wp-contract-desc">Permissionless keeper. Allows anyone to trigger auto-compound for batches of up to 100 user deposits. All per-user failures are silent &mdash; one failure never stops the batch.</div>
+    </div>
+    <div class="wp-contract">
+      <div class="wp-contract-name">NexCredit.sol &mdash; Deploy 5th</div>
+      <div class="wp-contract-desc">On-chain credit scoring. Reads deposit history, lock tiers, protocol loyalty, referrals, and badge status to produce a private 0&ndash;1000 score across 7 tiers. Wallet owners can only see their own score. 55 dedicated tests.</div>
     </div>
 
     <div class="wp-h3">Key Security Properties</div>
@@ -818,7 +822,7 @@
       </div>
     </div>
 
-    <p class="wp-text" style="margin-top:20px">All 229 unit tests pass across all four contracts. Tests cover deposits, withdrawals, yield calculations, lock enforcement, referral bonuses, genesis badges, compounding, GYDS integration, admin functions, dev earnings protection, and security edge cases. Full results available at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</p>
+    <p class="wp-text" style="margin-top:20px">All 229 unit tests pass across all five contracts. Tests cover deposits, withdrawals, yield calculations, lock enforcement, referral bonuses, genesis badges, compounding, credit scoring, GYDS integration, admin functions, dev earnings protection, and security edge cases. Full results available at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</p>
 
     <div class="wp-h3">Our Transparency Pledge</div>
     <p class="wp-text">We will be honest about what is built and what is not. We will disclose risks openly. We will publish our audit when complete regardless of findings, and fix every issue before expanding marketing or TVL targets.</p>

@@ -7,9 +7,9 @@
   --cyan: #00f0ff;
   --cyan-dim: rgba(0,240,255,.15);
   --cyan-glow: rgba(0,240,255,.4);
-  --magenta: #ff00ff;
-  --magenta-dim: rgba(255,0,255,.12);
-  --magenta-glow: rgba(255,0,255,.35);
+  --magenta: #c9a84c;
+  --magenta-dim: rgba(201,168,76,.12);
+  --magenta-glow: rgba(201,168,76,.35);
   --gold: #c9a84c;
   --gold-dim: rgba(201,168,76,.12);
   --neon-green: #39ff14;
@@ -165,13 +165,13 @@ body::after {
 .btn-magenta {
   border-color: var(--magenta);
   color: var(--magenta);
-  background: rgba(255,0,255,.06);
-  text-shadow: 0 0 8px rgba(255,0,255,.4);
-  box-shadow: 0 0 15px rgba(255,0,255,.1), inset 0 0 15px rgba(255,0,255,.03);
+  background: rgba(201,168,76,.06);
+  text-shadow: 0 0 8px rgba(201,168,76,.4);
+  box-shadow: 0 0 15px rgba(201,168,76,.1), inset 0 0 15px rgba(201,168,76,.03);
 }
 .btn-magenta:hover {
-  background: rgba(255,0,255,.12);
-  box-shadow: 0 0 30px rgba(255,0,255,.2), inset 0 0 30px rgba(255,0,255,.06);
+  background: rgba(201,168,76,.12);
+  box-shadow: 0 0 30px rgba(201,168,76,.2), inset 0 0 30px rgba(201,168,76,.06);
 }
 .btn-ghost {
   border-color: rgba(255,255,255,.1);
@@ -240,7 +240,7 @@ body::after {
 /* ── Neon Dividers ── */
 .c-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,240,255,.2), rgba(255,0,255,.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,240,255,.2), rgba(201,168,76,.2), transparent);
   margin: 0;
   border: none;
 }

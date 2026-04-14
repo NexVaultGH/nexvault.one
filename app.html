@@ -5,117 +5,177 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NexVault — USDX Savings Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-cyber.css">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --gold:#fbbf24;--gold2:#d97706;--bg:#06070a;--card:rgba(255,255,255,.026);
-      --border:rgba(255,255,255,.07);--text:#e8e4dc;--muted:#6b7280;--dim:#374151;
-    }
-    body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden}
+    /* ── App-specific overrides on top of nv-cyber.css ── */
     button{cursor:pointer;font-family:'DM Mono',monospace}
     input:focus{outline:none}
     input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
-    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
-
-    /* ── Orbs ── */
-    .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
-
-    /* ── Card ── */
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(0,240,255,.12);border-radius:2px}
 
     /* ── Animations ── */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
-    @keyframes gp{0%{box-shadow:0 0 0 0 rgba(251,191,36,.5)}60%{box-shadow:0 0 50px 14px rgba(251,191,36,.14)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}}
+    @keyframes gp{0%{box-shadow:0 0 0 0 rgba(0,240,255,.5)}60%{box-shadow:0 0 50px 14px rgba(0,240,255,.14)}100%{box-shadow:0 0 0 0 rgba(0,240,255,0)}}
     @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
     @keyframes spin{to{transform:rotate(360deg)}}
     .blink{animation:blink 1.6s infinite}
     .gp{animation:gp .7s ease}
     .spin{animation:spin 1s linear infinite}
 
-    /* ── Nav ── */
-    nav{
-      position:sticky;top:0;z-index:50;
-      background:rgba(6,7,10,.85);backdrop-filter:blur(20px);
-      border-bottom:1px solid var(--border);
-      padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px
-    }
-    .nav-logo{display:flex;align-items:center;gap:10px}
-    .nav-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#fbbf24,#d97706);display:flex;align-items:center;justify-content:center;font-family:serif;font-size:16px;font-weight:700;color:#06070a}
-    .nav-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;letter-spacing:.15em;color:var(--text)}
-
     /* ── Wallet button ── */
     .wallet-btn{
-      padding:9px 20px;border-radius:9px;font-size:12px;letter-spacing:.06em;font-weight:500;
-      border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#9ca3af;
-      transition:all .2s;display:flex;align-items:center;gap:8px
+      padding:10px 24px;border-radius:4px;font-size:11px;letter-spacing:.1em;font-weight:500;
+      border:1px solid rgba(0,240,255,.3);background:rgba(0,240,255,.06);color:var(--cyan);
+      transition:all .3s;display:flex;align-items:center;gap:8px;
+      text-shadow:0 0 8px rgba(0,240,255,.3);
+      box-shadow:0 0 15px rgba(0,240,255,.08);
+      font-family:'DM Mono',monospace;
     }
-    .wallet-btn:hover{border-color:rgba(251,191,36,.3);color:var(--gold)}
-    .wallet-btn.connected{border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.07);color:#60a5fa}
-    .wallet-dot{width:7px;height:7px;border-radius:50%;background:#4ade80}
+    .wallet-btn:hover{
+      background:rgba(0,240,255,.12);
+      border-color:var(--cyan);
+      box-shadow:0 0 25px rgba(0,240,255,.15),inset 0 0 15px rgba(0,240,255,.04);
+    }
+    .wallet-btn.connected{border-color:rgba(57,255,20,.3);background:rgba(57,255,20,.06);color:#39ff14;text-shadow:0 0 8px rgba(57,255,20,.3);box-shadow:0 0 15px rgba(57,255,20,.08)}
+    .wallet-dot{width:7px;height:7px;border-radius:50%;background:#39ff14;box-shadow:0 0 8px rgba(57,255,20,.6)}
 
     /* ── Tabs ── */
     .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
-    .tab{padding:9px 18px;border-radius:8px;font-size:11px;letter-spacing:.07em;border:none;background:transparent;color:var(--muted);transition:all .2s;font-weight:500}
-    .tab:hover{color:#9ca3af}
-    .tab.active{background:rgba(255,255,255,.06);color:var(--text);border-bottom:2px solid rgba(255,255,255,.15)}
-    .tab.dev-tab{color:rgba(251,191,36,.3)}
-    .tab.dev-tab.active{color:var(--gold);border-bottom-color:rgba(251,191,36,.4)}
+    .tab{
+      padding:10px 20px;border-radius:4px;font-size:11px;letter-spacing:.1em;
+      border:1px solid transparent;background:transparent;color:var(--muted);
+      transition:all .3s;font-weight:500;font-family:'DM Mono',monospace;
+    }
+    .tab:hover{color:var(--text);border-color:rgba(0,240,255,.1)}
+    .tab.active{
+      background:rgba(0,240,255,.06);color:var(--cyan);
+      border:1px solid rgba(0,240,255,.2);
+      text-shadow:0 0 8px rgba(0,240,255,.3);
+      box-shadow:0 0 15px rgba(0,240,255,.05);
+    }
 
     /* ── Stats row ── */
-    .stat-card{flex:1 1 130px;background:rgba(255,255,255,.023);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px 18px}
+    .stat-card{
+      flex:1 1 130px;
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      border-radius:8px;
+      padding:18px 20px;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter:blur(8px);
+      transition:all .4s;
+    }
+    .stat-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(0,240,255,.3),transparent);opacity:.5;
+    }
+    .stat-card:hover{
+      border-color:rgba(0,240,255,.2);
+      box-shadow:0 0 20px rgba(0,240,255,.06);
+    }
 
     /* ── Inputs ── */
-    .inp{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:14px 16px;color:var(--text);font-family:'DM Mono',monospace;font-size:20px;transition:border-color .2s}
-    .inp:focus{border-color:rgba(251,191,36,.35)}
-    .inp::placeholder{color:#1f2937}
+    .inp{
+      width:100%;background:rgba(0,240,255,.03);
+      border:none;border-bottom:2px solid rgba(0,240,255,.15);
+      border-radius:0;padding:14px 4px;color:var(--text-bright);
+      font-family:'DM Mono',monospace;font-size:20px;transition:all .3s;
+    }
+    .inp:focus{border-bottom-color:var(--cyan);box-shadow:0 2px 15px rgba(0,240,255,.1)}
+    .inp::placeholder{color:rgba(0,240,255,.15)}
 
-    /* ── Buttons ── */
-    .qbtn{padding:7px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:var(--muted);font-size:12px;transition:all .15s}
-    .qbtn:hover{background:rgba(251,191,36,.08);color:var(--gold);border-color:rgba(251,191,36,.2)}
-    .pbtn{width:100%;padding:15px;border-radius:10px;font-size:13px;letter-spacing:.1em;border:none;font-weight:600;transition:all .2s}
-    .pbtn:hover{opacity:.88;transform:translateY(-1px)}
-    .pbtn-d{background:linear-gradient(135deg,#fbbf24,#d97706);color:#06070a}
-    .pbtn-w{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.18)}
+    /* ── Quick-amount Buttons ── */
+    .qbtn{
+      padding:8px 14px;border-radius:4px;background:rgba(0,240,255,.04);
+      border:1px solid rgba(0,240,255,.12);color:var(--muted);font-size:12px;
+      transition:all .3s;font-family:'DM Mono',monospace;letter-spacing:.06em;
+    }
+    .qbtn:hover{background:rgba(0,240,255,.08);color:var(--cyan);border-color:rgba(0,240,255,.3);text-shadow:0 0 6px rgba(0,240,255,.3)}
+
+    /* ── Primary Buttons ── */
+    .pbtn{
+      width:100%;padding:16px;border-radius:4px;font-size:12px;letter-spacing:.12em;
+      border:none;font-weight:600;transition:all .3s;font-family:'DM Mono',monospace;
+    }
+    .pbtn:hover{transform:translateY(-2px)}
+    .pbtn-d{
+      background:rgba(0,240,255,.06);color:var(--cyan);
+      border:1px solid var(--cyan);
+      text-shadow:0 0 8px rgba(0,240,255,.4);
+      box-shadow:0 0 15px rgba(0,240,255,.1),inset 0 0 15px rgba(0,240,255,.03);
+    }
+    .pbtn-d:hover{
+      background:rgba(0,240,255,.12);
+      box-shadow:0 0 30px rgba(0,240,255,.2),inset 0 0 30px rgba(0,240,255,.06);
+    }
+    .pbtn-w{
+      background:rgba(239,68,68,.06);color:#f87171;
+      border:1px solid rgba(239,68,68,.3);
+      text-shadow:0 0 8px rgba(239,68,68,.3);
+      box-shadow:0 0 15px rgba(239,68,68,.08);
+    }
+    .pbtn-w:hover{background:rgba(239,68,68,.1);box-shadow:0 0 25px rgba(239,68,68,.12)}
 
     /* ── Badge ── */
-    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;letter-spacing:.09em;font-weight:500}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:4px;font-size:10px;letter-spacing:.09em;font-weight:500}
 
     /* ── Progress ── */
-    .prog{height:4px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden}
-    .prog-fill{height:100%;background:linear-gradient(90deg,#d97706,#fbbf24);transition:width 1s ease}
+    .prog{height:3px;border-radius:2px;background:rgba(0,240,255,.06);overflow:hidden}
+    .prog-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));transition:width 1s ease;box-shadow:0 0 8px rgba(0,240,255,.3)}
 
     /* ── Tier options ── */
-    .tier-opt{border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;margin-bottom:10px}
-    .tier-opt:hover{border-color:rgba(255,255,255,.16)}
+    .tier-opt{
+      border:1px solid var(--card-border);border-radius:8px;padding:14px 16px;
+      cursor:pointer;transition:all .3s;margin-bottom:10px;
+      background:var(--card-bg);backdrop-filter:blur(8px);
+    }
+    .tier-opt:hover{border-color:rgba(0,240,255,.2);box-shadow:0 0 15px rgba(0,240,255,.05)}
 
     /* ── Toggle ── */
     .toggle-wrap{width:48px;height:26px;border-radius:13px;position:relative;cursor:pointer;transition:background .25s;flex-shrink:0}
     .toggle-knob{position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4);transition:left .25s cubic-bezier(0.34,1.56,0.64,1)}
 
     /* ── Leaderboard ── */
-    .lb-row{display:grid;grid-template-columns:28px 1fr auto auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .lb-row{display:grid;grid-template-columns:28px 1fr auto auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(0,240,255,.06)}
     .lb-row:last-child{border:none}
-    .you-row{background:rgba(251,191,36,.04);border-radius:8px;padding:10px 12px;border:1px solid rgba(251,191,36,.1);margin:0 -12px}
+    .you-row{background:rgba(0,240,255,.03);border-radius:8px;padding:10px 12px;border:1px solid rgba(0,240,255,.1);margin:0 -12px}
 
     /* ── Vote bar ── */
-    .vbar{height:6px;border-radius:3px;background:rgba(255,255,255,.05);overflow:hidden;margin-top:8px}
+    .vbar{height:6px;border-radius:3px;background:rgba(0,240,255,.05);overflow:hidden;margin-top:8px}
 
     /* ── Notification ── */
-    #notif{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);padding:11px 26px;border-radius:40px;font-size:12px;z-index:9999;white-space:nowrap;letter-spacing:.04em;font-weight:500;display:none;transition:all .3s}
+    #notif{
+      position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+      padding:12px 28px;border-radius:4px;font-size:12px;z-index:9999;
+      white-space:nowrap;letter-spacing:.06em;font-weight:500;display:none;
+      transition:all .3s;backdrop-filter:blur(12px);
+    }
 
     /* ── Network banner ── */
-    #net-banner{display:none;padding:10px 24px;background:rgba(239,68,68,.1);border-bottom:1px solid rgba(239,68,68,.2);text-align:center;font-size:12px;color:#f87171;font-weight:500}
+    #net-banner{
+      display:none;padding:10px 24px;
+      background:rgba(239,68,68,.06);border-bottom:1px solid rgba(239,68,68,.15);
+      text-align:center;font-size:12px;color:#f87171;font-weight:500;
+      backdrop-filter:blur(8px);
+    }
 
     /* ── PIN gate ── */
     #pin-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px}
-    .pin-card{padding:36px 40px;background:var(--card);border:1px solid var(--border);border-radius:18px;text-align:center;min-width:280px}
-    .pin-inp{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 14px;color:var(--text);font-family:monospace;font-size:24px;text-align:center;letter-spacing:.3em;margin-bottom:14px;transition:border-color .2s}
-    .pin-inp:focus{outline:none}
+    .pin-card{padding:36px 40px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;text-align:center;min-width:280px;backdrop-filter:blur(8px)}
+    .pin-inp{
+      width:100%;background:rgba(0,240,255,.03);border:none;border-bottom:2px solid rgba(0,240,255,.15);
+      border-radius:0;padding:13px 14px;color:var(--text-bright);font-family:monospace;font-size:24px;
+      text-align:center;letter-spacing:.3em;margin-bottom:14px;transition:all .3s;
+    }
+    .pin-inp:focus{outline:none;border-bottom-color:var(--cyan);box-shadow:0 2px 15px rgba(0,240,255,.1)}
 
     /* ── Chart ── */
     .mini-chart{width:100%;height:80px}
+
+    /* ── App content spacing ── */
+    .app-main{max-width:1100px;margin:0 auto;padding:26px 16px;position:relative;z-index:2;margin-top:80px}
 
     /* ── Responsive ── */
     @media(max-width:680px){.g2{grid-template-columns:1fr!important}.g3{grid-template-columns:1fr 1fr!important}.hide-sm{display:none!important}}
@@ -123,66 +183,73 @@
 </head>
 <body>
 
-<!-- Background orbs -->
-<div class="orb" style="width:700px;height:700px;background:rgba(251,191,36,.025);top:-250px;right:-200px"></div>
-<div class="orb" style="width:500px;height:500px;background:rgba(96,165,250,.03);bottom:-150px;left:-200px"></div>
+<!-- Cyber Grid Canvas -->
+<canvas id="cyber-grid"></canvas>
+
+<!-- Loader -->
+<div id="cyber-loader">
+  <div class="cl-mark">V</div>
+  <div class="cl-bar"><div class="cl-fill" style="width:0%"></div></div>
+  <div class="cl-pct">0%</div>
+</div>
 
 <!-- Network warning banner -->
 <div id="net-banner">
-  ⚠️ Wrong network detected. Please switch to <strong>Nexus Mainnet</strong> to use NexVault.
-  <button onclick="switchNetwork()" style="margin-left:12px;padding:4px 12px;border-radius:6px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.1);color:#f87171;font-size:11px;cursor:pointer">SWITCH NETWORK</button>
+  Wrong network detected. Please switch to <strong>Nexus Mainnet</strong> to use NexVault.
+  <button onclick="switchNetwork()" style="margin-left:12px;padding:5px 14px;border-radius:4px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.08);color:#f87171;font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:.06em">SWITCH NETWORK</button>
 </div>
 
 <!-- Notification -->
 <div id="notif"></div>
 
 <!-- Nav -->
-<nav>
-  <div class="nav-logo">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <div class="nav-mark">V</div>
-      <span class="nav-name">NEXVAULT</span>
-    </a>
-    <div class="badge" style="background:rgba(251,191,36,.09);border:1px solid rgba(251,191,36,.22);color:var(--gold)">🏛️ VAULT GENESIS</div>
-  </div>
-  <div style="display:flex;gap:10px;align-items:center">
-    <div class="blink" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0"></div>
-    <button id="wallet-btn" class="wallet-btn" onclick="connectWallet()">
-      <span id="wallet-icon">◈</span>
-      <span id="wallet-text">CONNECT WALLET</span>
-    </button>
+<nav class="c-nav">
+  <a href="/" class="c-nav-logo"><div class="c-nav-mark">V</div><span class="c-nav-word">NEXVAULT</span></a>
+  <div class="c-nav-links">
+    <a href="/security" class="c-nav-link">SECURITY</a>
+    <a href="/nexcredit" class="c-nav-link">NEXCREDIT</a>
+    <a href="/about" class="c-nav-link">ABOUT</a>
+    <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
+    <a href="/app" class="c-nav-cta" style="display:none">OPEN VAULT</a>
+    <div style="display:flex;align-items:center;gap:10px;margin-left:12px">
+      <div class="blink" style="width:7px;height:7px;border-radius:50%;background:#39ff14;flex-shrink:0;box-shadow:0 0 8px rgba(57,255,20,.5)"></div>
+      <button id="wallet-btn" class="wallet-btn" onclick="connectWallet()">
+        <span id="wallet-icon">&#x25C8;</span>
+        <span id="wallet-text">CONNECT WALLET</span>
+      </button>
+    </div>
   </div>
 </nav>
 
 <!-- Main -->
-<div style="max-width:1100px;margin:0 auto;padding:26px 16px;position:relative;z-index:1">
+<div class="app-main">
 
   <!-- Global Stats -->
-  <div style="display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;animation:fadeUp .6s ease .1s both">
+  <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;animation:fadeUp .6s ease .1s both">
     <div class="stat-card">
-      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Total Value Locked</div>
-      <div id="stat-tvl" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold)">$0.00</div>
-      <div style="font-size:10px;color:var(--dim);margin-top:2px">Grows with every deposit</div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;font-weight:500">Total Value Locked</div>
+      <div id="stat-tvl" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--cyan);text-shadow:0 0 10px rgba(0,240,255,.3)">$0.00</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:3px">Grows with every deposit</div>
     </div>
     <div class="stat-card">
-      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Ecosystem APY</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#a78bfa">3.80 – 4.44%</div>
-      <div style="font-size:10px;color:var(--dim);margin-top:2px">Tier based</div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;font-weight:500">Ecosystem APY</div>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;color:var(--gold);text-shadow:0 0 10px rgba(201,168,76,.3)">3.80 -- 4.44%</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:3px">Tier based</div>
     </div>
     <div class="stat-card">
-      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Active Vaults</div>
-      <div id="stat-depositors" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#60a5fa">0</div>
-      <div style="font-size:10px;color:var(--dim);margin-top:2px">Be the first</div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;font-weight:500">Active Vaults</div>
+      <div id="stat-depositors" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--cyan);text-shadow:0 0 10px rgba(0,240,255,.3)">0</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:3px">Be the first</div>
     </div>
     <div class="stat-card">
-      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Yield Distributed</div>
-      <div id="stat-yield" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#4ade80">$0.00</div>
-      <div style="font-size:10px;color:var(--dim);margin-top:2px">All time</div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;font-weight:500">Yield Distributed</div>
+      <div id="stat-yield" style="font-family:'Playfair Display',serif;font-size:24px;color:#39ff14;text-shadow:0 0 10px rgba(57,255,20,.3)">$0.00</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:3px">All time</div>
     </div>
     <div class="stat-card">
-      <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Your Rank</div>
-      <div id="stat-rank" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold)">—</div>
-      <div style="font-size:10px;color:var(--dim);margin-top:2px">Connect wallet to see</div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;font-weight:500">Your Rank</div>
+      <div id="stat-rank" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--cyan);text-shadow:0 0 10px rgba(0,240,255,.3)">&mdash;</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:3px">Connect wallet to see</div>
     </div>
   </div>
 
@@ -193,102 +260,104 @@
     <button class="tab" onclick="switchTab('leaderboard',this)">LEADERBOARD</button>
   </div>
 
-  <!-- ═══════════ VAULT TAB ═══════════ -->
+  <!-- =========== VAULT TAB =========== -->
   <div id="tab-vault" style="animation:fadeUp .6s ease .2s both">
     <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
 
       <!-- Left: Balance -->
       <div>
-        <div id="balance-card" class="card" style="padding:28px;margin-bottom:18px">
+        <div id="balance-card" class="c-card" style="padding:28px;margin-bottom:18px">
 
           <!-- Connect prompt -->
-          <div id="connect-prompt" style="text-align:center;padding:20px 0">
-            <div style="font-size:40px;margin-bottom:16px">◈</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text);margin-bottom:8px">Connect Your Wallet</div>
+          <div id="connect-prompt" style="text-align:center;padding:24px 0">
+            <div style="font-size:44px;margin-bottom:16px;color:var(--cyan);text-shadow:0 0 20px rgba(0,240,255,.4)">&#x25C8;</div>
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright);margin-bottom:8px">Connect Your Wallet</div>
             <div style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.7">Connect MetaMask to access your vault</div>
-            <button onclick="connectWallet()" style="padding:13px 28px;border-radius:10px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#06070a;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.08em;font-weight:600;cursor:pointer">CONNECT METAMASK</button>
+            <button onclick="connectWallet()" class="btn-neon" style="margin:0 auto">CONNECT METAMASK</button>
           </div>
 
           <!-- Balance (shown when connected) -->
           <div id="balance-content" style="display:none">
-            <div style="font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px;font-weight:500">Your Vault Balance</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:58px;font-weight:300;line-height:1;margin-bottom:6px;color:var(--text)">
+            <div style="font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:18px;font-weight:500">Your Vault Balance</div>
+            <div style="font-family:'Playfair Display',serif;font-size:58px;font-weight:300;line-height:1;margin-bottom:6px;color:var(--text-bright)">
               $<span id="user-balance">0.00</span>
             </div>
             <div style="font-size:12px;color:var(--muted);margin-bottom:22px">
-              USDX &nbsp;·&nbsp; <span id="tier-label">1-Year</span> Tier &nbsp;·&nbsp;
-              <span id="apy-label" style="color:#60a5fa;font-weight:600">3.80% APY</span>
+              USDX &nbsp;&middot;&nbsp; <span id="tier-label">1-Year</span> Tier &nbsp;&middot;&nbsp;
+              <span id="apy-label" style="color:var(--cyan);font-weight:600;text-shadow:0 0 6px rgba(0,240,255,.3)">3.80% APY</span>
             </div>
 
             <!-- Live yield ticker -->
-            <div style="background:rgba(74,222,128,.03);border:1px solid rgba(74,222,128,.09);border-radius:10px;padding:13px 15px;margin-bottom:18px">
-              <div style="font-size:9px;color:#4ade80;letter-spacing:.1em;margin-bottom:5px;text-transform:uppercase;font-weight:600">⚡ Earning Right Now</div>
-              <div style="font-size:17px"><span id="live-yield" style="color:#4ade80;font-weight:400;font-family:monospace">+0.00000000</span> <span style="color:var(--muted);font-size:12px">USDX</span></div>
+            <div style="background:rgba(57,255,20,.03);border:1px solid rgba(57,255,20,.12);border-radius:8px;padding:14px 16px;margin-bottom:18px">
+              <div style="font-size:9px;color:#39ff14;letter-spacing:.12em;margin-bottom:5px;text-transform:uppercase;font-weight:600;text-shadow:0 0 6px rgba(57,255,20,.3)">Earning Right Now</div>
+              <div style="font-size:17px"><span id="live-yield" style="color:#39ff14;font-weight:400;font-family:monospace;text-shadow:0 0 8px rgba(57,255,20,.4)">+0.00000000</span> <span style="color:var(--muted);font-size:12px">USDX</span></div>
             </div>
 
             <!-- Auto-compound toggle -->
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid rgba(0,240,255,.06);border-bottom:1px solid rgba(0,240,255,.06);margin-bottom:18px">
               <div>
-                <div style="font-size:13px;color:var(--text);margin-bottom:3px;font-weight:500">Auto-Compound</div>
+                <div style="font-size:13px;color:var(--text-bright);margin-bottom:3px;font-weight:500">Auto-Compound</div>
                 <div style="font-size:11px;color:var(--muted)">Reinvest yield automatically</div>
               </div>
-              <div id="toggle-wrap" class="toggle-wrap" style="background:rgba(251,191,36,.65)" onclick="toggleAutoCompound()">
+              <div id="toggle-wrap" class="toggle-wrap" style="background:rgba(0,240,255,.55)" onclick="toggleAutoCompound()">
                 <div id="toggle-knob" class="toggle-knob" style="left:25px"></div>
               </div>
             </div>
 
             <!-- Projections -->
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
-              <div style="background:rgba(74,222,128,.03);border:1px solid rgba(74,222,128,.08);border-radius:9px;padding:12px">
-                <div style="font-size:9px;color:var(--muted);letter-spacing:.06em;margin-bottom:5px">DAILY</div>
-                <div id="proj-daily" style="color:#4ade80;font-size:15px;font-weight:400">+$0.00</div>
+              <div style="background:rgba(57,255,20,.03);border:1px solid rgba(57,255,20,.1);border-radius:8px;padding:12px">
+                <div style="font-size:9px;color:var(--muted);letter-spacing:.08em;margin-bottom:5px">DAILY</div>
+                <div id="proj-daily" style="color:#39ff14;font-size:15px;font-weight:400;text-shadow:0 0 6px rgba(57,255,20,.3)">+$0.00</div>
               </div>
-              <div style="background:rgba(74,222,128,.03);border:1px solid rgba(74,222,128,.08);border-radius:9px;padding:12px">
-                <div style="font-size:9px;color:var(--muted);letter-spacing:.06em;margin-bottom:5px">MONTHLY</div>
-                <div id="proj-monthly" style="color:#4ade80;font-size:15px;font-weight:400">+$0.00</div>
+              <div style="background:rgba(57,255,20,.03);border:1px solid rgba(57,255,20,.1);border-radius:8px;padding:12px">
+                <div style="font-size:9px;color:var(--muted);letter-spacing:.08em;margin-bottom:5px">MONTHLY</div>
+                <div id="proj-monthly" style="color:#39ff14;font-size:15px;font-weight:400;text-shadow:0 0 6px rgba(57,255,20,.3)">+$0.00</div>
               </div>
-              <div style="background:rgba(74,222,128,.03);border:1px solid rgba(74,222,128,.08);border-radius:9px;padding:12px">
-                <div style="font-size:9px;color:var(--muted);letter-spacing:.06em;margin-bottom:5px">YEARLY</div>
-                <div id="proj-yearly" style="color:#4ade80;font-size:15px;font-weight:400">+$0.00</div>
+              <div style="background:rgba(57,255,20,.03);border:1px solid rgba(57,255,20,.1);border-radius:8px;padding:12px">
+                <div style="font-size:9px;color:var(--muted);letter-spacing:.08em;margin-bottom:5px">YEARLY</div>
+                <div id="proj-yearly" style="color:#39ff14;font-size:15px;font-weight:400;text-shadow:0 0 6px rgba(57,255,20,.3)">+$0.00</div>
               </div>
             </div>
 
             <!-- Goal bar -->
-            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 18px">
+            <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:18px 20px">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-                <div style="font-size:13px;color:var(--text);font-weight:600">🎯 Savings Goal</div>
+                <div style="font-size:13px;color:var(--text-bright);font-weight:600">Savings Goal</div>
                 <div style="display:flex;align-items:center;gap:8px">
-                  <div id="goal-pct" style="font-size:13px;color:var(--gold);font-weight:600">0.0% complete</div>
-                  <button onclick="openGoalEditor()" style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:10px;color:var(--gold);font-weight:600;letter-spacing:.05em;font-family:'DM Mono',monospace">EDIT</button>
+                  <div id="goal-pct" style="font-size:13px;color:var(--cyan);font-weight:600;text-shadow:0 0 6px rgba(0,240,255,.3)">0.0% complete</div>
+                  <button onclick="openGoalEditor()" style="background:rgba(0,240,255,.06);border:1px solid rgba(0,240,255,.2);border-radius:4px;padding:4px 10px;cursor:pointer;font-size:10px;color:var(--cyan);font-weight:600;letter-spacing:.06em;font-family:'DM Mono',monospace;transition:all .3s" onmouseover="this.style.borderColor='var(--cyan)';this.style.boxShadow='0 0 10px rgba(0,240,255,.15)'" onmouseout="this.style.borderColor='rgba(0,240,255,.2)';this.style.boxShadow='none'">EDIT</button>
                 </div>
               </div>
 
               <!-- Inline goal editor -->
-              <div id="goal-editor" style="display:none;margin-bottom:12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.14);border-radius:8px;padding:12px">
-                <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.06em;font-weight:500">SET YOUR SAVINGS GOAL</div>
+              <div id="goal-editor" style="display:none;margin-bottom:12px;background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.12);border-radius:8px;padding:12px">
+                <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.08em;font-weight:500">SET YOUR SAVINGS GOAL</div>
                 <div style="display:flex;gap:8px;align-items:center">
-                  <span style="color:var(--gold);font-size:15px;font-weight:500;flex-shrink:0">$</span>
+                  <span style="color:var(--cyan);font-size:15px;font-weight:500;flex-shrink:0">$</span>
                   <input id="goal-input" type="number" min="1" step="100" placeholder="30000"
-                    style="flex:1;min-width:0;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:8px 10px;color:var(--text);font-size:14px;font-weight:500;outline:none;-webkit-appearance:none"
+                    style="flex:1;min-width:0;background:rgba(0,240,255,.03);border:none;border-bottom:2px solid rgba(0,240,255,.15);border-radius:0;padding:8px 4px;color:var(--text-bright);font-size:14px;font-weight:500;outline:none;-webkit-appearance:none;font-family:'DM Mono',monospace;transition:all .3s"
+                    onfocus="this.style.borderBottomColor='var(--cyan)'"
+                    onblur="this.style.borderBottomColor='rgba(0,240,255,.15)'"
                     onkeydown="if(event.key==='Enter')saveGoal()" />
-                  <button onclick="saveGoal()" style="background:var(--gold);border:none;border-radius:6px;padding:8px 14px;cursor:pointer;color:#000;font-size:11px;font-weight:700;letter-spacing:.05em;white-space:nowrap;font-family:'DM Mono',monospace;flex-shrink:0">SAVE</button>
-                  <button onclick="closeGoalEditor()" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:6px;padding:8px 10px;cursor:pointer;color:var(--muted);font-size:13px;line-height:1;flex-shrink:0">✕</button>
+                  <button onclick="saveGoal()" class="btn-neon" style="padding:8px 16px;font-size:11px">SAVE</button>
+                  <button onclick="closeGoalEditor()" style="background:rgba(255,255,255,.03);border:1px solid rgba(0,240,255,.1);border-radius:4px;padding:8px 10px;cursor:pointer;color:var(--muted);font-size:13px;line-height:1;flex-shrink:0;transition:all .3s" onmouseover="this.style.borderColor='rgba(0,240,255,.3)'" onmouseout="this.style.borderColor='rgba(0,240,255,.1)'">&#x2715;</button>
                 </div>
               </div>
 
               <div style="display:flex;justify-content:space-between;margin-bottom:10px">
-                <span id="goal-current" style="font-size:14px;color:var(--text);font-weight:500">$0.00</span>
+                <span id="goal-current" style="font-size:14px;color:var(--text-bright);font-weight:500">$0.00</span>
                 <span style="font-size:14px;color:var(--muted)">Goal: <span id="goal-target-display">$30,000</span></span>
               </div>
               <div class="prog" style="margin-bottom:12px"><div id="goal-bar" class="prog-fill" style="width:0%"></div></div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.12);border-radius:8px;padding:10px 12px">
+                <div style="background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.1);border-radius:8px;padding:10px 12px">
                   <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:500">STILL NEEDED</div>
-                  <div id="goal-remaining" style="font-size:16px;color:var(--gold);font-weight:600">$30,000</div>
+                  <div id="goal-remaining" style="font-size:16px;color:var(--cyan);font-weight:600;text-shadow:0 0 6px rgba(0,240,255,.3)">$30,000</div>
                 </div>
-                <div style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.1);border-radius:8px;padding:10px 12px">
+                <div style="background:rgba(57,255,20,.03);border:1px solid rgba(57,255,20,.1);border-radius:8px;padding:10px 12px">
                   <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:500">YIELD / MONTH</div>
-                  <div id="goal-monthly" style="font-size:16px;color:#4ade80;font-weight:400">+$0.00</div>
+                  <div id="goal-monthly" style="font-size:16px;color:#39ff14;font-weight:400;text-shadow:0 0 6px rgba(57,255,20,.3)">+$0.00</div>
                 </div>
               </div>
             </div>
@@ -296,8 +365,8 @@
         </div>
 
         <!-- Transaction History -->
-        <div class="card" style="padding:24px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;font-weight:600">Transaction History</div>
+        <div class="c-card" style="padding:24px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px;font-weight:600">Transaction History</div>
           <div id="tx-history">
             <div style="text-align:center;padding:20px;font-size:12px;color:var(--dim)">Connect wallet to see your transactions</div>
           </div>
@@ -306,26 +375,29 @@
 
       <!-- Right: Action Panel -->
       <div>
-        <div class="card" style="padding:28px">
+        <div class="c-card" style="padding:28px">
 
           <!-- USDX only badge -->
-          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.16);border-radius:12px;margin-bottom:22px">
-            <span style="color:var(--gold);font-size:22px">◈</span>
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.15);border-radius:8px;margin-bottom:22px">
+            <span style="color:var(--cyan);font-size:22px;text-shadow:0 0 10px rgba(0,240,255,.4)">&#x25C8;</span>
             <div>
-              <div style="font-size:14px;color:var(--gold);font-weight:700">USDX</div>
+              <div style="font-size:14px;color:var(--cyan);font-weight:700;text-shadow:0 0 6px rgba(0,240,255,.3)">USDX</div>
               <div style="font-size:11px;color:var(--muted);font-weight:500">Only asset accepted in this vault</div>
             </div>
           </div>
 
 
-            <!-- ═══ NEXCREDIT SCORE CARD ═══ -->
+            <!-- === NEXCREDIT SCORE CARD === -->
             <div id="nexcredit-card" style="display:none;margin-bottom:18px;">
-              <div style="border-radius:14px;border:1px solid rgba(201,168,76,.15);background:rgba(8,11,16,.9);padding:20px 22px;">
+              <div style="border-radius:8px;border:1px solid rgba(201,168,76,.18);background:rgba(10,10,30,.8);padding:20px 22px;backdrop-filter:blur(8px);position:relative;overflow:hidden;">
+
+                <!-- Top glow line -->
+                <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.4),transparent);"></div>
 
                 <!-- Header -->
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                  <div style="font-size:9px;letter-spacing:.15em;color:var(--gold);font-weight:600;text-transform:uppercase;">NexCredit Score</div>
-                  <div style="font-size:9px;color:#4b5563;letter-spacing:.1em;font-weight:500;">🔒 PRIVATE</div>
+                  <div style="font-size:9px;letter-spacing:.15em;color:var(--gold);font-weight:600;text-transform:uppercase;text-shadow:0 0 8px rgba(201,168,76,.3)">NexCredit Score</div>
+                  <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;font-weight:500">PRIVATE</div>
                 </div>
 
                 <!-- Score + components layout -->
@@ -333,10 +405,10 @@
 
                   <!-- Left: Big score -->
                   <div style="flex-shrink:0;text-align:center;min-width:90px;">
-                    <div id="nc-score-num" style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;line-height:1;color:var(--gold);">—</div>
+                    <div id="nc-score-num" style="font-family:'Playfair Display',serif;font-size:56px;font-weight:300;line-height:1;color:var(--gold);text-shadow:0 0 15px rgba(201,168,76,.3)">&mdash;</div>
                     <div id="nc-score-label" style="font-size:10px;letter-spacing:.14em;color:var(--muted);margin-top:4px;font-weight:600;">LOADING</div>
-                    <div style="margin-top:10px;height:4px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden;">
-                      <div id="nc-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#c9a84c,#f0c040);border-radius:2px;transition:width .8s ease;"></div>
+                    <div style="margin-top:10px;height:3px;border-radius:2px;background:rgba(201,168,76,.08);overflow:hidden;">
+                      <div id="nc-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--gold),#f0c040);border-radius:2px;transition:width .8s ease;box-shadow:0 0 8px rgba(201,168,76,.3);"></div>
                     </div>
                     <div id="nc-total-text" style="font-size:9px;color:var(--dim);margin-top:4px;">0 / 1000</div>
                   </div>
@@ -349,8 +421,8 @@
                         <span style="font-size:9px;color:var(--dim);letter-spacing:.08em;">DEPOSIT STRENGTH</span>
                         <span id="nc-ds" style="font-size:9px;color:var(--muted);">0/250</span>
                       </div>
-                      <div style="height:3px;border-radius:2px;background:rgba(255,255,255,.05);">
-                        <div id="nc-ds-bar" style="height:100%;width:0%;background:rgba(201,168,76,.6);border-radius:2px;transition:width .6s ease;"></div>
+                      <div style="height:3px;border-radius:2px;background:rgba(201,168,76,.06);">
+                        <div id="nc-ds-bar" style="height:100%;width:0%;background:rgba(201,168,76,.6);border-radius:2px;transition:width .6s ease;box-shadow:0 0 6px rgba(201,168,76,.2);"></div>
                       </div>
                     </div>
 
@@ -359,8 +431,8 @@
                         <span style="font-size:9px;color:var(--dim);letter-spacing:.08em;">LOCK COMMITMENT</span>
                         <span id="nc-lc" style="font-size:9px;color:var(--muted);">0/250</span>
                       </div>
-                      <div style="height:3px;border-radius:2px;background:rgba(255,255,255,.05);">
-                        <div id="nc-lc-bar" style="height:100%;width:0%;background:rgba(201,168,76,.6);border-radius:2px;transition:width .6s ease;"></div>
+                      <div style="height:3px;border-radius:2px;background:rgba(201,168,76,.06);">
+                        <div id="nc-lc-bar" style="height:100%;width:0%;background:rgba(201,168,76,.6);border-radius:2px;transition:width .6s ease;box-shadow:0 0 6px rgba(201,168,76,.2);"></div>
                       </div>
                     </div>
 
@@ -369,8 +441,8 @@
                         <span style="font-size:9px;color:var(--dim);letter-spacing:.08em;">PROTOCOL LOYALTY</span>
                         <span id="nc-pl" style="font-size:9px;color:var(--muted);">0/250</span>
                       </div>
-                      <div style="height:3px;border-radius:2px;background:rgba(255,255,255,.05);">
-                        <div id="nc-pl-bar" style="height:100%;width:0%;background:rgba(201,168,76,.6);border-radius:2px;transition:width .6s ease;"></div>
+                      <div style="height:3px;border-radius:2px;background:rgba(201,168,76,.06);">
+                        <div id="nc-pl-bar" style="height:100%;width:0%;background:rgba(201,168,76,.6);border-radius:2px;transition:width .6s ease;box-shadow:0 0 6px rgba(201,168,76,.2);"></div>
                       </div>
                     </div>
 
@@ -379,8 +451,8 @@
                         <span style="font-size:9px;color:var(--dim);letter-spacing:.08em;">BEHAVIORAL</span>
                         <span id="nc-be" style="font-size:9px;color:var(--muted);">0/250</span>
                       </div>
-                      <div style="height:3px;border-radius:2px;background:rgba(255,255,255,.05);">
-                        <div id="nc-be-bar" style="height:100%;width:0%;background:rgba(201,168,76,.6);border-radius:2px;transition:width .6s ease;"></div>
+                      <div style="height:3px;border-radius:2px;background:rgba(201,168,76,.06);">
+                        <div id="nc-be-bar" style="height:100%;width:0%;background:rgba(201,168,76,.6);border-radius:2px;transition:width .6s ease;box-shadow:0 0 6px rgba(201,168,76,.2);"></div>
                       </div>
                     </div>
 
@@ -388,28 +460,28 @@
                 </div>
 
                 <!-- Footer -->
-                <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04);font-size:9px;color:#374151;text-align:center;letter-spacing:.06em;">
-                  Verified on-chain &nbsp;·&nbsp; Only visible to you &nbsp;·&nbsp; <a href="/nexcredit" style="color:#4b5563;text-decoration:none;">How scores work →</a>
+                <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(201,168,76,.06);font-size:9px;color:var(--dim);text-align:center;letter-spacing:.06em;">
+                  Verified on-chain &nbsp;&middot;&nbsp; Only visible to you &nbsp;&middot;&nbsp; <a href="/nexcredit" style="color:var(--gold);text-decoration:none;text-shadow:0 0 6px rgba(201,168,76,.2);">How scores work &rarr;</a>
                 </div>
 
               </div>
             </div>
-            <!-- ═══ END NEXCREDIT CARD ═══ -->
+            <!-- === END NEXCREDIT CARD === -->
 
           <!-- Yield Tiers -->
           <div style="margin-bottom:22px">
-            <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;font-weight:600">Choose Your Yield Tier</div>
+            <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;font-weight:600">Choose Your Yield Tier</div>
 
-            <div class="tier-opt" id="tier-1yr" onclick="selectTier('1yr')" style="border-color:#60a5fa;background:rgba(96,165,250,.05)">
+            <div class="tier-opt" id="tier-1yr" onclick="selectTier('1yr')" style="border-color:var(--cyan);background:rgba(0,240,255,.04)">
               <div style="display:flex;justify-content:space-between;align-items:center">
                 <div style="display:flex;align-items:center;gap:10px">
-                  <div class="tier-dot" style="width:10px;height:10px;border-radius:50%;background:#60a5fa;flex-shrink:0"></div>
+                  <div class="tier-dot" style="width:10px;height:10px;border-radius:50%;background:var(--cyan);flex-shrink:0;box-shadow:0 0 8px rgba(0,240,255,.4)"></div>
                   <div>
-                    <div class="tier-name" style="font-size:14px;color:#60a5fa;font-weight:600">1-Year</div>
+                    <div class="tier-name" style="font-size:14px;color:var(--cyan);font-weight:600;text-shadow:0 0 6px rgba(0,240,255,.3)">1-Year</div>
                     <div style="font-size:10px;color:var(--dim)">Locked 365 days</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#60a5fa">3.80%</div>
+                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--cyan);text-shadow:0 0 10px rgba(0,240,255,.3)">3.80%</div>
               </div>
             </div>
 
@@ -418,11 +490,11 @@
                 <div style="display:flex;align-items:center;gap:10px">
                   <div class="tier-dot" style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0"></div>
                   <div>
-                    <div class="tier-name" style="font-size:14px;color:#9ca3af;font-weight:600">3-Year</div>
+                    <div class="tier-name" style="font-size:14px;color:var(--muted);font-weight:600">3-Year</div>
                     <div style="font-size:10px;color:var(--dim)">Locked 1095 days</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dim)">4.10%</div>
+                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--dim)">4.10%</div>
               </div>
             </div>
 
@@ -431,19 +503,19 @@
                 <div style="display:flex;align-items:center;gap:10px">
                   <div class="tier-dot" style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0"></div>
                   <div>
-                    <div class="tier-name" style="font-size:14px;color:#9ca3af;font-weight:600">5-Year</div>
-                    <div style="font-size:10px;color:var(--dim)">Locked 1825 days — maximum yield</div>
+                    <div class="tier-name" style="font-size:14px;color:var(--muted);font-weight:600">5-Year</div>
+                    <div style="font-size:10px;color:var(--dim)">Locked 1825 days -- maximum yield</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dim)">4.44%</div>
+                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--dim)">4.44%</div>
               </div>
             </div>
           </div>
 
           <!-- Deposit / Withdraw tabs -->
           <div style="display:flex;gap:8px;margin-bottom:18px">
-            <button id="action-deposit" onclick="setAction('deposit')" style="flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:rgba(251,191,36,.1);color:var(--gold);border-bottom:2px solid var(--gold);transition:all .2s">DEPOSIT</button>
-            <button id="action-withdraw" onclick="setAction('withdraw')" style="flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:transparent;color:var(--dim);border-bottom:2px solid transparent;transition:all .2s">WITHDRAW</button>
+            <button id="action-deposit" onclick="setAction('deposit')" style="flex:1;padding:10px 0;border-radius:4px;font-size:12px;letter-spacing:.08em;border:1px solid rgba(0,240,255,.3);font-weight:600;background:rgba(0,240,255,.06);color:var(--cyan);transition:all .3s;font-family:'DM Mono',monospace;text-shadow:0 0 6px rgba(0,240,255,.3)">DEPOSIT</button>
+            <button id="action-withdraw" onclick="setAction('withdraw')" style="flex:1;padding:10px 0;border-radius:4px;font-size:12px;letter-spacing:.08em;border:1px solid transparent;font-weight:600;background:transparent;color:var(--dim);transition:all .3s;font-family:'DM Mono',monospace">WITHDRAW</button>
           </div>
 
           <div style="margin-bottom:10px">
@@ -458,37 +530,37 @@
           </div>
 
           <!-- Preview -->
-          <div id="preview-box" style="display:none;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:15px;margin-bottom:16px">
-            <div style="font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:.08em;font-weight:600">TRANSACTION PREVIEW</div>
+          <div id="preview-box" style="display:none;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:16px;margin-bottom:16px">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:.1em;font-weight:600">TRANSACTION PREVIEW</div>
             <div style="display:flex;justify-content:space-between;margin-bottom:8px">
               <span style="font-size:12px;color:var(--muted)">Amount</span>
-              <span id="prev-amount" style="font-size:12px;color:#9ca3af;font-weight:600">$0.00</span>
+              <span id="prev-amount" style="font-size:12px;color:var(--text);font-weight:600">$0.00</span>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:8px">
               <span style="font-size:12px;color:var(--muted)">Tier</span>
-              <span id="prev-tier" style="font-size:12px;color:#9ca3af;font-weight:600">1-Year — 3.80% APY</span>
+              <span id="prev-tier" style="font-size:12px;color:var(--text);font-weight:600">1-Year -- 3.80% APY</span>
             </div>
             <div style="display:flex;justify-content:space-between">
               <span style="font-size:12px;color:var(--muted)">Est. yearly yield</span>
-              <span id="prev-yield" style="font-size:12px;color:#4ade80;font-weight:600">+$0.00</span>
+              <span id="prev-yield" style="font-size:12px;color:#39ff14;font-weight:600;text-shadow:0 0 6px rgba(57,255,20,.3)">+$0.00</span>
             </div>
           </div>
 
           <!-- Unaudited warning -->
-          <div style="padding:10px 14px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:8px;margin-bottom:14px;font-size:11px;color:#f87171;line-height:1.65;font-weight:500">
-            ⚠️ Contracts are unaudited at launch. Audit in progress. Deposit amounts you are comfortable with.
+          <div style="padding:10px 14px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12);border-radius:8px;margin-bottom:14px;font-size:11px;color:#f87171;line-height:1.65;font-weight:500">
+            Contracts are unaudited at launch. Audit in progress. Deposit amounts you are comfortable with.
           </div>
 
           <button id="main-action-btn" class="pbtn pbtn-d" onclick="handleAction()">DEPOSIT USDX AT 3.80% APY</button>
 
           <!-- Referral -->
-          <div style="margin-top:18px;padding:15px;background:rgba(255,255,255,.02);border-radius:10px">
+          <div style="margin-top:18px;padding:16px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <span style="font-size:12px;color:#c9c4bb;font-weight:600">Referral Boost</span>
-              <div class="badge" style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.15);color:var(--gold)">+0.5% APY / REFERRAL</div>
+              <span style="font-size:12px;color:var(--text-bright);font-weight:600">Referral Boost</span>
+              <div class="badge" style="background:rgba(0,240,255,.06);border:1px solid rgba(0,240,255,.15);color:var(--cyan);text-shadow:0 0 6px rgba(0,240,255,.2)">+0.5% APY / REFERRAL</div>
             </div>
             <div style="font-size:12px;color:var(--dim);margin-bottom:10px;line-height:1.65">Share your link to boost your APY.</div>
-            <div id="ref-link" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:9px 13px;font-size:12px;color:var(--gold);font-family:monospace">
+            <div id="ref-link" style="background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.1);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--cyan);font-family:monospace">
               Connect wallet to get your referral link
             </div>
           </div>
@@ -497,45 +569,45 @@
     </div>
   </div>
 
-  <!-- ═══════════ ANALYTICS TAB ═══════════ -->
+  <!-- =========== ANALYTICS TAB =========== -->
   <div id="tab-analytics" style="display:none">
 
     <!-- Preview mode banner -->
     <div style="
       display:flex;align-items:center;gap:12px;
-      padding:14px 20px;border-radius:12px;
-      background:rgba(251,191,36,.05);
-      border:1px solid rgba(251,191,36,.2);
+      padding:14px 20px;border-radius:8px;
+      background:rgba(0,240,255,.03);
+      border:1px solid rgba(0,240,255,.12);
       margin-bottom:20px;
     ">
-      <span style="font-size:18px">📊</span>
+      <span style="font-size:18px;color:var(--cyan)">&#x25A3;</span>
       <div>
-        <div style="font-size:13px;color:#fbbf24;font-weight:600;margin-bottom:2px">Analytics Preview Mode</div>
-        <div style="font-size:11px;color:#6b7280;line-height:1.6">Charts and data populate automatically when Nexus mainnet launches and real deposits flow in. This is a preview of what your analytics dashboard will look like.</div>
+        <div style="font-size:13px;color:var(--cyan);font-weight:600;margin-bottom:2px;text-shadow:0 0 6px rgba(0,240,255,.3)">Analytics Preview Mode</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.6">Charts and data populate automatically when Nexus mainnet launches and real deposits flow in. This is a preview of what your analytics dashboard will look like.</div>
       </div>
     </div>
     <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
       <div>
-        <div class="card" style="padding:26px;margin-bottom:18px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px;font-weight:600">YOUR BALANCE GROWTH</div>
+        <div class="c-card" style="padding:26px;margin-bottom:18px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:14px;font-weight:600">YOUR BALANCE GROWTH</div>
           <svg class="mini-chart" id="chart-balance" viewBox="0 0 300 80"></svg>
           <div style="font-size:12px;color:var(--muted);margin-top:10px">Connect wallet to see your personal chart</div>
         </div>
-        <div class="card" style="padding:26px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px;font-weight:600">12-MONTH PROJECTION — 90-DAY TIER (11% APY)</div>
+        <div class="c-card" style="padding:26px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:14px;font-weight:600">12-MONTH PROJECTION -- 90-DAY TIER (11% APY)</div>
           <svg class="mini-chart" id="chart-proj" viewBox="0 0 300 80"></svg>
           <div style="font-size:12px;color:var(--muted);margin-top:10px" id="proj-note">Deposit USDX to see your projection</div>
         </div>
       </div>
       <div>
-        <div class="card" style="padding:26px;margin-bottom:18px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:16px;font-weight:600">YIELD BREAKDOWN</div>
+        <div class="c-card" style="padding:26px;margin-bottom:18px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:16px;font-weight:600">YIELD BREAKDOWN</div>
           <div id="yield-breakdown">
             <div style="text-align:center;padding:20px;font-size:12px;color:var(--dim)">Connect wallet to see your yield breakdown</div>
           </div>
         </div>
-        <div class="card" style="padding:26px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:16px;font-weight:600">TIER COMPARISON — YOUR BALANCE</div>
+        <div class="c-card" style="padding:26px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:16px;font-weight:600">TIER COMPARISON -- YOUR BALANCE</div>
           <div id="tier-comparison">
             <div style="text-align:center;padding:20px;font-size:12px;color:var(--dim)">Deposit USDX to compare tier earnings</div>
           </div>
@@ -544,32 +616,32 @@
     </div>
   </div>
 
-  <!-- ═══════════ LEADERBOARD TAB ═══════════ -->
+  <!-- =========== LEADERBOARD TAB =========== -->
   <div id="tab-leaderboard" style="display:none">
     <div class="g2" style="display:grid;grid-template-columns:2fr 1fr;gap:20px">
-      <div class="card" style="padding:26px">
+      <div class="c-card" style="padding:26px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-          <div style="font-size:13px;color:var(--text);font-weight:700;letter-spacing:.06em">GLOBAL TVL LEADERBOARD</div>
-          <div class="badge" style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);color:#4ade80;font-size:9px">
-            <div class="blink" style="width:5px;height:5px;border-radius:50%;background:#22c55e"></div>LIVE
+          <div style="font-size:13px;color:var(--text-bright);font-weight:700;letter-spacing:.08em">GLOBAL TVL LEADERBOARD</div>
+          <div class="badge" style="background:rgba(57,255,20,.06);border:1px solid rgba(57,255,20,.15);color:#39ff14;font-size:9px">
+            <div class="blink" style="width:5px;height:5px;border-radius:50%;background:#39ff14;box-shadow:0 0 6px rgba(57,255,20,.5)"></div>LIVE
           </div>
         </div>
         <div id="leaderboard-rows">
           <div style="text-align:center;padding:30px;font-size:13px;color:var(--dim)">
-            🏆 Be the first depositor on NexVault.<br>
+            Be the first depositor on NexVault.<br>
             <span style="font-size:11px;color:var(--dim);margin-top:8px;display:block">The leaderboard fills when mainnet launches.</span>
           </div>
         </div>
       </div>
       <div>
-        <div class="card" style="padding:22px;margin-bottom:16px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px;font-weight:600">YOUR STATS</div>
+        <div class="c-card" style="padding:22px;margin-bottom:16px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:14px;font-weight:600">YOUR STATS</div>
           <div id="user-stats">
             <div style="font-size:12px;color:var(--dim);text-align:center;padding:16px">Connect wallet to see your stats</div>
           </div>
         </div>
-        <div class="card" style="padding:22px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:14px;font-weight:600">NFT BADGES</div>
+        <div class="c-card" style="padding:22px">
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:14px;font-weight:600">NFT BADGES</div>
           <div id="badge-list"></div>
         </div>
       </div>
@@ -581,16 +653,19 @@
 </div><!-- end main -->
 
 <!-- Footer -->
-<footer style="border-top:1px solid rgba(255,255,255,.05);padding:28px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:relative;z-index:1;margin-top:40px">
-  <div style="font-size:11px;color:#1a1f2e;letter-spacing:.1em;font-weight:500">© 2026 NEXVAULT · BUILT ON NEXUS.XYZ · SOVEREIGN YIELD BANKING FOR EVERY HUMAN ON EARTH</div>
-  <a href="/" style="font-size:12px;color:#6b7280;text-decoration:none;letter-spacing:.08em;font-weight:500;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);transition:all .2s" onmouseover="this.style.color='#c9a84c'" onmouseout="this.style.color='#6b7280'">← nexvault.one</a>
+<footer class="c-footer">
+  <span class="c-footer-copy">&copy; 2026 NexVault</span>
+  <div class="c-footer-links">
+    <a href="/about">About</a><a href="/security">Security</a><a href="/nexcredit">NexCredit</a>
+    <a href="/proof">Proof</a><a href="/news">News</a><a href="/whitepaper">Whitepaper</a><a href="/terms">Terms</a>
+  </div>
 </footer>
 
-<!-- ═══════════════════════════════════════════
+<!-- =============================================
      WALLET CONNECTION
-════════════════════════════════════════════ -->
+============================================= -->
 <script>
-// ── Config (fill in at Nexus mainnet launch) ──────────
+// -- Config (fill in at Nexus mainnet launch) ----------
 const NEXUS_CHAIN_ID = 1
 const NEXUS_RPC_URL  = ''
 const VAULT_ADDRESS      = ''
@@ -626,15 +701,15 @@ const METAMASK_ICON = `<svg width="36" height="36" viewBox="0 0 35 33" xmlns="ht
   <polygon fill="#763E1A" stroke="#763E1A" stroke-width=".25" stroke-linejoin="round" points="0.0033,4.1199 1.4833,10.906 0.6358,11.2778 1.7976,12.1453 0.9006,12.8424 2.0624,13.8975 1.316,14.4354 3.0995,16.5022 9.9791,14.5149 14.8497,9.9028 2.0418,0.842"/>
 </svg>`
 
-// ═══════════════════════════════════════════════════════
+// =======================================================
 //  METAMASK-ONLY WALLET CONNECTION
 //  Uses EIP-6963 (modern standard) to find MetaMask by
-//  its unique reverse-domain ID "io.metamask" — this
+//  its unique reverse-domain ID "io.metamask" -- this
 //  cannot be spoofed by other wallets (Trust, Coinbase etc.)
 //  Falls back to legacy window.ethereum detection.
-// ═══════════════════════════════════════════════════════
+// =======================================================
 
-// ── EIP-6963 provider store ───────────────────────────
+// -- EIP-6963 provider store ---------------------------
 const _eip6963Providers = {}  // keyed by rdns
 
 // Start listening for EIP-6963 announcements immediately
@@ -648,13 +723,13 @@ window.addEventListener('eip6963:announceProvider', (event) => {
 // Ask all installed wallets to announce themselves
 window.dispatchEvent(new Event('eip6963:requestProvider'))
 
-// ── Find MetaMask provider ────────────────────────────
+// -- Find MetaMask provider ----------------------------
 // Priority 1: EIP-6963 with exact rdns "io.metamask"
 // Priority 2: window.ethereum.providers[] array (legacy multi-wallet)
 // Priority 3: window.ethereum directly if it's genuinely MetaMask
 function getMetaMaskProvider() {
 
-  // ── Priority 1: EIP-6963 (most reliable) ─────────────
+  // -- Priority 1: EIP-6963 (most reliable) -------------
   if (_eip6963Providers['io.metamask']) {
     return _eip6963Providers['io.metamask']
   }
@@ -662,7 +737,7 @@ function getMetaMaskProvider() {
   const eth = window.ethereum
   if (!eth) return null
 
-  // ── Priority 2: providers array ───────────────────────
+  // -- Priority 2: providers array -----------------------
   // When multiple extensions are installed, each pushes into this array
   if (eth.providers && eth.providers.length) {
     // Find by EIP-6963 rdns stored on provider (newer MetaMask versions)
@@ -675,8 +750,8 @@ function getMetaMaskProvider() {
     if (mmFallback) return mmFallback
   }
 
-  // ── Priority 3: single provider ───────────────────────
-  // Trust Wallet ALSO sets isMetaMask=true — detect it by its own flag
+  // -- Priority 3: single provider -----------------------
+  // Trust Wallet ALSO sets isMetaMask=true -- detect it by its own flag
   // MetaMask has a ._metamask property; Trust Wallet does not
   if (eth.isMetaMask && eth._metamask !== undefined) {
     return eth
@@ -685,13 +760,13 @@ function getMetaMaskProvider() {
   return null
 }
 
-// ── Wait up to 1s for EIP-6963 announcements ─────────
+// -- Wait up to 1s for EIP-6963 announcements ---------
 function waitForMetaMask() {
   return new Promise(resolve => {
     // Re-request in case page loaded before wallets injected
     window.dispatchEvent(new Event('eip6963:requestProvider'))
 
-    // If already found via EIP-6963 → resolve immediately
+    // If already found via EIP-6963 -> resolve immediately
     if (_eip6963Providers['io.metamask']) {
       resolve(_eip6963Providers['io.metamask'])
       return
@@ -713,18 +788,18 @@ function waitForMetaMask() {
   })
 }
 
-// ── Is mobile device? ─────────────────────────────────
+// -- Is mobile device? ---------------------------------
 function isMobile() {
   return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent)
 }
 
-// ── Remove any open modal ─────────────────────────────
+// -- Remove any open modal -----------------------------
 function removeWalletModal() {
   const el = document.getElementById('nv-wallet-modal')
   if (el) el.remove()
 }
 
-// ── Show "MetaMask not found" modal ───────────────────
+// -- Show "MetaMask not found" modal -------------------
 function showNoMetaMaskModal() {
   removeWalletModal()
   const mobile     = isMobile()
@@ -733,39 +808,41 @@ function showNoMetaMaskModal() {
 
   const d = document.createElement('div')
   d.id = 'nv-wallet-modal'
-  d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.87);backdrop-filter:blur(14px)'
+  d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(5,5,15,.92);backdrop-filter:blur(14px)'
 
   const inner = mobile ? `
-    <div style="background:#0d0f14;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px 24px;width:340px;max-width:92vw;text-align:center;position:relative">
-      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#6b7280;font-size:22px;cursor:pointer;line-height:1;padding:0">✕</button>
-      <div style="width:52px;height:52px;border-radius:14px;overflow:hidden;margin:0 auto 16px;display:flex;align-items:center;justify-content:center">${METAMASK_ICON}</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#f0ece4;margin-bottom:8px">Connect Wallet</div>
-      <div style="font-size:12px;color:#6b7280;line-height:1.8;margin-bottom:22px">Open NexVault inside the MetaMask app browser to connect.</div>
+    <div style="background:var(--bg2,#0a0a1a);border:1px solid rgba(0,240,255,.15);border-radius:8px;padding:32px 24px;width:340px;max-width:92vw;text-align:center;position:relative;box-shadow:0 0 40px rgba(0,240,255,.06)">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.3),transparent)"></div>
+      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted,#4a4a6a);font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>
+      <div style="width:52px;height:52px;border-radius:8px;overflow:hidden;margin:0 auto 16px;display:flex;align-items:center;justify-content:center">${METAMASK_ICON}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright,#f0f0ff);margin-bottom:8px">Connect Wallet</div>
+      <div style="font-size:12px;color:var(--muted,#4a4a6a);line-height:1.8;margin-bottom:22px">Open NexVault inside the MetaMask app browser to connect.</div>
       <button onclick="window.location.href='${deepLink}'"
-        style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#06070a;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.04em">
-        🦊 &nbsp;OPEN IN METAMASK APP
+        style="width:100%;padding:14px;border-radius:4px;border:1px solid var(--cyan,#00f0ff);background:rgba(0,240,255,.06);color:var(--cyan,#00f0ff);font-family:'DM Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,240,255,.3);box-shadow:0 0 15px rgba(0,240,255,.1)">
+        OPEN IN METAMASK APP
       </button>
       <button onclick="window.open('${installURL}','_blank')"
-        style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#9ca3af;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.04em">
-        GET METAMASK ↗
+        style="width:100%;padding:12px;border-radius:4px;border:1px solid rgba(0,240,255,.12);background:rgba(0,240,255,.03);color:var(--muted,#4a4a6a);font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.06em">
+        GET METAMASK
       </button>
     </div>` : `
-    <div style="background:#0d0f14;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px 30px;width:380px;max-width:94vw;text-align:center;position:relative">
-      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#6b7280;font-size:22px;cursor:pointer;line-height:1;padding:0">✕</button>
-      <div style="width:52px;height:52px;border-radius:14px;overflow:hidden;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">${METAMASK_ICON}</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#f0ece4;margin-bottom:10px">MetaMask Not Detected</div>
-      <div style="font-size:13px;color:#6b7280;line-height:1.8;margin-bottom:22px">
+    <div style="background:var(--bg2,#0a0a1a);border:1px solid rgba(0,240,255,.15);border-radius:8px;padding:36px 30px;width:380px;max-width:94vw;text-align:center;position:relative;box-shadow:0 0 40px rgba(0,240,255,.06)">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.3),transparent)"></div>
+      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted,#4a4a6a);font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>
+      <div style="width:52px;height:52px;border-radius:8px;overflow:hidden;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">${METAMASK_ICON}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright,#f0f0ff);margin-bottom:10px">MetaMask Not Detected</div>
+      <div style="font-size:13px;color:var(--muted,#4a4a6a);line-height:1.8;margin-bottom:22px">
         Install the MetaMask browser extension, then refresh this page.
       </div>
       <button onclick="window.open('${installURL}','_blank')"
-        style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#06070a;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.04em">
-        🦊 &nbsp;GET METAMASK ↗
+        style="width:100%;padding:14px;border-radius:4px;border:1px solid var(--cyan,#00f0ff);background:rgba(0,240,255,.06);color:var(--cyan,#00f0ff);font-family:'DM Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,240,255,.3);box-shadow:0 0 15px rgba(0,240,255,.1)">
+        GET METAMASK
       </button>
       <button onclick="removeWalletModal()"
-        style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#9ca3af;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.04em">
+        style="width:100%;padding:12px;border-radius:4px;border:1px solid rgba(0,240,255,.12);background:rgba(0,240,255,.03);color:var(--muted,#4a4a6a);font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.06em">
         CANCEL
       </button>
-      <div style="margin-top:14px;font-size:10px;color:#374151;line-height:1.7">After installing, refresh this page and click Connect Wallet.</div>
+      <div style="margin-top:14px;font-size:10px;color:var(--dim,#2a2a40);line-height:1.7">After installing, refresh this page and click Connect Wallet.</div>
     </div>`
 
   d.innerHTML = inner
@@ -773,15 +850,15 @@ function showNoMetaMaskModal() {
   d.addEventListener('click', e => { if (e.target === d) removeWalletModal() })
 }
 
-// ── MAIN CONNECT FUNCTION ─────────────────────────────
+// -- MAIN CONNECT FUNCTION -----------------------------
 async function openWalletModal() {
   const btn = document.getElementById('wallet-btn')
-  if (btn) btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite">◌</span><span> CONNECTING...</span>'
+  if (btn) btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite">&#x25CC;</span><span> CONNECTING...</span>'
 
   const provider = await waitForMetaMask()
 
   if (!provider) {
-    if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>◈</span><span>CONNECT WALLET</span>' }
+    if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
     showNoMetaMaskModal()
     return
   }
@@ -792,25 +869,25 @@ async function openWalletModal() {
       window._activeProvider = provider
       window.onWalletConnected(accounts[0])
     } else {
-      if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>◈</span><span>CONNECT WALLET</span>' }
-      showNotif('No accounts — unlock MetaMask and try again', 'err')
+      if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
+      showNotif('No accounts -- unlock MetaMask and try again', 'err')
     }
   } catch (err) {
-    if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>◈</span><span>CONNECT WALLET</span>' }
+    if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
     if (err.code === 4001) showNotif('Connection cancelled', 'err')
-    else if (err.code === -32002) showNotif('MetaMask popup is already open — check your extension', 'err')
-    else showNotif('Connection failed — unlock MetaMask and try again', 'err')
+    else if (err.code === -32002) showNotif('MetaMask popup is already open -- check your extension', 'err')
+    else showNotif('Connection failed -- unlock MetaMask and try again', 'err')
   }
 }
 
-// ── Disconnect ────────────────────────────────────────
+// -- Disconnect ----------------------------------------
 function doDisconnect() {
   window._activeProvider = null
   window.onWalletDisconnected()
   showNotif('Wallet disconnected', 'ok')
 }
 
-// ── Account / chain listeners ─────────────────────────
+// -- Account / chain listeners -------------------------
 ;(function attachListeners() {
   function attach(eth) {
     try {
@@ -830,7 +907,7 @@ function doDisconnect() {
   }, { once: true })
 })()
 
-// ── Auto-reconnect on page load ───────────────────────
+// -- Auto-reconnect on page load -----------------------
 window.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('nexvault_address')
   if (!saved) return
@@ -847,7 +924,7 @@ window.addEventListener('DOMContentLoaded', () => {
   })
 })
 
-// ── NexCredit ──────────────────────────────────────────
+// -- NexCredit -----------------------------------------
 const NEXCREDIT_ABI = [
   'function getScore(address) external view returns (uint256)',
   'function getScoreBreakdown(address) external view returns (uint256,uint256,uint256,uint256,uint256)',
@@ -855,13 +932,13 @@ const NEXCREDIT_ABI = [
 ]
 
 const NC_TIER_COLORS = {
-  'No History':  '#4b5563',
-  'Dormant':     '#6b7280',
-  'Building':    '#f0ece4',
-  'Established': '#60a5fa',
-  'Trusted':     '#a78bfa',
-  'Senior':      '#fbbf24',
-  'Elite':       '#4ade80',
+  'No History':  '#4a4a6a',
+  'Dormant':     '#4a4a6a',
+  'Building':    '#d0d0e0',
+  'Established': '#00f0ff',
+  'Trusted':     '#c9a84c',
+  'Senior':      '#c9a84c',
+  'Elite':       '#39ff14',
 }
 
 async function loadNexCredit(address) {
@@ -899,27 +976,27 @@ async function loadNexCredit(address) {
     document.getElementById('nc-be-bar').style.width = (beN/250*100)+'%'
     if (label === 'Elite') {
       const inner = card.querySelector('div')
-      inner.style.boxShadow = '0 0 24px rgba(74,222,128,0.08)'
-      inner.style.borderColor = 'rgba(74,222,128,0.25)'
+      inner.style.boxShadow = '0 0 24px rgba(57,255,20,0.08)'
+      inner.style.borderColor = 'rgba(57,255,20,0.25)'
     }
   } catch(e) {
     console.warn('NexCredit unavailable:', e.message)
-    document.getElementById('nc-score-num').textContent = '—'
+    document.getElementById('nc-score-num').textContent = '\u2014'
     document.getElementById('nc-score-label').textContent = 'UNAVAILABLE'
   }
 }
 
-// ── Globals ───────────────────────────────────────────
+// -- Globals -------------------------------------------
 window.connectWallet    = openWalletModal
 window.disconnectWallet = doDisconnect
 window.switchNetwork    = openWalletModal
 </script>
 
-<!-- ═══════════════════════════════════════════
+<!-- =============================================
      APP LOGIC
-════════════════════════════════════════════ -->
+============================================= -->
 <script>
-  // ── STATE ─────────────────────────────────────────────
+  // -- STATE ---------------------------------------------
   const STATE = {
     connected: false,
     address: null,
@@ -936,15 +1013,15 @@ window.switchNetwork    = openWalletModal
   }
 
   const TIERS = {
-    '1yr': { label: '1-Year',   apy: 3.8,  color: '#60a5fa', lock: 365 },
-    '3yr': { label: '3-Year',   apy: 4.1,  color: '#fbbf24', lock: 1095 },
-    '5yr': { label: '5-Year',   apy: 4.44, color: '#4ade80', lock: 1825 },
+    '1yr': { label: '1-Year',   apy: 3.8,  color: '#00f0ff', lock: 365 },
+    '3yr': { label: '3-Year',   apy: 4.1,  color: '#c9a84c', lock: 1095 },
+    '5yr': { label: '5-Year',   apy: 4.44, color: '#39ff14', lock: 1825 },
   }
 
   let GOAL = parseFloat(localStorage.getItem('nexvault_goal') || '30000')
   const fmt = (n, d=2) => Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})
 
-  // ── WALLET EVENTS ─────────────────────────────────────
+  // -- WALLET EVENTS -------------------------------------
   window.onWalletConnected = (address) => {
     STATE.connected = true
     STATE.address = address
@@ -966,7 +1043,7 @@ window.switchNetwork    = openWalletModal
     startLiveYield()
     loadUserStats()
     loadNexCredit(address)
-    showNotif('✓ Wallet connected', 'ok')
+    showNotif('Wallet connected', 'ok')
   }
 
   window.onWalletDisconnected = () => {
@@ -979,7 +1056,7 @@ window.switchNetwork    = openWalletModal
 
     const btn = document.getElementById('wallet-btn')
     btn.className = 'wallet-btn'
-    btn.innerHTML = '<span>◈</span><span>CONNECT WALLET</span>'
+    btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>'
 
     document.getElementById('connect-prompt').style.display = 'block'
     document.getElementById('balance-content').style.display = 'none'
@@ -989,7 +1066,7 @@ window.switchNetwork    = openWalletModal
     updateUI()
   }
 
-  // ── TABS ──────────────────────────────────────────────
+  // -- TABS ----------------------------------------------
   function switchTab(name, el) {
     ['vault','analytics','leaderboard'].forEach(t => {
       const el = document.getElementById('tab-'+t)
@@ -1004,7 +1081,7 @@ window.switchNetwork    = openWalletModal
     if(name === 'leaderboard') renderLeaderboard()
   }
 
-  // ── TIERS ─────────────────────────────────────────────
+  // -- TIERS ---------------------------------------------
   function selectTier(tier) {
     STATE.tier = tier
     STATE.apy = TIERS[tier].apy
@@ -1012,29 +1089,29 @@ window.switchNetwork    = openWalletModal
     // Reset ALL tiers first
     Object.keys(TIERS).forEach(t => {
       const el = document.getElementById('tier-'+t)
-      el.style.borderColor = 'rgba(255,255,255,.07)'
-      el.style.background = 'transparent'
+      el.style.borderColor = 'var(--card-border)'
+      el.style.background = 'var(--card-bg)'
       // Reset dot
       const dot = el.querySelector('.tier-dot')
-      if(dot) { dot.style.background = 'rgba(255,255,255,.15)' }
+      if(dot) { dot.style.background = 'rgba(255,255,255,.15)'; dot.style.boxShadow = 'none' }
       // Reset name color
       const nameEl = el.querySelector('.tier-name')
-      if(nameEl) { nameEl.style.color = '#9ca3af' }
+      if(nameEl) { nameEl.style.color = 'var(--muted)'; nameEl.style.textShadow = 'none' }
       // Reset APY color
       const apyEl = el.querySelector('.tier-apy')
-      if(apyEl) { apyEl.style.color = 'var(--dim)' }
+      if(apyEl) { apyEl.style.color = 'var(--dim)'; apyEl.style.textShadow = 'none' }
     })
 
     // Highlight ONLY selected tier
     const sel = document.getElementById('tier-'+tier)
     sel.style.borderColor = TIERS[tier].color
-    sel.style.background = `rgba(${hexToRgb(TIERS[tier].color)},0.05)`
+    sel.style.background = `rgba(${hexToRgb(TIERS[tier].color)},0.04)`
     const selDot  = sel.querySelector('.tier-dot')
     const selName = sel.querySelector('.tier-name')
     const selApy  = sel.querySelector('.tier-apy')
-    if(selDot)  selDot.style.background  = TIERS[tier].color
-    if(selName) selName.style.color      = TIERS[tier].color
-    if(selApy)  selApy.style.color       = TIERS[tier].color
+    if(selDot)  { selDot.style.background  = TIERS[tier].color; selDot.style.boxShadow = `0 0 8px ${TIERS[tier].color}60` }
+    if(selName) { selName.style.color      = TIERS[tier].color; selName.style.textShadow = `0 0 6px ${TIERS[tier].color}50` }
+    if(selApy)  { selApy.style.color       = TIERS[tier].color; selApy.style.textShadow = `0 0 10px ${TIERS[tier].color}40` }
 
     document.getElementById('tier-label').textContent = TIERS[tier].label
     document.getElementById('apy-label').textContent  = TIERS[tier].apy+'% APY'
@@ -1054,7 +1131,7 @@ window.switchNetwork    = openWalletModal
     return `${r},${g},${b}`
   }
 
-  // ── ACTION (deposit/withdraw) ─────────────────────────
+  // -- ACTION (deposit/withdraw) -------------------------
   function setAction(a) {
     STATE.action = a
     const dep = document.getElementById('action-deposit')
@@ -1062,13 +1139,13 @@ window.switchNetwork    = openWalletModal
     const btn = document.getElementById('main-action-btn')
 
     if(a === 'deposit') {
-      dep.style.cssText = 'flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:rgba(251,191,36,.1);color:#fbbf24;border-bottom:2px solid #fbbf24;transition:all .2s'
-      wit.style.cssText = 'flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:transparent;color:#374151;border-bottom:2px solid transparent;transition:all .2s'
+      dep.style.cssText = 'flex:1;padding:10px 0;border-radius:4px;font-size:12px;letter-spacing:.08em;border:1px solid rgba(0,240,255,.3);font-weight:600;background:rgba(0,240,255,.06);color:#00f0ff;transition:all .3s;font-family:DM Mono,monospace;text-shadow:0 0 6px rgba(0,240,255,.3)'
+      wit.style.cssText = 'flex:1;padding:10px 0;border-radius:4px;font-size:12px;letter-spacing:.08em;border:1px solid transparent;font-weight:600;background:transparent;color:#2a2a40;transition:all .3s;font-family:DM Mono,monospace'
       btn.className = 'pbtn pbtn-d'
       btn.textContent = `DEPOSIT USDX AT ${STATE.apy}% APY`
     } else {
-      dep.style.cssText = 'flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:transparent;color:#374151;border-bottom:2px solid transparent;transition:all .2s'
-      wit.style.cssText = 'flex:1;padding:9px 0;border-radius:8px;font-size:12px;letter-spacing:.06em;border:none;font-weight:600;background:rgba(239,68,68,.08);color:#f87171;border-bottom:2px solid rgba(239,68,68,.45);transition:all .2s'
+      dep.style.cssText = 'flex:1;padding:10px 0;border-radius:4px;font-size:12px;letter-spacing:.08em;border:1px solid transparent;font-weight:600;background:transparent;color:#2a2a40;transition:all .3s;font-family:DM Mono,monospace'
+      wit.style.cssText = 'flex:1;padding:10px 0;border-radius:4px;font-size:12px;letter-spacing:.08em;border:1px solid rgba(239,68,68,.3);font-weight:600;background:rgba(239,68,68,.06);color:#f87171;transition:all .3s;font-family:DM Mono,monospace;text-shadow:0 0 6px rgba(239,68,68,.3)'
       btn.className = 'pbtn pbtn-w'
       btn.textContent = 'WITHDRAW USDX'
     }
@@ -1094,7 +1171,7 @@ window.switchNetwork    = openWalletModal
       STATE.txHistory.unshift({ date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), action:'Deposit', amount:`+${fmt(amt)}`, type:'deposit' })
       updateUI()
       startLiveYield()
-      showNotif(`✓ ${fmt(amt)} USDX deposited at ${STATE.apy}% APY`)
+      showNotif(`${fmt(amt)} USDX deposited at ${STATE.apy}% APY`)
       document.getElementById('balance-card').classList.add('gp')
       setTimeout(()=>document.getElementById('balance-card').classList.remove('gp'), 700)
     } else {
@@ -1102,7 +1179,7 @@ window.switchNetwork    = openWalletModal
       STATE.balance -= amt
       STATE.txHistory.unshift({ date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), action:'Withdraw', amount:`-${fmt(amt)}`, type:'withdraw' })
       updateUI()
-      showNotif(`✓ ${fmt(amt)} USDX withdrawn`)
+      showNotif(`${fmt(amt)} USDX withdrawn`)
     }
     document.getElementById('amount-input').value = ''
     document.getElementById('preview-box').style.display = 'none'
@@ -1115,20 +1192,20 @@ window.switchNetwork    = openWalletModal
     if(!amt || amt <= 0) { box.style.display='none'; return }
     box.style.display='block'
     document.getElementById('prev-amount').textContent = '$'+fmt(amt)
-    document.getElementById('prev-tier').textContent = TIERS[STATE.tier].label+' — '+STATE.apy+'% APY'
+    document.getElementById('prev-tier').textContent = TIERS[STATE.tier].label+' \u2014 '+STATE.apy+'% APY'
     document.getElementById('prev-yield').textContent = '+$'+fmt(amt*STATE.apy/100)
   }
 
-  // ── AUTO-COMPOUND TOGGLE ──────────────────────────────
+  // -- AUTO-COMPOUND TOGGLE ------------------------------
   function toggleAutoCompound() {
     STATE.autoCompound = !STATE.autoCompound
     const wrap = document.getElementById('toggle-wrap')
     const knob = document.getElementById('toggle-knob')
-    wrap.style.background = STATE.autoCompound ? 'rgba(251,191,36,0.65)' : 'rgba(255,255,255,0.1)'
+    wrap.style.background = STATE.autoCompound ? 'rgba(0,240,255,0.55)' : 'rgba(255,255,255,0.1)'
     knob.style.left = STATE.autoCompound ? '25px' : '3px'
   }
 
-  // ── LIVE YIELD TICKER ─────────────────────────────────
+  // -- LIVE YIELD TICKER ---------------------------------
   function startLiveYield() {
     stopLiveYield()
     if(STATE.balance <= 0) return
@@ -1144,7 +1221,7 @@ window.switchNetwork    = openWalletModal
     if(STATE.yieldInterval) { clearInterval(STATE.yieldInterval); STATE.yieldInterval = null }
   }
 
-  // ── UPDATE UI ─────────────────────────────────────────
+  // -- UPDATE UI -----------------------------------------
   function updateUI() {
     if(!STATE.connected) return
     const b = STATE.balance
@@ -1174,29 +1251,29 @@ window.switchNetwork    = openWalletModal
   function loadUserStats() {
     // Badges
     const badges = [
-      { icon:'👑', name:'Vault Genesis', desc:'First 5,000 wallets', earned:true },
-      { icon:'💎', name:'Diamond Hands',   desc:'Hold 90 days',      earned:false },
-      { icon:'🏆', name:'Top 10',          desc:'TVL leaderboard',   earned:false },
-      { icon:'🐳', name:'Whale',           desc:'$100K+ deposited',  earned:false },
+      { icon:'\u{1F451}', name:'Vault Genesis', desc:'First 5,000 wallets', earned:true },
+      { icon:'\u{1F48E}', name:'Diamond Hands',   desc:'Hold 90 days',      earned:false },
+      { icon:'\u{1F3C6}', name:'Top 10',          desc:'TVL leaderboard',   earned:false },
+      { icon:'\u{1F40B}', name:'Whale',           desc:'$100K+ deposited',  earned:false },
     ]
     document.getElementById('badge-list').innerHTML = badges.map(b=>`
-      <div style="display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:8px;background:${b.earned?'rgba(251,191,36,.04)':'rgba(255,255,255,.02)'};border:1px solid ${b.earned?'rgba(251,191,36,.14)':'rgba(255,255,255,.05)'};margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:8px;background:${b.earned?'rgba(0,240,255,.03)':'rgba(255,255,255,.02)'};border:1px solid ${b.earned?'rgba(0,240,255,.12)':'rgba(255,255,255,.04)'};margin-bottom:8px">
         <div style="font-size:20px;opacity:${b.earned?1:.22}">${b.icon}</div>
         <div style="flex:1">
-          <div style="font-size:13px;color:${b.earned?'#fbbf24':'#4b5563'};font-weight:600">${b.name}</div>
-          <div style="font-size:10px;color:#374151;margin-top:2px">${b.desc}</div>
+          <div style="font-size:13px;color:${b.earned?'#00f0ff':'#4a4a6a'};font-weight:600;${b.earned?'text-shadow:0 0 6px rgba(0,240,255,.3)':''}">${b.name}</div>
+          <div style="font-size:10px;color:#2a2a40;margin-top:2px">${b.desc}</div>
         </div>
-        ${b.earned?'<div style="font-size:10px;color:#4ade80;font-weight:700">EARNED</div>':''}
+        ${b.earned?'<div style="font-size:10px;color:#39ff14;font-weight:700;text-shadow:0 0 6px rgba(57,255,20,.3)">EARNED</div>':''}
       </div>
     `).join('')
 
     // User stats
-    const addr = STATE.address ? STATE.address.slice(0,6)+'...'+STATE.address.slice(-4) : '—'
+    const addr = STATE.address ? STATE.address.slice(0,6)+'...'+STATE.address.slice(-4) : '\u2014'
     document.getElementById('user-stats').innerHTML = `
-      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:12px;color:#4b5563">Wallet</span><span style="font-size:12px;color:#9ca3af;font-family:monospace">${addr}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:12px;color:#4b5563">Balance</span><span style="font-size:12px;color:#9ca3af">$${fmt(STATE.balance)}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:12px;color:#4b5563">Tier</span><span style="font-size:12px;color:#9ca3af">${TIERS[STATE.tier].label}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:9px 0"><span style="font-size:12px;color:#4b5563">Badge</span><span style="font-size:12px;color:#fbbf24">🏛️ Vault Genesis</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,240,255,.06)"><span style="font-size:12px;color:var(--muted)">Wallet</span><span style="font-size:12px;color:var(--text);font-family:monospace">${addr}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,240,255,.06)"><span style="font-size:12px;color:var(--muted)">Balance</span><span style="font-size:12px;color:var(--text)">$${fmt(STATE.balance)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,240,255,.06)"><span style="font-size:12px;color:var(--muted)">Tier</span><span style="font-size:12px;color:var(--text)">${TIERS[STATE.tier].label}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 0"><span style="font-size:12px;color:var(--muted)">Badge</span><span style="font-size:12px;color:var(--cyan);text-shadow:0 0 6px rgba(0,240,255,.3)">Vault Genesis</span></div>
     `
   }
 
@@ -1207,38 +1284,38 @@ window.switchNetwork    = openWalletModal
       return
     }
     el.innerHTML = STATE.txHistory.slice(0,6).map((h,i)=>`
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:${i<STATE.txHistory.length-1?'1px solid rgba(255,255,255,.04)':'none'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:${i<STATE.txHistory.length-1?'1px solid rgba(0,240,255,.06)':'none'}">
         <div>
-          <div style="font-size:13px;color:#c9c4bb;margin-bottom:2px;font-weight:500">${h.action}</div>
-          <div style="font-size:10px;color:#374151">${h.date}</div>
+          <div style="font-size:13px;color:var(--text);margin-bottom:2px;font-weight:500">${h.action}</div>
+          <div style="font-size:10px;color:var(--dim)">${h.date}</div>
         </div>
-        <div style="font-size:14px;font-family:monospace;color:${h.type==='yield'?'#fbbf24':h.type==='compound'?'#a78bfa':'#e8e4dc'};font-weight:600">
-          ${h.amount} <span style="font-size:10px;color:#374151">USDX</span>
+        <div style="font-size:14px;font-family:monospace;color:${h.type==='yield'?'#c9a84c':h.type==='compound'?'#c9a84c':'var(--text-bright)'};font-weight:600">
+          ${h.amount} <span style="font-size:10px;color:var(--dim)">USDX</span>
         </div>
       </div>
     `).join('')
   }
 
-  // ── ANALYTICS ─────────────────────────────────────────
+  // -- ANALYTICS -----------------------------------------
   function renderAnalytics() {
     // Projection chart
     const bal = STATE.balance || 5000
     const projData = Array.from({length:13},(_,i)=>bal*Math.pow(1+0.11/12,i))
-    drawChart('chart-proj', projData, '#a78bfa')
+    drawChart('chart-proj', projData, '#c9a84c')
 
     document.getElementById('proj-note').textContent =
-      `$${fmt(bal)} → $${fmt(projData[12])} compounding at 11% APY`
+      `$${fmt(bal)} \u2192 $${fmt(projData[12])} compounding at 11% APY`
 
     // Yield breakdown
     document.getElementById('yield-breakdown').innerHTML = [
-      {l:'Total Earned (All Time)', v:'$'+fmt(STATE.totalYieldEarned), c:'#fbbf24'},
-      {l:'Auto-Compounded',          v:'$0.00',                         c:'#a78bfa'},
-      {l:'Manually Claimed',          v:'$0.00',                         c:'#60a5fa'},
-      {l:'Referral Bonuses',          v:'$0.00',                         c:'#4ade80'},
+      {l:'Total Earned (All Time)', v:'$'+fmt(STATE.totalYieldEarned), c:'#00f0ff'},
+      {l:'Auto-Compounded',          v:'$0.00',                         c:'#c9a84c'},
+      {l:'Manually Claimed',          v:'$0.00',                         c:'#00f0ff'},
+      {l:'Referral Bonuses',          v:'$0.00',                         c:'#39ff14'},
     ].map(r=>`
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05)">
-        <span style="font-size:13px;color:#6b7280;font-weight:500">${r.l}</span>
-        <span style="font-size:14px;color:${r.c};font-family:monospace;font-weight:700">${r.v}</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid rgba(0,240,255,.06)">
+        <span style="font-size:13px;color:var(--muted);font-weight:500">${r.l}</span>
+        <span style="font-size:14px;color:${r.c};font-family:monospace;font-weight:700;text-shadow:0 0 6px ${r.c}40">${r.v}</span>
       </div>
     `).join('')
 
@@ -1247,34 +1324,34 @@ window.switchNetwork    = openWalletModal
     document.getElementById('tier-comparison').innerHTML = Object.entries(TIERS).map(([k,t])=>`
       <div style="margin-bottom:18px">
         <div style="display:flex;justify-content:space-between;margin-bottom:7px">
-          <span style="font-size:13px;color:${t.color};font-weight:600">${t.label} — ${t.apy}% APY</span>
-          <span style="font-size:13px;color:#c9c4bb;font-family:monospace;font-weight:700">+$${fmt(b*t.apy/100)}/yr</span>
+          <span style="font-size:13px;color:${t.color};font-weight:600;text-shadow:0 0 6px ${t.color}40">${t.label} \u2014 ${t.apy}% APY</span>
+          <span style="font-size:13px;color:var(--text);font-family:monospace;font-weight:700">+$${fmt(b*t.apy/100)}/yr</span>
         </div>
-        <div class="prog"><div style="height:100%;border-radius:2px;background:${t.color};width:${(t.apy/12)*100}%;transition:width 1s"></div></div>
-        <div style="font-size:11px;color:#4b5563;margin-top:5px">+$${fmt(b*t.apy/100/12)}/month</div>
+        <div class="prog"><div style="height:100%;border-radius:2px;background:${t.color};width:${(t.apy/12)*100}%;transition:width 1s;box-shadow:0 0 8px ${t.color}40"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:5px">+$${fmt(b*t.apy/100/12)}/month</div>
       </div>
     `).join('')
   }
 
-  // ── LEADERBOARD ───────────────────────────────────────
+  // -- LEADERBOARD ---------------------------------------
   function renderLeaderboard() {
     if(!STATE.connected || STATE.balance === 0) return
     const addr = STATE.address ? STATE.address.slice(0,6)+'...'+STATE.address.slice(-4) : 'YOU'
     document.getElementById('leaderboard-rows').innerHTML = `
-      <div style="font-size:11px;color:#4b5563;margin-bottom:16px;text-align:center">You are the first depositor. The leaderboard grows with the vault.</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:16px;text-align:center">You are the first depositor. The leaderboard grows with the vault.</div>
       <div class="lb-row you-row">
-        <div style="font-size:16px;text-align:center">⭐</div>
+        <div style="font-size:16px;text-align:center;color:var(--gold)">&#x2605;</div>
         <div>
-          <div style="font-size:13px;color:#fbbf24;font-family:monospace;font-weight:700">${addr}</div>
-          <div style="font-size:10px;color:#374151">${TIERS[STATE.tier].label} tier</div>
+          <div style="font-size:13px;color:var(--cyan);font-family:monospace;font-weight:700;text-shadow:0 0 6px rgba(0,240,255,.3)">${addr}</div>
+          <div style="font-size:10px;color:var(--dim)">${TIERS[STATE.tier].label} tier</div>
         </div>
-        <div style="font-size:13px;color:#fbbf24;font-family:monospace;font-weight:700">$${fmt(STATE.balance)}</div>
-        <div class="badge" style="font-size:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:#4b5563">${STATE.apy}%</div>
+        <div style="font-size:13px;color:var(--cyan);font-family:monospace;font-weight:700;text-shadow:0 0 6px rgba(0,240,255,.3)">$${fmt(STATE.balance)}</div>
+        <div class="badge" style="font-size:10px;background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.12);color:var(--muted)">${STATE.apy}%</div>
       </div>
     `
   }
 
-  // ── CHART HELPER ──────────────────────────────────────
+  // -- CHART HELPER --------------------------------------
   function drawChart(id, data, color) {
     const svg = document.getElementById(id)
     if(!svg) return
@@ -1296,37 +1373,39 @@ window.switchNetwork    = openWalletModal
     `
   }
 
-  // ── NOTIFICATIONS ─────────────────────────────────────
+  // -- NOTIFICATIONS -------------------------------------
   function showNotif(msg, type='ok') {
     const el = document.getElementById('notif')
     el.textContent = msg
     el.style.display = 'block'
-    el.style.background = type==='err' ? 'rgba(239,68,68,.12)' : 'rgba(251,191,36,.09)'
-    el.style.border = `1px solid ${type==='err'?'rgba(239,68,68,.28)':'rgba(251,191,36,.28)'}`
-    el.style.color = type==='err' ? '#f87171' : '#fbbf24'
+    el.style.background = type==='err' ? 'rgba(239,68,68,.08)' : 'rgba(0,240,255,.06)'
+    el.style.border = `1px solid ${type==='err'?'rgba(239,68,68,.25)':'rgba(0,240,255,.25)'}`
+    el.style.color = type==='err' ? '#f87171' : '#00f0ff'
+    el.style.textShadow = type==='err' ? '0 0 6px rgba(239,68,68,.3)' : '0 0 6px rgba(0,240,255,.3)'
+    el.style.boxShadow = type==='err' ? '0 0 20px rgba(239,68,68,.08)' : '0 0 20px rgba(0,240,255,.08)'
     setTimeout(()=>{ el.style.display='none' }, 3200)
   }
 
-  // ── INIT ──────────────────────────────────────────────
+  // -- INIT ----------------------------------------------
   document.addEventListener('DOMContentLoaded', () => {
     renderTxHistory()
     selectTier('1yr')
-    drawChart('chart-balance', [0], '#fbbf24')
-    drawChart('chart-proj', Array.from({length:13},(_,i)=>5000*Math.pow(1.0092,i)), '#a78bfa')
-    drawChart('chart-tvl', [0,0,0], '#fbbf24')
+    drawChart('chart-balance', [0], '#00f0ff')
+    drawChart('chart-proj', Array.from({length:13},(_,i)=>5000*Math.pow(1.0092,i)), '#c9a84c')
+    drawChart('chart-tvl', [0,0,0], '#00f0ff')
 
-    // ── Auto-switch to analytics tab if URL param set ──
+    // -- Auto-switch to analytics tab if URL param set --
     const params = new URLSearchParams(window.location.search)
     if(params.get('tab') === 'analytics') {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
       const analyticsBtn = document.querySelector('.tab[onclick*="analytics"]')
       if(analyticsBtn) analyticsBtn.classList.add('active')
       switchTab('analytics', null)
-      showNotif('📊 Analytics preview — data populates when mainnet launches', 'ok')
+      showNotif('Analytics preview \u2014 data populates when mainnet launches', 'ok')
     }
   })
 
-  // ── Savings Goal Editor ───────────────────────────────
+  // -- Savings Goal Editor -------------------------------
   function openGoalEditor() {
     const editor = document.getElementById('goal-editor')
     editor.style.display = 'block'
@@ -1352,6 +1431,8 @@ window.switchNetwork    = openWalletModal
     showNotif('Savings goal updated', 'ok')
   }
 </script>
+
+<script src="/nv-cyber.js"></script>
 
 </body>
 </html>

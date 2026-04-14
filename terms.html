@@ -72,9 +72,9 @@
     /* ── Warning banner ── */
     .warning-banner {
       background: var(--card-bg);
-      border: 1px solid rgba(255,0,255,.2);
+      border: 1px solid rgba(201,168,76,.2);
       border-radius: 8px; padding: 28px 32px; margin-bottom: 56px;
-      font-size: 13px; color: rgba(255,0,255,.7); line-height: 1.8;
+      font-size: 13px; color: rgba(201,168,76,.7); line-height: 1.8;
       position: relative; overflow: hidden; backdrop-filter: blur(8px);
     }
     .warning-banner::before {
@@ -83,7 +83,7 @@
     }
     .warning-banner strong {
       color: var(--magenta); font-weight: 600; letter-spacing: .04em;
-      text-shadow: 0 0 8px rgba(255,0,255,.4);
+      text-shadow: 0 0 8px rgba(201,168,76,.4);
     }
 
     /* ── Legal sections ── */
@@ -119,18 +119,18 @@
     }
     .legal-text a {
       color: var(--magenta); text-decoration: none;
-      border-bottom: 1px solid rgba(255,0,255,.2);
+      border-bottom: 1px solid rgba(201,168,76,.2);
       padding-bottom: 1px; transition: all .2s;
-      text-shadow: 0 0 6px rgba(255,0,255,.2);
+      text-shadow: 0 0 6px rgba(201,168,76,.2);
     }
     .legal-text a:hover {
       border-color: var(--magenta);
-      text-shadow: 0 0 12px rgba(255,0,255,.4);
+      text-shadow: 0 0 12px rgba(201,168,76,.4);
     }
 
     .section-line {
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,240,255,.12), rgba(255,0,255,.12), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,.12), rgba(201,168,76,.12), transparent);
       margin: 0 0 56px; border: none;
     }
 
@@ -211,7 +211,7 @@
     <div class="legal-num">SECTION 1</div>
     <h2 class="legal-heading">Nature of the Protocol</h2>
     <div class="legal-text">
-      <p>NexVault is non-custodial software deployed on the Nexus blockchain. It consists of four smart contracts — USDXVault, VaultGenesisBadge, ReferralRegistry, and AutoCompounder — that together form a fixed-rate USDX savings protocol.</p>
+      <p>NexVault is non-custodial software deployed on the Nexus blockchain. It consists of five smart contracts — USDXVault, VaultGenesisBadge, ReferralRegistry, AutoCompounder, and NexCredit — that together form a fixed-rate USDX savings protocol with on-chain credit scoring.</p>
       <p>These smart contracts are autonomous. Once deployed, they execute exactly as coded. No individual, company, entity, or organization controls the contracts or has the ability to access, move, freeze, or redirect user funds. The contracts are non-upgradeable: there is no proxy pattern, no admin upgrade key, and no mechanism to change the deployed code.</p>
       <p><strong>NexVault is not a bank.</strong> It is not a financial institution, investment fund, brokerage, money services business, or licensed financial services provider of any kind. NexVault is open-source software provided as-is under the MIT license. Using NexVault is equivalent to interacting directly with smart contract code on a public blockchain.</p>
     </div>

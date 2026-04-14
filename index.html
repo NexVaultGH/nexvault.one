@@ -60,7 +60,7 @@
     .step{padding:40px 28px;border-left:1px solid rgba(0,240,255,.08);position:relative}
     .step::before{content:'';position:absolute;top:0;left:-1px;width:1px;height:0;background:var(--cyan);box-shadow:0 0 8px var(--cyan);transition:height 1s ease}
     .step.visible::before{height:100%}
-    .step-num{font-family:var(--font-display);font-size:56px;font-weight:300;background:linear-gradient(180deg,rgba(0,240,255,.2),transparent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:16px}
+    .step-num{font-family:var(--font-display);font-size:56px;font-weight:300;color:var(--cyan);text-shadow:0 0 20px rgba(0,240,255,.5),0 0 40px rgba(0,240,255,.2);line-height:1;margin-bottom:16px}
     .step-title{font-size:14px;font-weight:500;color:var(--text-bright);margin-bottom:12px}
     .step-desc{font-size:12px;color:var(--muted);line-height:1.8}
 
@@ -70,12 +70,12 @@
     .tier-card{border:1px solid rgba(0,240,255,.06);border-radius:8px;padding:48px 28px;text-align:center;background:rgba(0,240,255,.01);position:relative;overflow:hidden;transition:all .4s}
     .tier-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.3),transparent);opacity:0;transition:opacity .4s}
     .tier-card:hover{border-color:rgba(0,240,255,.2);transform:translateY(-6px)}.tier-card:hover::before{opacity:1}
-    .tier-card.featured{border-color:rgba(255,0,255,.2);background:rgba(255,0,255,.02)}
-    .tier-card.featured::before{background:linear-gradient(90deg,transparent,rgba(255,0,255,.4),transparent);opacity:1}
+    .tier-card.featured{border-color:rgba(201,168,76,.2);background:rgba(201,168,76,.02)}
+    .tier-card.featured::before{background:linear-gradient(90deg,transparent,rgba(201,168,76,.4),transparent);opacity:1}
     .tier-apy{font-family:var(--font-display);font-size:48px;font-weight:300;margin-bottom:8px}
     .tier-name{font-size:11px;letter-spacing:.15em;color:var(--muted);margin-bottom:24px}
     .tier-detail{font-size:12px;color:var(--dim);line-height:2}
-    .tier-badge{display:inline-block;padding:4px 14px;border-radius:4px;font-size:9px;letter-spacing:.12em;border:1px solid rgba(255,0,255,.3);color:var(--magenta);text-shadow:0 0 8px rgba(255,0,255,.4);margin-top:20px}
+    .tier-badge{display:inline-block;padding:4px 14px;border-radius:4px;font-size:9px;letter-spacing:.12em;border:1px solid rgba(201,168,76,.3);color:var(--magenta);text-shadow:0 0 8px rgba(201,168,76,.4);margin-top:20px}
 
     /* ── Mission ── */
     .mission{padding:160px 0;text-align:center;position:relative;z-index:1}
@@ -85,7 +85,7 @@
 
     /* ── CTA ── */
     .cta{padding:120px 0;text-align:center;position:relative;z-index:1}
-    .cta-glow{position:absolute;top:50%;left:50%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,240,255,.04),rgba(255,0,255,.02),transparent 70%);transform:translate(-50%,-50%);pointer-events:none}
+    .cta-glow{position:absolute;top:50%;left:50%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,240,255,.04),rgba(201,168,76,.02),transparent 70%);transform:translate(-50%,-50%);pointer-events:none}
 
     @media(max-width:768px){
       .split{grid-template-columns:1fr;gap:40px;padding:0 20px}
