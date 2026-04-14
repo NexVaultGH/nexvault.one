@@ -18,10 +18,10 @@
   --bg3: #0e0e24;
   --card-bg: rgba(10,10,30,.6);
   --card-border: rgba(0,240,255,.1);
-  --text: #d0d0e0;
-  --text-bright: #f0f0ff;
-  --muted: #4a4a6a;
-  --dim: #2a2a40;
+  --text: #e0e0f0;
+  --text-bright: #f5f5ff;
+  --muted: #8888aa;
+  --dim: #5a5a7a;
   --font: 'DM Mono', monospace;
   --font-display: 'Playfair Display', serif;
 }
