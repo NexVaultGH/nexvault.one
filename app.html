@@ -679,11 +679,10 @@
 <!-- Ethers v6 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
 
-<!-- WalletConnect QR — custom QR display (no @walletconnect/modal dependency) -->
+<!-- WalletConnect QR — custom QR display with step-by-step status -->
 <script>
 var _wcProvider = null
 
-// Show custom QR modal with NexVault cyberpunk styling
 function showWCQRModal(uri) {
   if (window.removeWalletModal) window.removeWalletModal()
   var d = document.createElement('div')
@@ -694,9 +693,9 @@ function showWCQRModal(uri) {
     '<button onclick="closeWCQR()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#8888aa;font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>' +
     '<div style="font-size:10px;letter-spacing:.2em;color:#00f0ff;font-weight:600;margin-bottom:16px;text-shadow:0 0 8px rgba(0,240,255,.4)">SCAN WITH METAMASK MOBILE</div>' +
     '<div id="wc-qr-box" style="width:220px;height:220px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:#ffffff;padding:10px">' +
-      '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(uri) + '&format=png" style="width:100%;height:100%" onerror="this.parentElement.innerHTML=\'<div style=color:#666;font-size:11px>QR failed to load</div>\'" />' +
+      '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(uri) + '&format=png" style="width:100%;height:100%" onerror="this.parentElement.innerHTML=\'<div style=color:#666;font-size:11px>QR failed</div>\'" />' +
     '</div>' +
-    '<div style="font-size:11px;color:#8888aa;line-height:1.7;margin-bottom:16px">Open <strong style="color:#e0e0f0">MetaMask</strong> on your phone<br>Tap the scan icon &#x1F4F7; and scan this code</div>' +
+    '<div style="font-size:11px;color:#8888aa;line-height:1.7;margin-bottom:16px">Open <strong style="color:#e0e0f0">MetaMask</strong> on your phone<br>Tap the QR scanner and scan this code</div>' +
     '<div style="display:flex;align-items:center;gap:8px;justify-content:center;padding:10px;border:1px solid rgba(0,240,255,.1);border-radius:6px;background:rgba(0,240,255,.03)">' +
       '<div style="width:8px;height:8px;border-radius:50%;background:#c9a84c;animation:blink 1.5s infinite"></div>' +
       '<div style="font-size:10px;color:#c9a84c;letter-spacing:.1em">WAITING FOR CONNECTION...</div>' +
@@ -706,47 +705,79 @@ function showWCQRModal(uri) {
   d.addEventListener('click', function(e) { if (e.target === d) closeWCQR() })
 }
 
+// Loading modal while WC initializes
+function showWCLoadingModal() {
+  if (window.removeWalletModal) window.removeWalletModal()
+  var d = document.createElement('div')
+  d.id = 'nv-wallet-modal'
+  d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(5,5,15,.92);backdrop-filter:blur(14px)'
+  d.innerHTML = '<div style="background:#0a0a1a;border:1px solid rgba(0,240,255,.2);border-radius:8px;padding:40px 30px;width:360px;max-width:92vw;text-align:center;position:relative;box-shadow:0 0 40px rgba(0,240,255,.06)">' +
+    '<div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.4),transparent)"></div>' +
+    '<button onclick="closeWCQR()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#8888aa;font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>' +
+    '<div style="font-size:32px;margin-bottom:16px;animation:spin 2s linear infinite;display:inline-block">&#x25CC;</div>' +
+    '<div id="wc-status" style="font-size:11px;color:#00f0ff;letter-spacing:.1em;margin-bottom:8px">LOADING WALLETCONNECT...</div>' +
+    '<div style="font-size:10px;color:#5a5a7a">This may take a few seconds</div>' +
+  '</div>'
+  document.body.appendChild(d)
+  d.addEventListener('click', function(e) { if (e.target === d) closeWCQR() })
+}
+
+function updateWCStatus(msg) {
+  var el = document.getElementById('wc-status')
+  if (el) el.textContent = msg
+}
+
 function closeWCQR() {
   var el = document.getElementById('nv-wallet-modal')
   if (el) el.remove()
-  // Abort any pending WC connection
-  if (_wcProvider && !_wcProvider.connected) {
-    try { _wcProvider.disconnect() } catch(e) {}
-  }
 }
 
 window.connectViaWalletConnect = async function() {
+  showWCLoadingModal()
+
   try {
-    if (window.showNotif) window.showNotif('Initializing QR...', 'ok')
-
-    // Dynamic import — only loads when user clicks
-    var mod = await import('https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.13.0/+esm')
+    // Step 1: Dynamic import
+    updateWCStatus('LOADING MODULE...')
+    console.log('[WC] Step 1: importing module...')
+    var mod = await import('https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.17.0/+esm')
     var EthereumProvider = mod.EthereumProvider || mod.default
+    console.log('[WC] Step 2: module loaded, EthereumProvider:', !!EthereumProvider)
 
+    if (!EthereumProvider) {
+      throw new Error('EthereumProvider not found in module')
+    }
+
+    // Step 2: Initialize provider
+    updateWCStatus('CONNECTING TO RELAY...')
+    console.log('[WC] Step 3: initializing provider...')
     _wcProvider = await EthereumProvider.init({
       projectId: '44a4b0d66bd62948f4ca92a7d6b3c7d2',
       chains: [1],
       optionalChains: [1],
-      showQrModal: false,  // We display our own QR modal
+      showQrModal: false,
       metadata: {
         name: 'NexVault',
-        description: 'USDX Savings Protocol',
+        description: 'USDX Savings Protocol — Sovereign Yield Banking',
         url: 'https://nexvault.one',
         icons: ['https://nexvault.one/icon-192.png'],
       },
     })
+    console.log('[WC] Step 4: provider initialized')
 
-    // When WC generates the pairing URI, show it as QR
+    // Step 3: Listen for URI and show QR
+    updateWCStatus('GENERATING QR CODE...')
     _wcProvider.on('display_uri', function(uri) {
+      console.log('[WC] Step 5: got URI, showing QR')
       showWCQRModal(uri)
     })
 
-    // This triggers the QR flow — waits for mobile wallet to scan + approve
+    // Step 4: Enable — waits for mobile wallet scan + approval
+    console.log('[WC] Step 5: calling enable()...')
     await _wcProvider.enable()
+    console.log('[WC] Step 6: enabled! accounts:', _wcProvider.accounts)
 
-    // Connection successful — close QR modal
+    // Success
     closeWCQR()
-
     if (_wcProvider.accounts && _wcProvider.accounts.length > 0) {
       window._activeProvider = _wcProvider
 
@@ -766,13 +797,15 @@ window.connectViaWalletConnect = async function() {
       if (window.showNotif) window.showNotif('Wallet connected via QR', 'ok')
     }
   } catch (err) {
+    console.error('[WC] FAILED:', err)
     closeWCQR()
-    console.warn('WalletConnect QR error:', err)
+
     if (err && err.message && (err.message.includes('rejected') || err.message.includes('reset') || err.message.includes('closed'))) {
       if (window.showNotif) window.showNotif('Connection cancelled', 'err')
     } else {
-      console.error('WC init failed:', err)
-      if (window.showNotif) window.showNotif('QR connection failed — try again', 'err')
+      // Show the actual error + fallback to deep-link
+      console.error('[WC] Full error:', JSON.stringify(err, Object.getOwnPropertyNames(err)))
+      showNoMetaMaskModal()
     }
   }
 }
