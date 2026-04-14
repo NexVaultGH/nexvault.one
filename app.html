@@ -679,23 +679,55 @@
 <!-- Ethers v6 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
 
-<!-- WalletConnect QR — dynamic import loads only on click -->
+<!-- WalletConnect QR — custom QR display (no @walletconnect/modal dependency) -->
 <script>
+var _wcProvider = null
+
+// Show custom QR modal with NexVault cyberpunk styling
+function showWCQRModal(uri) {
+  if (window.removeWalletModal) window.removeWalletModal()
+  var d = document.createElement('div')
+  d.id = 'nv-wallet-modal'
+  d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(5,5,15,.92);backdrop-filter:blur(14px)'
+  d.innerHTML = '<div style="background:#0a0a1a;border:1px solid rgba(0,240,255,.2);border-radius:8px;padding:36px 30px;width:400px;max-width:94vw;text-align:center;position:relative;box-shadow:0 0 60px rgba(0,240,255,.08)">' +
+    '<div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.4),transparent)"></div>' +
+    '<button onclick="closeWCQR()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#8888aa;font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>' +
+    '<div style="font-size:10px;letter-spacing:.2em;color:#00f0ff;font-weight:600;margin-bottom:16px;text-shadow:0 0 8px rgba(0,240,255,.4)">SCAN WITH METAMASK MOBILE</div>' +
+    '<div id="wc-qr-box" style="width:220px;height:220px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:#ffffff;padding:10px">' +
+      '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(uri) + '&format=png" style="width:100%;height:100%" onerror="this.parentElement.innerHTML=\'<div style=color:#666;font-size:11px>QR failed to load</div>\'" />' +
+    '</div>' +
+    '<div style="font-size:11px;color:#8888aa;line-height:1.7;margin-bottom:16px">Open <strong style="color:#e0e0f0">MetaMask</strong> on your phone<br>Tap the scan icon &#x1F4F7; and scan this code</div>' +
+    '<div style="display:flex;align-items:center;gap:8px;justify-content:center;padding:10px;border:1px solid rgba(0,240,255,.1);border-radius:6px;background:rgba(0,240,255,.03)">' +
+      '<div style="width:8px;height:8px;border-radius:50%;background:#c9a84c;animation:blink 1.5s infinite"></div>' +
+      '<div style="font-size:10px;color:#c9a84c;letter-spacing:.1em">WAITING FOR CONNECTION...</div>' +
+    '</div>' +
+  '</div>'
+  document.body.appendChild(d)
+  d.addEventListener('click', function(e) { if (e.target === d) closeWCQR() })
+}
+
+function closeWCQR() {
+  var el = document.getElementById('nv-wallet-modal')
+  if (el) el.remove()
+  // Abort any pending WC connection
+  if (_wcProvider && !_wcProvider.connected) {
+    try { _wcProvider.disconnect() } catch(e) {}
+  }
+}
+
 window.connectViaWalletConnect = async function() {
   try {
-    if (window.removeWalletModal) window.removeWalletModal()
-    if (window.showNotif) window.showNotif('Loading QR code...', 'ok')
+    if (window.showNotif) window.showNotif('Initializing QR...', 'ok')
 
-    // Dynamic import — loads WalletConnect only when user clicks QR button
+    // Dynamic import — only loads when user clicks
     var mod = await import('https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.13.0/+esm')
     var EthereumProvider = mod.EthereumProvider || mod.default
 
-    var wcProvider = await EthereumProvider.init({
+    _wcProvider = await EthereumProvider.init({
       projectId: '44a4b0d66bd62948f4ca92a7d6b3c7d2',
       chains: [1],
       optionalChains: [1],
-      showQrModal: true,
-      qrModalOptions: { themeMode: 'dark' },
+      showQrModal: false,  // We display our own QR modal
       metadata: {
         name: 'NexVault',
         description: 'USDX Savings Protocol',
@@ -704,17 +736,25 @@ window.connectViaWalletConnect = async function() {
       },
     })
 
-    // This opens the WalletConnect QR modal and waits for mobile wallet to scan + approve
-    await wcProvider.enable()
+    // When WC generates the pairing URI, show it as QR
+    _wcProvider.on('display_uri', function(uri) {
+      showWCQRModal(uri)
+    })
 
-    if (wcProvider.accounts && wcProvider.accounts.length > 0) {
-      window._activeProvider = wcProvider
+    // This triggers the QR flow — waits for mobile wallet to scan + approve
+    await _wcProvider.enable()
 
-      wcProvider.on('disconnect', function() {
+    // Connection successful — close QR modal
+    closeWCQR()
+
+    if (_wcProvider.accounts && _wcProvider.accounts.length > 0) {
+      window._activeProvider = _wcProvider
+
+      _wcProvider.on('disconnect', function() {
         window._activeProvider = null
         if (window.onWalletDisconnected) window.onWalletDisconnected()
       })
-      wcProvider.on('accountsChanged', function(accts) {
+      _wcProvider.on('accountsChanged', function(accts) {
         if (!accts || accts.length === 0) {
           if (window.onWalletDisconnected) window.onWalletDisconnected()
         } else {
@@ -722,16 +762,17 @@ window.connectViaWalletConnect = async function() {
         }
       })
 
-      if (window.onWalletConnected) window.onWalletConnected(wcProvider.accounts[0])
+      if (window.onWalletConnected) window.onWalletConnected(_wcProvider.accounts[0])
       if (window.showNotif) window.showNotif('Wallet connected via QR', 'ok')
     }
   } catch (err) {
+    closeWCQR()
     console.warn('WalletConnect QR error:', err)
-    if (err && err.message && (err.message.includes('rejected') || err.message.includes('closed'))) {
+    if (err && err.message && (err.message.includes('rejected') || err.message.includes('reset') || err.message.includes('closed'))) {
       if (window.showNotif) window.showNotif('Connection cancelled', 'err')
     } else {
-      console.error('QR connection failed, showing fallback:', err)
-      if (window.showNotif) window.showNotif('QR loading — please wait and try again', 'err')
+      console.error('WC init failed:', err)
+      if (window.showNotif) window.showNotif('QR connection failed — try again', 'err')
     }
   }
 }
