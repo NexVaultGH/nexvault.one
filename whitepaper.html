@@ -560,7 +560,7 @@
     </div>
     <div class="wp-meta-card">
       <div class="wp-meta-label">Test Results</div>
-      <div class="wp-meta-val wp-meta-val--green">234 / 234 Passing</div>
+      <div class="wp-meta-val wp-meta-val--green">246 / 246 Passing</div>
     </div>
   </div>
 </div>
@@ -603,7 +603,7 @@
     <p class="wp-text">All yield paid to NexVault depositors originates exclusively from GYDS. Nexus automatically distributes protocol yield to the NexVault contract proportional to its USDX TVL. No yield is funded by the protocol developer, no capital from the NexVault team is used to pay depositor returns, and no token emissions or inflationary mechanisms are involved. Yield is real &mdash; sourced from the underlying assets backing USDX.</p>
     <p class="wp-text">NexVault offers <strong>three yield tiers</strong> &mdash; 1-Year Lock (3.80% APY), 3-Year Lock (4.10% APY), and 5-Year Lock (4.44% APY) &mdash; providing meaningful choice between liquidity and yield maximization. The protocol is non-custodial: no administrator can access, freeze, or move user funds.</p>
     <p class="wp-text">The first 5,000 depositors receive a permanent on-chain Vault Genesis Badge &mdash; an ERC-721 NFT with fully on-chain SVG metadata and a rarity tier based on deposit position. Supply is hardcoded at 5,000 and can never be increased.</p>
-    <p class="wp-text">The developer earns a proportional share of GYDS yield based on TVL, creating a self-sustaining economic model without governance grants or token emissions. NexVault is built on radical transparency &mdash; open source contracts, 234/234 passing tests, honest audit disclosure, and roadmap decisions published publicly.</p>
+    <p class="wp-text">The developer earns a proportional share of GYDS yield based on TVL, creating a self-sustaining economic model without governance grants or token emissions. NexVault is built on radical transparency &mdash; open source contracts, 246/246 passing tests, honest audit disclosure, and roadmap decisions published publicly.</p>
   </div>
 
   <div class="wp-divider"></div>
@@ -788,7 +788,7 @@
       <li>SafeERC20 for all token transfers</li>
       <li>Emergency pause &mdash; deposits can be halted, withdrawals always remain open</li>
       <li>receiveYield() restricted to registered GYDS address only</li>
-      <li>234/234 tests passing &mdash; comprehensive coverage across all contracts and edge cases</li>
+      <li>246/246 tests passing &mdash; comprehensive coverage across all contracts and edge cases</li>
     </ul>
   </div>
 
@@ -801,12 +801,12 @@
 
     <div class="wp-disclaimer">
       <div class="wp-disclaimer-title">IMPORTANT &mdash; UNAUDITED AT LAUNCH</div>
-      <p>NexVault smart contracts have been written with a comprehensive test suite (234/234 tests passing). They have NOT been audited by a third-party security firm at initial launch. A security audit is actively being funded from protocol earnings. The full report will be published publicly at nexvault.one upon completion. Deposit only amounts you are comfortable with.</p>
+      <p>NexVault smart contracts have been written with a comprehensive test suite (246/246 tests passing). They have NOT been audited by a third-party security firm at initial launch. A security audit is actively being funded from protocol earnings. The full report will be published publicly at nexvault.one upon completion. Deposit only amounts you are comfortable with.</p>
     </div>
 
     <div class="wp-stats">
       <div class="wp-stat">
-        <div class="wp-stat-val wp-stat-val--green">234</div>
+        <div class="wp-stat-val wp-stat-val--green">246</div>
         <div class="wp-stat-lbl">PASSING TESTS</div>
       </div>
       <div class="wp-stat">
@@ -823,7 +823,7 @@
       </div>
     </div>
 
-    <p class="wp-text" style="margin-top:20px">All 234 unit tests pass across all five contracts. Tests cover deposits, withdrawals, yield calculations, lock enforcement, referral bonuses, genesis badges, compounding, credit scoring, GYDS integration, admin functions, dev earnings protection, and security edge cases. Full results available at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</p>
+    <p class="wp-text" style="margin-top:20px">All 246 unit tests pass across all five contracts. Tests cover deposits, withdrawals, yield calculations, lock enforcement, referral bonuses, genesis badges, compounding, credit scoring, GYDS integration, admin functions, dev earnings protection, and security edge cases. Full results available at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</p>
 
     <div class="wp-h3">Our Transparency Pledge</div>
     <p class="wp-text">We will be honest about what is built and what is not. We will disclose risks openly. We will publish our audit when complete regardless of findings, and fix every issue before expanding marketing or TVL targets.</p>
@@ -831,7 +831,7 @@
     <div style="margin-top:20px">
       <div class="wp-phase">
         <div class="wp-phase-label">TESTING</div>
-        <div class="wp-phase-action">Full test suite &mdash; 234/234 tests, all functions</div>
+        <div class="wp-phase-action">Full test suite &mdash; 246/246 tests, all functions</div>
         <div class="wp-phase-status done">COMPLETE</div>
       </div>
       <div class="wp-phase">
@@ -921,7 +921,18 @@
         <tr><td>Elite</td><td>850&ndash;1000</td></tr>
       </tbody>
     </table>
-    <p class="wp-text">Elite requires $100K+ deposited, a 5-Year lock, and 3 years of protocol loyalty simultaneously. Under 1% of wallets will ever qualify. The protocol founder wallet (OWNER) holds permanent Elite status (1000/1000) &mdash; hardcoded on-chain as a protocol design decision. NexCredit is tested with 60 dedicated unit tests covering all scoring categories, privacy controls, founder status, and critical invariants.</p>
+    <p class="wp-text">Elite requires $100K+ deposited, a 5-Year lock, and 3 years of protocol loyalty simultaneously. Under 1% of wallets will ever qualify. The protocol founder wallet (OWNER) holds permanent Elite status (1000/1000) &mdash; hardcoded on-chain as a protocol design decision.</p>
+
+    <div class="wp-h3">Penalty System</div>
+    <p class="wp-text">NexCredit includes a penalty system that can <strong>reduce</strong> a wallet's score for negative credit events &mdash; just like a real credit system. Penalties are capped at 200 points maximum per wallet.</p>
+    <ul class="wp-list">
+      <li><strong>Referral Inactivity</strong> &mdash; if a referred user withdraws all deposits and becomes inactive, the referrer loses 15 points per inactive referral (automatic, no admin action needed)</li>
+      <li><strong>Late Lending Payments</strong> &mdash; future lending products can trigger penalties for missed or late payments (admin-applied)</li>
+      <li><strong>Loan Defaults</strong> &mdash; failure to repay a protocol loan results in a larger penalty deduction (admin-applied)</li>
+      <li><strong>Protocol Violations</strong> &mdash; abuse of referral system, wash trading, or other harmful behaviors (admin-applied)</li>
+    </ul>
+    <p class="wp-text">Penalties can be <strong>recovered</strong> over time through good behavior. The OWNER can reduce penalties for wallets that demonstrate improved protocol participation. All penalty events are recorded on-chain via PenaltyApplied and PenaltyReduced events.</p>
+    <p class="wp-text">NexCredit is tested with 72 dedicated unit tests covering all scoring categories, penalty mechanics, privacy controls, founder status, and critical invariants.</p>
   </div>
 
   <div class="wp-divider"></div>
@@ -933,7 +944,7 @@
     <p class="wp-text">Interacting with any DeFi protocol involves risks. NexVault is committed to disclosing these clearly and honestly. Do not deposit funds you cannot afford to lose.</p>
 
     <div class="wp-h3">Smart Contract Risk</div>
-    <p class="wp-text">NexVault contracts are unaudited at initial launch. Despite 234/234 passing tests, undiscovered bugs or vulnerabilities may exist. A professional audit is planned and will be published publicly.</p>
+    <p class="wp-text">NexVault contracts are unaudited at initial launch. Despite 246/246 passing tests, undiscovered bugs or vulnerabilities may exist. A professional audit is planned and will be published publicly.</p>
 
     <div class="wp-h3">GYDS Dependency Risk</div>
     <p class="wp-text">All depositor yield originates from Nexus GYDS. If GYDS is delayed, reduced, or modified by Nexus, yield distributions to NexVault will be affected accordingly. NexVault does not fund yield independently.</p>
@@ -970,7 +981,7 @@
     <div class="wp-conclusion-footer">
       <div class="wp-conclusion-tagline">Sovereign Yield Banking for Every Human on Earth</div>
       <div class="wp-conclusion-links">
-        Built on Nexus &middot; Powered by GYDS &middot; Treasury-Backed Yield &middot; Non-Custodial &middot; Open Source &middot; 234/234 Tests Passing<br>
+        Built on Nexus &middot; Powered by GYDS &middot; Treasury-Backed Yield &middot; Non-Custodial &middot; Open Source &middot; 246/246 Tests Passing<br>
         <a href="https://nexvault.one">nexvault.one</a> &middot;
         <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a> &middot;
         <a href="/security">nexvault.one/security</a>

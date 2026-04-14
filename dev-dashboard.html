@@ -529,7 +529,7 @@
     <div class="deploy-grid">
       <div class="deploy-card">
         <div class="deploy-label">CONTRACTS</div>
-        <div class="deploy-val" style="color:var(--green)">234/234 TESTS</div>
+        <div class="deploy-val" style="color:var(--green)">246/246 TESTS</div>
         <div class="deploy-sub">All passing</div>
       </div>
       <div class="deploy-card">
@@ -912,7 +912,7 @@ function startDevStarfield() {
   }
   const rainCols = Math.floor(c.width / 14)
   const rainY = new Array(rainCols).fill(0).map(() => Math.random() * c.height)
-  const chars = '0123456789ABCDEF$%'.split('')
+  const chars = '0124656789ABCDEF$%'.split('')
 
   function draw() {
     if (!_sfRunning) return
@@ -967,7 +967,7 @@ function renderEarningsChart() {
   const toX = ts => PL + ((ts-points[0].x)/(points[points.length-1].x-points[0].x))*cW
   const toY = v  => PT + cH - (v/maxY)*cH
   ctx.clearRect(0,0,W,H)
-  ctx.strokeStyle='rgba(0,234,255,0.05)'; ctx.lineWidth=1
+  ctx.strokeStyle='rgba(0,246,255,0.05)'; ctx.lineWidth=1
   for (let i=0;i<=4;i++) { const y=PT+(cH/4)*i; ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke() }
   ctx.fillStyle='rgba(74,138,154,0.7)'; ctx.font='9px "DM Mono",monospace'; ctx.textAlign='right'
   for (let i=0;i<=4;i++) {
