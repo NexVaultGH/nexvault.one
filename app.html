@@ -287,7 +287,7 @@
             <div style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.7">Connect MetaMask to view your vault balance, track live yield, and manage deposits.</div>
             <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
               <button onclick="connectWallet()" class="btn-neon" style="margin:0">CONNECT METAMASK</button>
-              <button onclick="showNoMetaMaskModal()" style="padding:14px 28px;border-radius:4px;border:1px solid rgba(0,240,255,.15);background:rgba(0,240,255,.03);color:var(--cyan);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.08em;transition:all .3s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(0,240,255,.08)';this.style.borderColor='rgba(0,240,255,.3)'" onmouseout="this.style.background='rgba(0,240,255,.03)';this.style.borderColor='rgba(0,240,255,.15)'">&#x25A3; SCAN QR CODE</button>
+              <button onclick="if(window.connectViaWalletConnect)connectViaWalletConnect();else showNoMetaMaskModal()" style="padding:14px 28px;border-radius:4px;border:1px solid rgba(0,240,255,.15);background:rgba(0,240,255,.03);color:var(--cyan);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.08em;transition:all .3s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(0,240,255,.08)';this.style.borderColor='rgba(0,240,255,.3)'" onmouseout="this.style.background='rgba(0,240,255,.03)';this.style.borderColor='rgba(0,240,255,.15)'">&#x25A3; SCAN QR CODE</button>
             </div>
           </div>
 
@@ -675,6 +675,73 @@
     <a href="/proof">Proof</a><a href="/news">News</a><a href="/whitepaper">Whitepaper</a><a href="/terms">Terms</a>
   </div>
 </footer>
+
+<!-- Ethers v6 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+
+<!-- WalletConnect v2 — QR bridge for mobile MetaMask → desktop session -->
+<script type="module">
+import { EthereumProvider } from 'https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.17.5/+esm'
+
+const WC_PROJECT_ID = '44a4b0d66bd62948f4ca92a7d6b3c7d2'
+
+window.connectViaWalletConnect = async function() {
+  try {
+    // Remove any existing modal
+    if (window.removeWalletModal) window.removeWalletModal()
+
+    const wcProvider = await EthereumProvider.init({
+      projectId: WC_PROJECT_ID,
+      chains: [1],
+      optionalChains: [1],
+      showQrModal: true,
+      qrModalOptions: {
+        themeMode: 'dark',
+        themeVariables: {
+          '--wcm-z-index': '999999',
+        },
+      },
+      metadata: {
+        name: 'NexVault',
+        description: 'USDX Savings Protocol — Sovereign Yield Banking',
+        url: 'https://nexvault.one',
+        icons: ['https://nexvault.one/icon-192.png'],
+      },
+    })
+
+    await wcProvider.enable()
+
+    if (wcProvider.accounts && wcProvider.accounts.length > 0) {
+      // Store WC provider globally for contract calls
+      window._wcProvider = wcProvider
+      window._activeProvider = wcProvider
+
+      // Wire up disconnect
+      wcProvider.on('disconnect', () => {
+        window._wcProvider = null
+        if (window.onWalletDisconnected) window.onWalletDisconnected()
+      })
+      wcProvider.on('accountsChanged', (accounts) => {
+        if (!accounts || accounts.length === 0) {
+          if (window.onWalletDisconnected) window.onWalletDisconnected()
+        } else {
+          if (window.onWalletConnected) window.onWalletConnected(accounts[0])
+        }
+      })
+
+      if (window.onWalletConnected) window.onWalletConnected(wcProvider.accounts[0])
+      if (window.showNotif) window.showNotif('Wallet connected via QR', 'ok')
+    }
+  } catch (err) {
+    console.warn('WalletConnect error:', err)
+    if (err.message && err.message.includes('User rejected')) {
+      if (window.showNotif) window.showNotif('Connection cancelled', 'err')
+    } else {
+      if (window.showNotif) window.showNotif('QR connect failed — try again', 'err')
+    }
+  }
+}
+</script>
 
 <!-- =============================================
      WALLET CONNECTION
