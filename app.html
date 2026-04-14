@@ -912,22 +912,14 @@ function getMetaMaskProvider() {
   if (!eth) return null
 
   // -- Priority 2: providers array -----------------------
-  // When multiple extensions are installed, each pushes into this array
   if (eth.providers && eth.providers.length) {
-    // Find by EIP-6963 rdns stored on provider (newer MetaMask versions)
-    const byRdns = eth.providers.find(p => p._metamask || p.isMetaMask && p._state)
-    // Safer: find one that explicitly is MetaMask and has _metamask object
-    const mm = eth.providers.find(p => p._metamask !== undefined)
+    const mm = eth.providers.find(p => p.isMetaMask)
     if (mm) return mm
-    // Fallback within array: isMetaMask true
-    const mmFallback = eth.providers.find(p => p.isMetaMask)
-    if (mmFallback) return mmFallback
   }
 
   // -- Priority 3: single provider -----------------------
-  // Trust Wallet ALSO sets isMetaMask=true -- detect it by its own flag
-  // MetaMask has a ._metamask property; Trust Wallet does not
-  if (eth.isMetaMask && eth._metamask !== undefined) {
+  // Accept any provider that says isMetaMask = true
+  if (eth.isMetaMask) {
     return eth
   }
 
@@ -954,7 +946,7 @@ function waitForMetaMask() {
       if (provider) {
         clearInterval(timer)
         resolve(provider)
-      } else if (elapsed >= 1000) {
+      } else if (elapsed >= 3000) {
         clearInterval(timer)
         resolve(null)
       }
