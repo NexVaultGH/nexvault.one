@@ -594,7 +594,7 @@
           <div style="font-size:12px;color:var(--muted);margin-top:10px">Connect wallet to see your personal chart</div>
         </div>
         <div class="c-card" style="padding:26px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:14px;font-weight:600">12-MONTH PROJECTION -- 90-DAY TIER (11% APY)</div>
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:14px;font-weight:600">12-MONTH PROJECTION -- 1-YEAR TIER (3.80% APY)</div>
           <svg class="mini-chart" id="chart-proj" viewBox="0 0 300 80"></svg>
           <div style="font-size:12px;color:var(--muted);margin-top:10px" id="proj-note">Deposit USDX to see your projection</div>
         </div>
@@ -1002,7 +1002,7 @@ window.switchNetwork    = openWalletModal
     address: null,
     balance: 0,
     tier: '1yr',
-    apy: 5.5,
+    apy: 3.8,
     autoCompound: true,
     action: 'deposit',
     yieldStart: null,
@@ -1304,7 +1304,7 @@ window.switchNetwork    = openWalletModal
     drawChart('chart-proj', projData, '#c9a84c')
 
     document.getElementById('proj-note').textContent =
-      `$${fmt(bal)} \u2192 $${fmt(projData[12])} compounding at 11% APY`
+      `$${fmt(bal)} \u2192 $${fmt(projData[12])} compounding at ${STATE.apy}% APY`
 
     // Yield breakdown
     document.getElementById('yield-breakdown').innerHTML = [
