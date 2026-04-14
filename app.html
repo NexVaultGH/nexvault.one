@@ -284,8 +284,11 @@
           <div id="connect-prompt" style="text-align:center;padding:24px 0">
             <div style="font-size:44px;margin-bottom:16px;color:var(--cyan);text-shadow:0 0 20px rgba(0,240,255,.4)">&#x25C8;</div>
             <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright);margin-bottom:8px">Connect Your Wallet</div>
-            <div style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.7">Connect MetaMask to access your vault</div>
-            <button onclick="connectWallet()" class="btn-neon" style="margin:0 auto">CONNECT METAMASK</button>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.7">Connect MetaMask to view your vault balance, track live yield, and manage deposits.</div>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+              <button onclick="connectWallet()" class="btn-neon" style="margin:0">CONNECT METAMASK</button>
+              <button onclick="showNoMetaMaskModal()" style="padding:14px 28px;border-radius:4px;border:1px solid rgba(0,240,255,.15);background:rgba(0,240,255,.03);color:var(--cyan);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.08em;transition:all .3s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(0,240,255,.08)';this.style.borderColor='rgba(0,240,255,.3)'" onmouseout="this.style.background='rgba(0,240,255,.03)';this.style.borderColor='rgba(0,240,255,.15)'">&#x25A3; SCAN QR CODE</button>
+            </div>
           </div>
 
           <!-- Balance (shown when connected) -->
@@ -805,6 +808,19 @@ function isMobile() {
   return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent)
 }
 
+// -- QR Code Generator (lightweight inline) -----------
+function generateQR(text, size) {
+  // Uses a public QR API to generate SVG — no library needed
+  const canvas = document.createElement('canvas')
+  canvas.width = size; canvas.height = size
+  const ctx = canvas.getContext('2d')
+  // Encode to QR via Google Charts API (reliable, fast)
+  const img = new Image()
+  img.crossOrigin = 'anonymous'
+  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&bgcolor=0a0a1a&color=00f0ff&format=png`
+  return img
+}
+
 // -- Remove any open modal -----------------------------
 function removeWalletModal() {
   const el = document.getElementById('nv-wallet-modal')
@@ -825,41 +841,62 @@ function showNoMetaMaskModal() {
   const inner = mobile ? `
     <div style="background:var(--bg2,#0a0a1a);border:1px solid rgba(0,240,255,.15);border-radius:8px;padding:32px 24px;width:340px;max-width:92vw;text-align:center;position:relative;box-shadow:0 0 40px rgba(0,240,255,.06)">
       <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.3),transparent)"></div>
-      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted,#4a4a6a);font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>
+      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted,#8888aa);font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>
       <div style="width:52px;height:52px;border-radius:8px;overflow:hidden;margin:0 auto 16px;display:flex;align-items:center;justify-content:center">${METAMASK_ICON}</div>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright,#f0f0ff);margin-bottom:8px">Connect Wallet</div>
-      <div style="font-size:12px;color:var(--muted,#4a4a6a);line-height:1.8;margin-bottom:22px">Open NexVault inside the MetaMask app browser to connect.</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright,#f5f5ff);margin-bottom:8px">Connect Wallet</div>
+      <div style="font-size:12px;color:var(--muted,#8888aa);line-height:1.8;margin-bottom:22px">Open NexVault inside the MetaMask app browser to connect.</div>
       <button onclick="window.location.href='${deepLink}'"
         style="width:100%;padding:14px;border-radius:4px;border:1px solid var(--cyan,#00f0ff);background:rgba(0,240,255,.06);color:var(--cyan,#00f0ff);font-family:'DM Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,240,255,.3);box-shadow:0 0 15px rgba(0,240,255,.1)">
         OPEN IN METAMASK APP
       </button>
       <button onclick="window.open('${installURL}','_blank')"
-        style="width:100%;padding:12px;border-radius:4px;border:1px solid rgba(0,240,255,.12);background:rgba(0,240,255,.03);color:var(--muted,#4a4a6a);font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.06em">
+        style="width:100%;padding:12px;border-radius:4px;border:1px solid rgba(0,240,255,.12);background:rgba(0,240,255,.03);color:var(--muted,#8888aa);font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.06em">
         GET METAMASK
       </button>
     </div>` : `
-    <div style="background:var(--bg2,#0a0a1a);border:1px solid rgba(0,240,255,.15);border-radius:8px;padding:36px 30px;width:380px;max-width:94vw;text-align:center;position:relative;box-shadow:0 0 40px rgba(0,240,255,.06)">
+    <div style="background:var(--bg2,#0a0a1a);border:1px solid rgba(0,240,255,.15);border-radius:8px;padding:36px 30px;width:420px;max-width:94vw;text-align:center;position:relative;box-shadow:0 0 40px rgba(0,240,255,.06)">
       <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.3),transparent)"></div>
-      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted,#4a4a6a);font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>
+      <button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted,#8888aa);font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>
       <div style="width:52px;height:52px;border-radius:8px;overflow:hidden;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">${METAMASK_ICON}</div>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright,#f0f0ff);margin-bottom:10px">MetaMask Not Detected</div>
-      <div style="font-size:13px;color:var(--muted,#4a4a6a);line-height:1.8;margin-bottom:22px">
-        Install the MetaMask browser extension, then refresh this page.
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright,#f5f5ff);margin-bottom:10px">Connect with MetaMask</div>
+      <div style="font-size:12px;color:var(--muted,#8888aa);line-height:1.8;margin-bottom:24px">
+        Install the browser extension <strong>or</strong> scan the QR code below with MetaMask mobile.
+      </div>
+      <div id="qr-container" style="background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.1);border-radius:8px;padding:20px;margin-bottom:20px;display:flex;flex-direction:column;align-items:center;gap:12px">
+        <div style="font-size:10px;letter-spacing:.14em;color:var(--cyan,#00f0ff);font-weight:600;text-shadow:0 0 8px rgba(0,240,255,.3)">SCAN WITH METAMASK MOBILE</div>
+        <div id="qr-code" style="width:180px;height:180px;display:flex;align-items:center;justify-content:center;border-radius:6px;overflow:hidden;background:#0a0a1a;border:1px solid rgba(0,240,255,.15);box-shadow:0 0 20px rgba(0,240,255,.08)">
+          <div style="color:var(--dim);font-size:10px;letter-spacing:.1em">LOADING QR...</div>
+        </div>
+        <div style="font-size:10px;color:var(--dim,#5a5a7a);line-height:1.6;max-width:240px">Open MetaMask app &rarr; tap camera icon &rarr; scan this code</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="flex:1;height:1px;background:rgba(0,240,255,.08)"></div>
+        <div style="font-size:9px;color:var(--dim,#5a5a7a);letter-spacing:.15em">OR</div>
+        <div style="flex:1;height:1px;background:rgba(0,240,255,.08)"></div>
       </div>
       <button onclick="window.open('${installURL}','_blank')"
-        style="width:100%;padding:14px;border-radius:4px;border:1px solid var(--cyan,#00f0ff);background:rgba(0,240,255,.06);color:var(--cyan,#00f0ff);font-family:'DM Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,240,255,.3);box-shadow:0 0 15px rgba(0,240,255,.1)">
-        GET METAMASK
+        style="width:100%;padding:14px;border-radius:4px;border:1px solid var(--cyan,#00f0ff);background:rgba(0,240,255,.06);color:var(--cyan,#00f0ff);font-family:'DM Mono',monospace;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,240,255,.3);box-shadow:0 0 15px rgba(0,240,255,.1)">
+        INSTALL METAMASK EXTENSION
       </button>
       <button onclick="removeWalletModal()"
-        style="width:100%;padding:12px;border-radius:4px;border:1px solid rgba(0,240,255,.12);background:rgba(0,240,255,.03);color:var(--muted,#4a4a6a);font-family:'DM Mono',monospace;font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.06em">
+        style="width:100%;padding:12px;border-radius:4px;border:1px solid rgba(0,240,255,.08);background:transparent;color:var(--muted,#8888aa);font-family:'DM Mono',monospace;font-size:11px;font-weight:500;cursor:pointer;letter-spacing:.06em">
         CANCEL
       </button>
-      <div style="margin-top:14px;font-size:10px;color:var(--dim,#2a2a40);line-height:1.7">After installing, refresh this page and click Connect Wallet.</div>
     </div>`
 
   d.innerHTML = inner
   document.body.appendChild(d)
   d.addEventListener('click', e => { if (e.target === d) removeWalletModal() })
+
+  // Load QR code for desktop
+  if (!mobile) {
+    const qrBox = document.getElementById('qr-code')
+    if (qrBox) {
+      const qrImg = generateQR(deepLink, 180)
+      qrImg.onload = () => { qrBox.innerHTML = ''; qrBox.appendChild(qrImg); qrImg.style.cssText = 'width:100%;height:100%;image-rendering:pixelated' }
+      qrImg.onerror = () => { qrBox.innerHTML = '<div style="font-size:10px;color:var(--muted)">QR unavailable</div>' }
+    }
+  }
 }
 
 // -- MAIN CONNECT FUNCTION -----------------------------
