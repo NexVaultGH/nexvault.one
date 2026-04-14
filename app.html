@@ -1066,7 +1066,7 @@ async function checkGYDSStatus() {
       // Pre-deploy: show pending
       return
     }
-    const provider = new ethers.BrowserProvider(window.ethereum)
+    const provider = new ethers.BrowserProvider(window._activeProvider || window.ethereum)
     const vault = new ethers.Contract(VAULT_ADDRESS, [
       'function gydsActive() view returns (bool)'
     ], provider)
@@ -1120,7 +1120,7 @@ async function loadNexCredit(address) {
   }
   card.style.display = 'block'
   try {
-    const provider = new ethers.BrowserProvider(window.ethereum)
+    const provider = new ethers.BrowserProvider(window._activeProvider || window.ethereum)
     const nc = new ethers.Contract(NEXCREDIT_ADDRESS, NEXCREDIT_ABI, provider)
     const score = await nc.getScore(address)
     const [ds, lc, pl, be] = await nc.getScoreBreakdown(address)
@@ -1338,7 +1338,7 @@ window.switchNetwork    = openWalletModal
     // On-chain mode: if contract addresses are filled, execute real transactions
     if(VAULT_ADDRESS && VAULT_ADDRESS !== '' && USDX_ADDRESS && USDX_ADDRESS !== '') {
       try {
-        const provider = new ethers.BrowserProvider(window.ethereum)
+        const provider = new ethers.BrowserProvider(window._activeProvider || window.ethereum)
         const signer = await provider.getSigner()
         const usdxAmount = ethers.parseUnits(String(amt), 6)
 
