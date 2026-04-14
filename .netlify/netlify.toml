@@ -52,6 +52,30 @@ for = "/nv-canvas.js"
 [headers.values]
 Cache-Control = "no-cache, must-revalidate"
 
+[[headers]]
+for = "/nv-cyber.css"
+
+[headers.values]
+Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+for = "/nv-cyber.js"
+
+[headers.values]
+Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+for = "/favicon.svg"
+
+[headers.values]
+Cache-Control = "no-cache, must-revalidate"
+
+[[headers]]
+for = "/favicon.ico"
+
+[headers.values]
+Cache-Control = "no-cache, must-revalidate"
+
 [[redirects]]
 from = "https://www.nexvault.one/*"
 to = "https://nexvault.one/:splat"

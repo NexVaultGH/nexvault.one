@@ -8,8 +8,8 @@
   <link rel="canonical" href="https://nexvault.one/whitepaper" />
 
   <!-- Favicon & Manifest -->
-  <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#05050f" />
@@ -39,7 +39,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/nv-cyber.css">
+  <link rel="stylesheet" href="/nv-cyber.css?v=2">
 
   <style>
     /* ── Page-specific styles ── */
@@ -589,8 +589,9 @@
       <li><a href="#contracts"><span class="wp-toc-num">9.</span> Smart Contract Architecture</a></li>
       <li><a href="#security"><span class="wp-toc-num">10.</span> Security &amp; Transparency</a></li>
       <li><a href="#tokenomics"><span class="wp-toc-num">11.</span> Tokenomics &amp; Developer Economics</a></li>
-      <li><a href="#risk"><span class="wp-toc-num">12.</span> Risk Disclosures</a></li>
-      <li><a href="#conclusion"><span class="wp-toc-num">13.</span> Conclusion</a></li>
+      <li><a href="#nexcredit"><span class="wp-toc-num">12.</span> NexCredit &mdash; On-Chain Credit Scoring</a></li>
+      <li><a href="#risk"><span class="wp-toc-num">13.</span> Risk Disclosures</a></li>
+      <li><a href="#conclusion"><span class="wp-toc-num">14.</span> Conclusion</a></li>
     </ol>
   </div>
 
@@ -882,9 +883,52 @@
 
   <div class="wp-divider"></div>
 
-  <!-- 12. Risk Disclosures -->
-  <div class="wp-section rv" id="risk">
+  <!-- 12. NexCredit -->
+  <div class="wp-section rv" id="nexcredit">
     <div class="wp-section-num">SECTION 12</div>
+    <div class="wp-section-title">NexCredit &mdash; On-Chain Credit Scoring</div>
+    <p class="wp-text">NexCredit is a private on-chain credit scoring contract built natively into NexVault. It reads a wallet's deposit history and produces a score from 0 to 1000 across seven tiers.</p>
+
+    <div class="wp-h3">Privacy Model</div>
+    <ul class="wp-list">
+      <li>Wallet owners can only see their own score &mdash; free, always</li>
+      <li>Protocol owner can query any wallet's score for analytics</li>
+      <li>No external wallet or contract can see another user's score</li>
+      <li>Scores are computed live from on-chain data &mdash; nothing is stored</li>
+    </ul>
+
+    <div class="wp-h3">Scoring Categories (250 pts each, 1000 max)</div>
+    <table class="wp-table">
+      <thead><tr><th>Category</th><th>Max</th><th>How to earn</th></tr></thead>
+      <tbody>
+        <tr><td>Deposit Strength</td><td>250</td><td>$5K/+50, $25K/+80, $100K/+90 (cumulative)</td></tr>
+        <tr><td>Lock Commitment</td><td>250</td><td>1YR=+20, 3YR=+80, 5YR=+250 (highest tier only)</td></tr>
+        <tr><td>Protocol Loyalty</td><td>250</td><td>60d/180d/365d/730d/1095d thresholds</td></tr>
+        <tr><td>Behavioral Excellence</td><td>250</td><td>Compound 3x, 5+ deposits, 3 referrals, badge+$5K, 2 active</td></tr>
+      </tbody>
+    </table>
+
+    <div class="wp-h3">Score Tiers</div>
+    <table class="wp-table">
+      <thead><tr><th>Tier</th><th>Range</th></tr></thead>
+      <tbody>
+        <tr><td>No History</td><td>0</td></tr>
+        <tr><td>Dormant</td><td>1&ndash;149</td></tr>
+        <tr><td>Building</td><td>150&ndash;299</td></tr>
+        <tr><td>Established</td><td>300&ndash;499</td></tr>
+        <tr><td>Trusted</td><td>500&ndash;699</td></tr>
+        <tr><td>Senior</td><td>700&ndash;849</td></tr>
+        <tr><td>Elite</td><td>850&ndash;1000</td></tr>
+      </tbody>
+    </table>
+    <p class="wp-text">Elite requires $100K+ deposited, a 5-Year lock, and 3 years of protocol loyalty simultaneously. Under 1% of wallets will ever qualify. NexCredit is tested with 55 dedicated unit tests covering all scoring categories, privacy controls, and critical invariants.</p>
+  </div>
+
+  <div class="wp-divider"></div>
+
+  <!-- 13. Risk Disclosures -->
+  <div class="wp-section rv" id="risk">
+    <div class="wp-section-num">SECTION 13</div>
     <div class="wp-section-title">Risk Disclosures</div>
     <p class="wp-text">Interacting with any DeFi protocol involves risks. NexVault is committed to disclosing these clearly and honestly. Do not deposit funds you cannot afford to lose.</p>
 
@@ -915,9 +959,9 @@
 
   <div class="wp-divider"></div>
 
-  <!-- 13. Conclusion -->
+  <!-- 14. Conclusion -->
   <div class="wp-section rv" id="conclusion">
-    <div class="wp-section-num">SECTION 13</div>
+    <div class="wp-section-num">SECTION 14</div>
     <div class="wp-section-title">Conclusion</div>
     <p class="wp-text">NexVault exists because the current financial system was not built for everyone. It was built for those who already have access &mdash; to institutions, to yield, to capital formation. We are building something different.</p>
     <p class="wp-text">A non-custodial savings vault where a person with $20 and a phone earns the same percentage return as an institution with $20 million. Where yield is automatic, transparent, and sourced entirely from Nexus GYDS. Where the protocol's success is directed by the vault architect toward initiatives they choose &mdash; each decision published on-chain so every holder can see exactly where it goes.</p>
@@ -950,7 +994,7 @@
   </div>
 </footer>
 
-<script src="/nv-cyber.js"></script>
+<script src="/nv-cyber.js?v=2"></script>
 
 </body>
 </html>

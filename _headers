@@ -15,3 +15,15 @@
 
 /nv-canvas.js
   Cache-Control: no-cache, must-revalidate
+
+/nv-cyber.css
+  Cache-Control: no-cache, must-revalidate
+
+/nv-cyber.js
+  Cache-Control: no-cache, must-revalidate
+
+/favicon.svg
+  Cache-Control: no-cache, must-revalidate
+
+/favicon.ico
+  Cache-Control: no-cache, must-revalidate
