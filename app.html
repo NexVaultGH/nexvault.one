@@ -986,6 +986,12 @@ function showNoMetaMaskModal() {
   const deepLink   = 'https://metamask.app.link/dapp/nexvault.one/app'
   const installURL = 'https://metamask.io/download'
 
+  // DESKTOP: if MetaMask not found, use WalletConnect QR to bridge mobile wallet
+  if (!mobile && window.connectViaWalletConnect) {
+    connectViaWalletConnect()
+    return
+  }
+
   const d = document.createElement('div')
   d.id = 'nv-wallet-modal'
   d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(5,5,15,.92);backdrop-filter:blur(14px)'
