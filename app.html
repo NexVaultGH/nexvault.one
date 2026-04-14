@@ -253,6 +253,18 @@
     </div>
   </div>
 
+  <!-- GYDS Status -->
+  <div id="gyds-status" style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:8px;border:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.03);margin-bottom:20px;animation:fadeUp .6s ease .12s both">
+    <div id="gyds-dot" style="width:10px;height:10px;border-radius:50%;background:#c9a84c;box-shadow:0 0 8px rgba(201,168,76,.5);flex-shrink:0"></div>
+    <div>
+      <div style="font-size:10px;letter-spacing:.14em;color:var(--gold);font-weight:600;margin-bottom:2px">GYDS STATUS: <span id="gyds-label">PENDING</span></div>
+      <div style="font-size:10px;color:var(--dim)" id="gyds-desc">Yield source not yet active. Waiting for GYDS activation on Nexus mainnet.</div>
+    </div>
+    <div style="margin-left:auto;position:relative;cursor:help" title="GYDS channels U.S. Treasury bill yield, Nexus exchange fees, and NEX token overlay to this vault.">
+      <span style="font-size:12px;color:var(--dim)">&#9432;</span>
+    </div>
+  </div>
+
   <!-- Tabs -->
   <div class="tabs" style="animation:fadeUp .6s ease .15s both">
     <button class="tab active" onclick="switchTab('vault',this)">VAULT</button>
@@ -941,6 +953,37 @@ const NC_TIER_COLORS = {
   'Elite':       '#39ff14',
 }
 
+async function checkGYDSStatus() {
+  const dot = document.getElementById('gyds-dot')
+  const label = document.getElementById('gyds-label')
+  const desc = document.getElementById('gyds-desc')
+  try {
+    if (!VAULT_ADDRESS || VAULT_ADDRESS === '') {
+      // Pre-deploy: show pending
+      return
+    }
+    const provider = new ethers.BrowserProvider(window.ethereum)
+    const vault = new ethers.Contract(VAULT_ADDRESS, [
+      'function gydsActive() view returns (bool)'
+    ], provider)
+    const active = await vault.gydsActive()
+    if (active) {
+      dot.style.background = '#39ff14'
+      dot.style.boxShadow = '0 0 10px rgba(57,255,20,.6)'
+      label.textContent = 'ACTIVE'
+      label.style.color = '#39ff14'
+      desc.textContent = 'GYDS is live. Yield is being distributed to this vault from U.S. Treasury-backed sources.'
+    } else {
+      dot.style.background = '#c9a84c'
+      dot.style.boxShadow = '0 0 8px rgba(201,168,76,.5)'
+      label.textContent = 'PENDING'
+      desc.textContent = 'GYDS address registered but not yet distributing yield. Waiting for first distribution.'
+    }
+  } catch (e) {
+    console.warn('GYDS status check:', e.message)
+  }
+}
+
 async function loadNexCredit(address) {
   const card = document.getElementById('nexcredit-card')
   if (!card) return
@@ -1043,6 +1086,7 @@ window.switchNetwork    = openWalletModal
     startLiveYield()
     loadUserStats()
     loadNexCredit(address)
+    checkGYDSStatus()
     showNotif('Wallet connected', 'ok')
   }
 
@@ -1157,14 +1201,81 @@ window.switchNetwork    = openWalletModal
     updatePreview()
   }
 
-  function handleAction() {
+  const TIER_ENUM = { '1yr': 0, '3yr': 1, '5yr': 2 }
+
+  async function handleAction() {
     if(!STATE.connected) { showNotif('Connect your wallet first', 'err'); return }
     const amt = parseFloat(document.getElementById('amount-input').value)
     if(!amt || amt <= 0) { showNotif('Enter an amount', 'err'); return }
 
+    // On-chain mode: if contract addresses are filled, execute real transactions
+    if(VAULT_ADDRESS && VAULT_ADDRESS !== '' && USDX_ADDRESS && USDX_ADDRESS !== '') {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        const signer = await provider.getSigner()
+        const usdxAmount = ethers.parseUnits(String(amt), 6)
+
+        if(STATE.action === 'deposit') {
+          showNotif('Approving USDX...', 'ok')
+          const usdx = new ethers.Contract(USDX_ADDRESS, [
+            'function approve(address spender, uint256 amount) returns (bool)',
+            'function allowance(address owner, address spender) view returns (uint256)'
+          ], signer)
+
+          // Check existing allowance
+          const allowance = await usdx.allowance(STATE.address, VAULT_ADDRESS)
+          if(allowance < usdxAmount) {
+            const approveTx = await usdx.approve(VAULT_ADDRESS, usdxAmount)
+            showNotif('Waiting for approval...', 'ok')
+            await approveTx.wait()
+          }
+
+          showNotif('Depositing...', 'ok')
+          const vault = new ethers.Contract(VAULT_ADDRESS, [
+            'function deposit(uint256 amount, uint8 tier, address referrer)'
+          ], signer)
+          const tierEnum = TIER_ENUM[STATE.tier]
+          const tx = await vault.deposit(usdxAmount, tierEnum, ethers.ZeroAddress)
+          showNotif('Confirming deposit...', 'ok')
+          await tx.wait()
+
+          showNotif(`${fmt(amt)} USDX deposited at ${STATE.apy}% APY`)
+          document.getElementById('balance-card').classList.add('gp')
+          setTimeout(()=>document.getElementById('balance-card').classList.remove('gp'), 700)
+
+        } else {
+          // Withdraw
+          showNotif('Withdrawing...', 'ok')
+          const vault = new ethers.Contract(VAULT_ADDRESS, [
+            'function withdraw(uint256 depositIndex)'
+          ], signer)
+          const depositIndex = 0 // withdraw first deposit by default
+          const tx = await vault.withdraw(depositIndex)
+          showNotif('Confirming withdrawal...', 'ok')
+          await tx.wait()
+          showNotif(`Withdrawal complete`)
+        }
+
+        // Refresh state from chain after action
+        document.getElementById('amount-input').value = ''
+        document.getElementById('preview-box').style.display = 'none'
+        return
+
+      } catch(e) {
+        if(e.code === 'ACTION_REJECTED' || e.code === 4001) {
+          showNotif('Transaction rejected', 'err')
+        } else if(e.message && e.message.includes('insufficient')) {
+          showNotif('Insufficient USDX balance', 'err')
+        } else {
+          showNotif(e.reason || e.message || 'Transaction failed', 'err')
+          console.error('TX error:', e)
+        }
+        return
+      }
+    }
+
+    // Fallback: local simulation when contracts not deployed
     if(STATE.action === 'deposit') {
-      // In production this calls vault.deposit(amount, tier, autoCompound, referralCode)
-      // For now, simulate locally until contract is deployed
       STATE.balance += amt
       STATE.totalDeposited += amt
       STATE.yieldStart = Date.now()
