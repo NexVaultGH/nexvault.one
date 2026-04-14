@@ -679,55 +679,42 @@
 <!-- Ethers v6 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
 
-<!-- MetaMask SDK — generates QR code for mobile-to-desktop bridge -->
-<script src="https://cdn.jsdelivr.net/npm/@metamask/sdk@0.28.4/dist/browser/iife/metamask-sdk.js"></script>
+<!-- WalletConnect QR — dynamic import loads only on click -->
 <script>
-// Initialize MetaMask SDK for QR code connection
-var _mmSDK = null;
-
 window.connectViaWalletConnect = async function() {
   try {
     if (window.removeWalletModal) window.removeWalletModal()
-    if (window.showNotif) window.showNotif('Opening QR scanner...', 'ok')
+    if (window.showNotif) window.showNotif('Loading QR code...', 'ok')
 
-    if (!_mmSDK) {
-      var MMSDK = window.MetaMaskSDK && window.MetaMaskSDK.MetaMaskSDK
-      if (!MMSDK) {
-        // SDK didn't load — fall back to deep-link modal
-        if (window.showNoMetaMaskModal) window.showNoMetaMaskModal()
-        return
-      }
-      _mmSDK = new MMSDK({
-        dappMetadata: {
-          name: 'NexVault',
-          url: 'https://nexvault.one',
-        },
-        checkInstallationImmediately: false,
-        modals: {
-          install: ({ link }) => {
-            // Show install modal with QR
-            return { unmount: () => {} }
-          },
-          otp: () => {
-            return { updateOTPValue: () => {} }
-          },
-        },
+    // Dynamic import — loads WalletConnect only when user clicks QR button
+    var mod = await import('https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.13.0/+esm')
+    var EthereumProvider = mod.EthereumProvider || mod.default
+
+    var wcProvider = await EthereumProvider.init({
+      projectId: '44a4b0d66bd62948f4ca92a7d6b3c7d2',
+      chains: [1],
+      optionalChains: [1],
+      showQrModal: true,
+      qrModalOptions: { themeMode: 'dark' },
+      metadata: {
+        name: 'NexVault',
+        description: 'USDX Savings Protocol',
+        url: 'https://nexvault.one',
+        icons: ['https://nexvault.one/icon-192.png'],
+      },
+    })
+
+    // This opens the WalletConnect QR modal and waits for mobile wallet to scan + approve
+    await wcProvider.enable()
+
+    if (wcProvider.accounts && wcProvider.accounts.length > 0) {
+      window._activeProvider = wcProvider
+
+      wcProvider.on('disconnect', function() {
+        window._activeProvider = null
+        if (window.onWalletDisconnected) window.onWalletDisconnected()
       })
-      await _mmSDK.init()
-    }
-
-    var sdkProvider = _mmSDK.getProvider()
-    if (!sdkProvider) {
-      if (window.showNoMetaMaskModal) window.showNoMetaMaskModal()
-      return
-    }
-
-    var accounts = await sdkProvider.request({ method: 'eth_requestAccounts' })
-
-    if (accounts && accounts.length > 0) {
-      window._activeProvider = sdkProvider
-
-      sdkProvider.on('accountsChanged', function(accts) {
+      wcProvider.on('accountsChanged', function(accts) {
         if (!accts || accts.length === 0) {
           if (window.onWalletDisconnected) window.onWalletDisconnected()
         } else {
@@ -735,18 +722,16 @@ window.connectViaWalletConnect = async function() {
         }
       })
 
-      sdkProvider.on('chainChanged', function() { window.location.reload() })
-
-      if (window.onWalletConnected) window.onWalletConnected(accounts[0])
+      if (window.onWalletConnected) window.onWalletConnected(wcProvider.accounts[0])
       if (window.showNotif) window.showNotif('Wallet connected via QR', 'ok')
     }
   } catch (err) {
-    console.warn('MetaMask SDK error:', err)
-    if (err.code === 4001) {
-      if (window.showNotif) window.showNotif('Connection rejected', 'err')
+    console.warn('WalletConnect QR error:', err)
+    if (err && err.message && (err.message.includes('rejected') || err.message.includes('closed'))) {
+      if (window.showNotif) window.showNotif('Connection cancelled', 'err')
     } else {
-      // Fall back to deep-link modal
-      if (window.showNoMetaMaskModal) window.showNoMetaMaskModal()
+      console.error('QR connection failed, showing fallback:', err)
+      if (window.showNotif) window.showNotif('QR loading — please wait and try again', 'err')
     }
   }
 }
