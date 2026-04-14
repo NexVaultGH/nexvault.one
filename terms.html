@@ -11,7 +11,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#05050f" />
   <meta name="author" content="NexVault" />
   <meta name="robots" content="index, follow" />
 
@@ -28,111 +28,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,.06);background:rgba(5,6,10,.8);backdrop-filter:blur(20px)}
-    .nav-logo{display:flex;align-items:center;gap:12px}
-    .nav-logomark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#c9a84c,#8b6914);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#05060a}
-    .nav-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;letter-spacing:.12em;color:#e8e2d6}
-    .nav-pill-link{padding:4px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.06);color:#c9a84c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:600;text-decoration:none;transition:all .2s;white-space:nowrap}
-    .nav-pill-link:hover{background:rgba(201,168,76,.14)}
-    .nav-launch-btn{padding:8px 18px;border-radius:9px;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:#c9a84c;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;font-weight:600;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
-    .nav-launch-btn:hover{background:rgba(201,168,76,.15)}
-    .dot-live{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.4)}
-    footer{text-align:center;padding:40px 20px;font-size:11px;color:#5a5650;letter-spacing:.1em;border-top:1px solid rgba(255,255,255,.04)}
-
-    /* ── Hero ── */
-    .terms-hero {
-      min-height: 40vh; display: flex; align-items: center; justify-content: center;
-      text-align: center; padding: 140px 24px 60px;
-    }
-    .terms-hero-content { max-width: 680px; }
-    .terms-subtitle {
-      font-family: var(--font); font-weight: 300; font-size: 14px;
-      color: rgba(255,255,255,0.35); line-height: 1.8; max-width: 520px;
-      margin: 16px auto 0;
-    }
-    .terms-updated {
-      font-family: var(--font-mono); font-size: 10px; color: var(--text-dim);
-      letter-spacing: 0.1em; margin-top: 20px;
-    }
-
-    /* ── Body ── */
-    .terms-body {
-      max-width: 680px; margin: 0 auto; padding: 0 24px 80px;
-    }
-
-    /* ── Warning banner ── */
-    .warning-banner {
-      background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.12);
-      border-radius: 8px; padding: 24px 28px; margin-bottom: 56px;
-      font-family: var(--font); font-weight: 300; font-size: 13px;
-      color: rgba(201,168,76,0.7); line-height: 1.8;
-    }
-    .warning-banner strong {
-      color: var(--gold); font-weight: 600; letter-spacing: 0.04em;
-    }
-
-    /* ── Legal sections ── */
-    .legal-section { margin-bottom: 56px; }
-    .legal-num {
-      font-family: var(--font); font-weight: 700; font-size: 10px;
-      letter-spacing: 0.14em; color: var(--gold); margin-bottom: 8px;
-    }
-    .legal-heading {
-      font-family: var(--font); font-weight: 300;
-      font-size: clamp(20px, 2.5vw, 30px); color: var(--text);
-      line-height: 1.2; margin-bottom: 20px; letter-spacing: -0.01em;
-    }
-    .legal-text {
-      font-family: var(--font); font-weight: 300; font-size: 15px;
-      color: rgba(255,255,255,0.4); line-height: 1.8;
-    }
-    .legal-text p { margin-bottom: 16px; }
-    .legal-text ul { margin: 12px 0 16px 20px; list-style: none; }
-    .legal-text ul li { position: relative; padding-left: 18px; margin-bottom: 10px; }
-    .legal-text ul li::before {
-      content: ''; position: absolute; left: 0; top: 9px;
-      width: 4px; height: 4px; border-radius: 50%;
-      background: var(--gold); opacity: 0.4;
-    }
-    .legal-text strong { color: rgba(255,255,255,0.7); font-weight: 500; }
-    .legal-text code {
-      background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.1);
-      border-radius: 3px; padding: 2px 7px;
-      font-family: var(--font-mono); font-size: 12px; color: var(--gold);
-      word-break: break-all;
-    }
-    .legal-text a {
-      color: var(--gold); text-decoration: none;
-      border-bottom: 1px solid rgba(201,168,76,0.2);
-      padding-bottom: 1px; transition: border-color 0.2s;
-    }
-    .legal-text a:hover { border-color: var(--gold); }
-
-    .section-line {
-      height: 1px; background: var(--border); margin: 0 0 56px;
-    }
-
-    /* ── Acknowledgment ── */
-    .ack-box {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 32px; text-align: center; margin-top: 64px;
-    }
-    .ack-box p {
-      font-family: var(--font); font-weight: 300; font-size: 13px;
-      color: var(--text-muted); line-height: 1.8; margin-bottom: 12px;
-    }
-    .ack-box .ack-statement {
-      font-size: 14px; color: var(--text); font-weight: 500; letter-spacing: 0.02em;
-    }
-
-    @media (max-width: 768px) {
-      .terms-hero { padding: 120px 20px 40px; min-height: 30vh; }
-      .terms-body { padding: 0 20px 60px; }
-      .warning-banner { padding: 20px; }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-cyber.css">
 
   <script type="application/ld+json">
   {
@@ -150,46 +47,167 @@
     "dateModified": "2026-03-31"
   }
   </script>
+
+  <style>
+    /* ── Hero ── */
+    .terms-hero {
+      min-height: 40vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 140px 24px 60px; position: relative; z-index: 1;
+    }
+    .terms-hero-content { max-width: 680px; }
+    .terms-subtitle {
+      font-size: 14px; color: var(--muted); line-height: 1.9;
+      max-width: 520px; margin: 16px auto 0;
+    }
+    .terms-updated {
+      font-size: 10px; color: var(--dim); letter-spacing: .12em; margin-top: 20px;
+    }
+
+    /* ── Body ── */
+    .terms-body {
+      max-width: 700px; margin: 0 auto; padding: 0 24px 80px;
+      position: relative; z-index: 2;
+    }
+
+    /* ── Warning banner ── */
+    .warning-banner {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,0,255,.2);
+      border-radius: 8px; padding: 28px 32px; margin-bottom: 56px;
+      font-size: 13px; color: rgba(255,0,255,.7); line-height: 1.8;
+      position: relative; overflow: hidden; backdrop-filter: blur(8px);
+    }
+    .warning-banner::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--magenta), transparent); opacity: .5;
+    }
+    .warning-banner strong {
+      color: var(--magenta); font-weight: 600; letter-spacing: .04em;
+      text-shadow: 0 0 8px rgba(255,0,255,.4);
+    }
+
+    /* ── Legal sections ── */
+    .legal-section { margin-bottom: 56px; }
+    .legal-num {
+      font-size: 10px; letter-spacing: .2em; font-weight: 500;
+      color: var(--cyan); text-shadow: 0 0 8px rgba(0,240,255,.3);
+      margin-bottom: 8px;
+    }
+    .legal-heading {
+      font-family: var(--font-display); font-weight: 300;
+      font-size: clamp(20px, 2.5vw, 30px); color: var(--text-bright);
+      line-height: 1.2; margin-bottom: 20px; letter-spacing: -0.01em;
+    }
+    .legal-text {
+      font-size: 14px; color: var(--muted); line-height: 1.9;
+    }
+    .legal-text p { margin-bottom: 16px; }
+    .legal-text ul { margin: 12px 0 16px 20px; list-style: none; }
+    .legal-text ul li { position: relative; padding-left: 20px; margin-bottom: 10px; }
+    .legal-text ul li::before {
+      content: ''; position: absolute; left: 0; top: 10px;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--cyan); opacity: .5;
+      box-shadow: 0 0 4px rgba(0,240,255,.4);
+    }
+    .legal-text strong { color: var(--text); font-weight: 500; }
+    .legal-text code {
+      background: rgba(0,240,255,.06); border: 1px solid rgba(0,240,255,.1);
+      border-radius: 3px; padding: 2px 7px;
+      font-size: 12px; color: var(--cyan);
+      word-break: break-all;
+    }
+    .legal-text a {
+      color: var(--magenta); text-decoration: none;
+      border-bottom: 1px solid rgba(255,0,255,.2);
+      padding-bottom: 1px; transition: all .2s;
+      text-shadow: 0 0 6px rgba(255,0,255,.2);
+    }
+    .legal-text a:hover {
+      border-color: var(--magenta);
+      text-shadow: 0 0 12px rgba(255,0,255,.4);
+    }
+
+    .section-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,.12), rgba(255,0,255,.12), transparent);
+      margin: 0 0 56px; border: none;
+    }
+
+    /* ── Acknowledgment ── */
+    .ack-box {
+      background: var(--card-bg);
+      border: 1px solid rgba(0,240,255,.12);
+      border-radius: 8px; padding: 36px; text-align: center; margin-top: 64px;
+      position: relative; overflow: hidden; backdrop-filter: blur(8px);
+    }
+    .ack-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: .4;
+    }
+    .ack-box p {
+      font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 12px;
+    }
+    .ack-box .ack-statement {
+      font-size: 14px; color: var(--text-bright); font-weight: 500;
+      letter-spacing: .02em;
+      text-shadow: 0 0 10px rgba(0,240,255,.15);
+    }
+
+    @media (max-width: 768px) {
+      .terms-hero { padding: 120px 20px 40px; min-height: 30vh; }
+      .terms-body { padding: 0 20px 60px; }
+      .warning-banner { padding: 20px; }
+    }
+  </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-logo">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <div class="nav-logomark">V</div>
-      <span class="nav-name">NEXVAULT</span>
-    </a>
-    <a href="/whitepaper" class="nav-pill-link">WHITEPAPER</a>
-    <a href="/about" class="nav-pill-link">ABOUT US</a>
-    <a href="/security" class="nav-pill-link">SECURITY</a>
-    <a href="/nexcredit" class="nav-pill-link">NEXCREDIT</a>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <div class="dot-live"></div>
-    <a href="/app" class="nav-launch-btn">◈ OPEN VAULT</a>
+<!-- Loader -->
+<div id="cyber-loader">
+  <div class="cl-mark">V</div>
+  <div class="cl-bar"><div class="cl-fill" id="cl-fill"></div></div>
+  <div class="cl-pct" id="cl-pct">0 %</div>
+</div>
+
+<!-- Grid Background -->
+<canvas id="cyber-grid"></canvas>
+
+<!-- Nav -->
+<nav class="c-nav">
+  <a href="/" class="c-nav-logo">
+    <div class="c-nav-mark">V</div>
+    <span class="c-nav-word">NEXVAULT</span>
+  </a>
+  <div class="c-nav-links">
+    <a href="/security" class="c-nav-link">SECURITY</a>
+    <a href="/nexcredit" class="c-nav-link">NEXCREDIT</a>
+    <a href="/about" class="c-nav-link">ABOUT</a>
+    <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
+    <a href="/app" class="c-nav-cta">OPEN VAULT</a>
   </div>
 </nav>
 
 <!-- Hero -->
 <section class="terms-hero">
   <div class="terms-hero-content">
-    <div class="label label-gold fi fi1" style="margin-bottom:20px">TERMS</div>
-    <h1 class="hlg fi fi2">Terms of Service</h1>
-    <p class="terms-subtitle fi fi3">Please read these terms carefully before using the NexVault protocol. By interacting with NexVault smart contracts, you agree to be bound by these terms.</p>
-    <div class="terms-updated fi fi4">LAST UPDATED: MARCH 31, 2026</div>
+    <div class="c-label rv">TERMS</div>
+    <h1 class="c-title rv rv-d1">Terms of <em>Service</em></h1>
+    <p class="terms-subtitle rv rv-d2">Please read these terms carefully before using the NexVault protocol. By interacting with NexVault smart contracts, you agree to be bound by these terms.</p>
+    <div class="terms-updated rv rv-d3">LAST UPDATED: MARCH 31, 2026</div>
   </div>
 </section>
 
 <!-- Terms Content -->
 <div class="terms-body">
 
-  <!-- Warning banner -->
-  <div class="warning-banner fi fi5">
+  <!-- Warning banner (c-card with magenta border) -->
+  <div class="warning-banner rv">
     <strong>IMPORTANT:</strong> NexVault smart contracts are thoroughly tested with 229 passing tests across all functions, security properties, and edge cases. At initial launch, contracts have not yet been reviewed by a third-party security firm. A formal audit is in progress. Only deposit amounts you are comfortable with until the audit is published. This is not financial advice.
   </div>
 
   <!-- 1. Nature of the Protocol -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 1</div>
     <h2 class="legal-heading">Nature of the Protocol</h2>
     <div class="legal-text">
@@ -202,7 +220,7 @@
   <div class="section-line"></div>
 
   <!-- 2. No Financial Advice -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 2</div>
     <h2 class="legal-heading">No Financial Advice</h2>
     <div class="legal-text">
@@ -219,7 +237,7 @@
   <div class="section-line"></div>
 
   <!-- 3. Assumption of Risk -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 3</div>
     <h2 class="legal-heading">Assumption of Risk</h2>
     <div class="legal-text">
@@ -240,7 +258,7 @@
   <div class="section-line"></div>
 
   <!-- 4. Limitation of Liability -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 4</div>
     <h2 class="legal-heading">Limitation of Liability</h2>
     <div class="legal-text">
@@ -261,7 +279,7 @@
   <div class="section-line"></div>
 
   <!-- 5. Non-Custodial Declaration -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 5</div>
     <h2 class="legal-heading">Non-Custodial Declaration</h2>
     <div class="legal-text">
@@ -278,7 +296,7 @@
   <div class="section-line"></div>
 
   <!-- 6. Intellectual Property -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 6</div>
     <h2 class="legal-heading">Intellectual Property</h2>
     <div class="legal-text">
@@ -291,7 +309,7 @@
   <div class="section-line"></div>
 
   <!-- 7. No Warranty -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 7</div>
     <h2 class="legal-heading">No Warranty</h2>
     <div class="legal-text">
@@ -310,7 +328,7 @@
   <div class="section-line"></div>
 
   <!-- 8. Governing Law -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 8</div>
     <h2 class="legal-heading">Governing Law &amp; Dispute Resolution</h2>
     <div class="legal-text">
@@ -323,7 +341,7 @@
   <div class="section-line"></div>
 
   <!-- 9. Changes to Terms -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 9</div>
     <h2 class="legal-heading">Changes to Terms</h2>
     <div class="legal-text">
@@ -336,7 +354,7 @@
   <div class="section-line"></div>
 
   <!-- 10. Contact -->
-  <div class="legal-section">
+  <div class="legal-section rv">
     <div class="legal-num">SECTION 10</div>
     <h2 class="legal-heading">Contact</h2>
     <div class="legal-text">
@@ -348,13 +366,27 @@
   </div>
 
   <!-- Acknowledgment box -->
-  <div class="ack-box">
+  <div class="ack-box rv">
     <p>By accessing the NexVault website, interacting with NexVault smart contracts, or depositing funds into the protocol, you confirm that:</p>
     <p class="ack-statement">You have read, understood, and agree to be bound by these Terms of Service and Legal Disclaimer in their entirety.</p>
   </div>
 
 </div>
 
-<footer>© 2026 NEXVAULT · BUILT ON NEXUS.XYZ</footer>
+<!-- Footer -->
+<footer class="c-footer">
+  <span class="c-footer-copy">&copy; 2026 NexVault</span>
+  <div class="c-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/nexcredit">NexCredit</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/whitepaper">Whitepaper</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script src="/nv-cyber.js"></script>
 </body>
 </html>

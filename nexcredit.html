@@ -7,506 +7,564 @@
   <meta name="description" content="NexCredit transforms your NexVault deposit history into a verifiable on-chain credit score. Private by design. Scores 0-1000 across 7 tiers." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-cyber.css">
 
   <style>
-    :root {
-      --gold: #c9a84c;
-      --gold-bright: #f0c040;
-      --gold-dim: rgba(201,168,76,0.15);
-      --bg: #05060a;
-      --bg2: #080b10;
-      --text: #e8e2d6;
-      --muted: #5a5650;
-      --dim: #3a3832;
-      --border: rgba(201,168,76,0.12);
-      --green: #4ade80;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    #bg-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1;
-      opacity: .6;
-    }
-
-    main {
+    /* ── Page-specific styles ── */
+    .nc-wrap {
       position: relative;
       z-index: 2;
-      max-width: 960px;
+      max-width: 1060px;
       margin: 0 auto;
-      padding: 0 24px 80px;
+      padding: 120px 24px 80px;
     }
 
-    /* ── Nav ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      height: 60px;
-      background: rgba(5,6,10,0.92);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(201,168,76,0.08);
-    }
-
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logomark {
-      width: 34px; height: 34px; border-radius: 9px;
-      background: linear-gradient(135deg,#c9a84c,#8b6914);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 16px; color: #06070a; font-weight: 700; flex-shrink: 0;
-    }
-    .nav-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px; color: var(--text);
-      letter-spacing: .06em; font-weight: 500;
-    }
-    .nav-links { display: flex; align-items: center; gap: 6px; }
-    .nav-pill-link {
-      font-size: 11px; letter-spacing: .1em; color: var(--muted);
-      text-decoration: none; padding: 6px 14px; border-radius: 20px;
-      border: 1px solid transparent; transition: all .2s;
-    }
-    .nav-pill-link:hover { color: var(--gold); background: rgba(201,168,76,.07); border-color: rgba(201,168,76,.15); }
-    .nav-pill-link.active { color: var(--gold); background: rgba(201,168,76,.08); border-color: rgba(201,168,76,.2); }
-    .nav-launch-btn {
-      font-size: 12px; letter-spacing: .08em; color: var(--gold);
-      text-decoration: none; padding: 8px 16px; border-radius: 20px;
-      border: 1px solid rgba(201,168,76,.35); font-weight: 600;
-      transition: all .2s;
-    }
-    .nav-launch-btn:hover { background: rgba(201,168,76,.1); }
-
-    /* ── Sections ── */
-    .hero { text-align: center; padding: 80px 0 60px; }
-
-    .pill {
+    /* Hero */
+    .nc-hero { text-align: center; margin-bottom: 80px; }
+    .nc-pill {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 16px; border-radius: 30px;
-      border: 1px solid rgba(201,168,76,0.2);
-      background: rgba(201,168,76,0.06);
-      font-size: 11px; letter-spacing: .18em;
-      color: var(--gold); margin-bottom: 24px; font-weight: 600;
+      padding: 6px 20px; border-radius: 4px;
+      border: 1px solid rgba(0,240,255,.2);
+      background: rgba(0,240,255,.04);
+      font-size: 10px; letter-spacing: .2em;
+      color: var(--cyan); margin-bottom: 28px; font-weight: 500;
+      text-shadow: 0 0 8px rgba(0,240,255,.3);
+    }
+    .nc-hero .c-title { margin-bottom: 24px; }
+    .nc-hero-desc {
+      font-size: 14px; color: var(--muted); line-height: 1.9;
+      max-width: 620px; margin: 0 auto 36px;
     }
 
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(32px,5vw,54px);
-      font-weight: 500; color: #f0ece4;
-      line-height: 1.2; margin-bottom: 20px;
-    }
-
-    .subtitle {
-      font-size: 16px; color: #9ca3af;
-      max-width: 600px; margin: 0 auto 32px;
-      line-height: 1.8;
-    }
-
-    /* ── Tier grid ── */
-    .tier-grid {
+    /* ── Tier Grid ── */
+    .nc-tier-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-      margin: 48px 0;
+      gap: 10px;
+      margin: 48px 0 80px;
     }
-
-    .tier-card {
-      border-radius: 14px; padding: 20px 14px;
-      border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(8,11,16,0.8);
+    .nc-tier {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 24px 12px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all .4s;
+      backdrop-filter: blur(6px);
+    }
+    .nc-tier::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity .4s;
+    }
+    .nc-tier:hover::before { opacity: 1; }
+    .nc-tier:hover {
+      border-color: rgba(0,240,255,.3);
+      box-shadow: 0 0 25px rgba(0,240,255,.1), inset 0 0 25px rgba(0,240,255,.02);
+      transform: translateY(-4px);
+    }
+    .nc-tier-score {
+      font-family: var(--font-display);
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .nc-tier-name {
+      font-size: 9px;
+      letter-spacing: .12em;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .nc-tier-req {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.5;
     }
 
-    /* ── Category cards ── */
-    .cat-grid {
+    /* Tier-specific colors */
+    .nc-tier--none .nc-tier-score { color: #3a3a50; }
+    .nc-tier--none .nc-tier-name { color: #3a3a50; }
+
+    .nc-tier--dormant .nc-tier-score { color: #5a5a7a; }
+    .nc-tier--dormant .nc-tier-name { color: #5a5a7a; }
+
+    .nc-tier--building .nc-tier-score { color: #8888aa; }
+    .nc-tier--building .nc-tier-name { color: #8888aa; }
+
+    .nc-tier--established .nc-tier-score { color: var(--cyan); text-shadow: 0 0 10px rgba(0,240,255,.4); }
+    .nc-tier--established .nc-tier-name { color: var(--cyan); }
+    .nc-tier--established { border-color: rgba(0,240,255,.15); }
+
+    .nc-tier--trusted .nc-tier-score { color: #a78bfa; text-shadow: 0 0 10px rgba(167,139,250,.4); }
+    .nc-tier--trusted .nc-tier-name { color: #a78bfa; }
+    .nc-tier--trusted { border-color: rgba(167,139,250,.15); }
+    .nc-tier--trusted:hover { border-color: rgba(167,139,250,.3); box-shadow: 0 0 25px rgba(167,139,250,.1); }
+
+    .nc-tier--senior .nc-tier-score { color: #fbbf24; text-shadow: 0 0 10px rgba(251,191,36,.4); }
+    .nc-tier--senior .nc-tier-name { color: #fbbf24; }
+    .nc-tier--senior { border-color: rgba(251,191,36,.15); }
+    .nc-tier--senior:hover { border-color: rgba(251,191,36,.3); box-shadow: 0 0 25px rgba(251,191,36,.1); }
+
+    .nc-tier--elite .nc-tier-score { color: var(--magenta); text-shadow: 0 0 14px rgba(255,0,255,.5); }
+    .nc-tier--elite .nc-tier-name { color: var(--magenta); }
+    .nc-tier--elite {
+      border-color: rgba(255,0,255,.2);
+      background: rgba(255,0,255,.03);
+    }
+    .nc-tier--elite::before {
+      background: linear-gradient(90deg, transparent, var(--magenta), transparent);
+      opacity: .5;
+    }
+    .nc-tier--elite:hover {
+      border-color: rgba(255,0,255,.4);
+      box-shadow: 0 0 30px rgba(255,0,255,.15), inset 0 0 30px rgba(255,0,255,.03);
+    }
+    .nc-tier--elite .nc-tier-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255,0,255,.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Section Headers ── */
+    .nc-section-head {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .nc-section-head .c-title { font-size: clamp(24px, 3.5vw, 38px); }
+    .nc-section-head .c-desc {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── Category Grid ── */
+    .nc-cat-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
-      margin: 48px 0;
+      margin-bottom: 80px;
+    }
+    .nc-cat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(6px);
+      transition: all .4s;
+    }
+    .nc-cat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: .3;
+    }
+    .nc-cat-card:hover {
+      border-color: rgba(0,240,255,.2);
+      box-shadow: 0 0 25px rgba(0,240,255,.06);
+    }
+    .nc-cat-label {
+      font-size: 10px; letter-spacing: .2em;
+      color: var(--cyan); font-weight: 500;
+      text-shadow: 0 0 8px rgba(0,240,255,.3);
+      margin-bottom: 14px;
+    }
+    .nc-cat-pts {
+      font-family: var(--font-display);
+      font-size: 36px; font-weight: 300;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+    }
+    .nc-cat-desc {
+      font-size: 13px; color: var(--muted); line-height: 1.8;
+      margin-bottom: 20px;
     }
 
-    .cat-card {
-      padding: 30px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(8,11,16,0.6);
-    }
-
-    .cat-label {
-      font-size: 9px; letter-spacing: .15em;
-      color: var(--gold); font-weight: 600;
-      text-transform: uppercase; margin-bottom: 12px;
-    }
-
-    .cat-pts {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 40px; color: #f0ece4; margin-bottom: 10px;
-    }
-
-    .cat-desc {
-      font-size: 13px; color: #6b7280; line-height: 1.75;
-    }
-
-    /* ── Points table ── */
-    .pts-table {
+    /* ── Points Table ── */
+    .nc-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 16px 0;
     }
-    .pts-table td {
-      padding: 8px 12px;
+    .nc-table td {
+      padding: 10px 14px;
       font-size: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(0,240,255,.06);
     }
-    .pts-table td:first-child { color: #6b7280; }
-    .pts-table td:last-child { color: var(--gold); text-align: right; font-weight: 600; }
+    .nc-table tr:last-child td { border-bottom: none; }
+    .nc-table td:first-child { color: var(--muted); }
+    .nc-table td:last-child {
+      color: var(--cyan);
+      text-align: right;
+      font-weight: 600;
+      text-shadow: 0 0 6px rgba(0,240,255,.3);
+    }
+    .nc-table-note {
+      font-size: 11px; color: var(--dim); margin-top: 10px;
+    }
+    .nc-table-note em { color: var(--cyan); font-style: normal; }
 
-    /* ── Privacy box ── */
-    .privacy-box {
-      text-align: center; padding: 40px;
-      border-radius: 16px;
-      border: 1px solid rgba(201,168,76,0.1);
-      background: rgba(201,168,76,0.03);
-      margin: 48px 0;
+    /* ── Privacy Box ── */
+    .nc-privacy {
+      text-align: center;
+      padding: 48px 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(57,255,20,.1);
+      background: rgba(57,255,20,.02);
+      margin-bottom: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .nc-privacy::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(57,255,20,.4), transparent);
+    }
+    .nc-privacy-icon {
+      font-size: 36px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 12px rgba(57,255,20,.4));
+    }
+    .nc-privacy-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--text-bright);
+      margin-bottom: 14px;
+    }
+    .nc-privacy-desc {
+      font-size: 14px; color: var(--muted);
+      max-width: 540px; margin: 0 auto 28px;
+      line-height: 1.9;
+    }
+    .nc-privacy-desc strong { color: var(--text-bright); }
+    .nc-priv-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .nc-priv-stat { text-align: center; }
+    .nc-priv-stat-label {
+      font-size: 10px; letter-spacing: .14em;
+      color: var(--neon-green); font-weight: 600;
+      text-shadow: 0 0 8px rgba(57,255,20,.4);
+      margin-bottom: 4px;
+    }
+    .nc-priv-stat-val {
+      font-size: 13px; color: var(--text-bright);
     }
 
-    /* ── Section divider ── */
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px; color: #f0ece4;
-      margin-bottom: 8px;
+    /* ── FAQ ── */
+    .nc-faq { margin-bottom: 60px; }
+    .nc-faq-item {
+      padding: 24px 28px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      margin-bottom: 10px;
+      backdrop-filter: blur(6px);
+      transition: all .3s;
     }
-
-    .section-sub {
-      font-size: 13px; color: #6b7280;
-      margin-bottom: 32px; line-height: 1.7;
+    .nc-faq-item:hover {
+      border-color: rgba(0,240,255,.2);
     }
-
-    /* ── Reveal animation ── */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* ── Footer ── */
-    footer {
-      position: relative; z-index: 2;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 28px 32px;
-      border-top: 1px solid rgba(201,168,76,0.08);
-      font-size: 11px;
+    .nc-faq-q {
+      font-size: 13px; color: var(--text-bright);
+      margin-bottom: 10px; font-weight: 600;
     }
-    .footer-copy { color: #2d2d2d; letter-spacing: .1em; }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-link { color: #374151; text-decoration: none; letter-spacing: .08em; transition: color .2s; }
-    .footer-link:hover { color: var(--gold); }
+    .nc-faq-a {
+      font-size: 13px; color: var(--muted); line-height: 1.8;
+    }
+    .nc-faq-a a { color: var(--cyan); }
 
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .nc-tier-grid { grid-template-columns: repeat(4, 1fr); }
+    }
     @media (max-width: 768px) {
-      .tier-grid { grid-template-columns: repeat(2,1fr); }
-      .cat-grid  { grid-template-columns: 1fr; }
-      .nav-links .nav-pill-link { display: none; }
-      footer { flex-direction: column; gap: 12px; text-align: center; }
-      .footer-links { justify-content: center; }
+      .nc-tier-grid { grid-template-columns: repeat(2, 1fr); }
+      .nc-cat-grid { grid-template-columns: 1fr; }
+      .nc-wrap { padding: 100px 18px 60px; }
+    }
+    @media (max-width: 480px) {
+      .nc-tier-grid { grid-template-columns: 1fr 1fr; }
+      .nc-priv-stats { gap: 24px; }
     }
   </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<!-- Loader -->
+<div id="cyber-loader">
+  <div class="cl-mark">V</div>
+  <div class="cl-bar"><div class="cl-fill" style="width:0%"></div></div>
+  <div class="cl-pct">0%</div>
+</div>
 
-<!-- ── Nav ── -->
-<nav>
-  <a class="nav-logo" href="/">
-    <div class="nav-logomark">V</div>
-    <span class="nav-name">NEXVAULT</span>
+<!-- Grid Canvas -->
+<canvas id="cyber-grid"></canvas>
+
+<!-- Nav -->
+<nav class="c-nav">
+  <a href="/" class="c-nav-logo">
+    <div class="c-nav-mark">V</div>
+    <span class="c-nav-word">NEXVAULT</span>
   </a>
-  <div class="nav-links">
-    <a href="/whitepaper" target="_blank" class="nav-pill-link">↓ WHITEPAPER</a>
-    <a href="/about" class="nav-pill-link">ABOUT US</a>
-    <a href="/security" class="nav-pill-link">SECURITY</a>
-    <a href="/nexcredit" class="nav-pill-link active">NEXCREDIT</a>
+  <div class="c-nav-links">
+    <a href="/security" class="c-nav-link">SECURITY</a>
+    <a href="/nexcredit" class="c-nav-link">NEXCREDIT</a>
+    <a href="/about" class="c-nav-link">ABOUT</a>
+    <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
+    <a href="/app" class="c-nav-cta">OPEN VAULT</a>
   </div>
-  <a href="/app" class="nav-launch-btn">LAUNCH APP →</a>
 </nav>
 
-<main>
+<!-- Content -->
+<div class="nc-wrap">
 
   <!-- ── Hero ── -->
-  <div class="hero reveal">
-    <div class="pill">ON-CHAIN CREDIT SCORING</div>
-    <h1>
+  <div class="nc-hero rv">
+    <div class="nc-pill">ON-CHAIN CREDIT SCORING</div>
+    <h1 class="c-title">
       Your Vault History.<br>
-      <em style="font-style:italic;background:linear-gradient(135deg,#f0c040,#c9a84c,#8b6914);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Your Credit Score.</em>
+      <em>Your Credit Score.</em>
     </h1>
-    <p class="subtitle">
+    <p class="nc-hero-desc">
       NexCredit is an on-chain credit scoring protocol built natively into NexVault.
       Your deposit history, lock commitment, protocol loyalty, and behavior are scored
       from 0 to 1000. Private by design — only you can see your score.
     </p>
-    <a href="/app" style="display:inline-block;padding:13px 30px;border-radius:10px;border:none;background:linear-gradient(135deg,#c9a84c,#8b6914);color:#06070a;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.08em;font-weight:600;text-decoration:none;">
-      CHECK YOUR SCORE →
-    </a>
+    <a href="/app" class="btn-neon">CHECK YOUR SCORE</a>
   </div>
 
   <!-- ── Score Tiers ── -->
-  <div class="reveal">
-    <div class="section-title" style="text-align:center">Seven Credit Tiers</div>
-    <p class="section-sub" style="text-align:center;max-width:580px;margin:8px auto 32px;">
-      Each tier is deliberately hard to reach. Elite requires years of commitment,
-      significant capital, and the 5-Year lock. Under 1% of wallets will ever qualify.
-    </p>
+  <div class="rv">
+    <div class="nc-section-head">
+      <div class="c-label">CREDIT TIERS</div>
+      <div class="c-title" style="font-size:clamp(24px,3.5vw,38px)">Seven Credit Tiers</div>
+      <p class="c-desc" style="max-width:600px;margin:0 auto;">
+        Each tier is deliberately hard to reach. Elite requires years of commitment,
+        significant capital, and the 5-Year lock. Under 1% of wallets will ever qualify.
+      </p>
+    </div>
 
-    <div class="tier-grid">
+    <div class="nc-tier-grid">
 
-      <div class="tier-card">
-        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:#4b5563;margin-bottom:8px;">0</div>
-        <div style="font-size:10px;letter-spacing:.1em;color:#374151;font-weight:600;margin-bottom:6px;">NO HISTORY</div>
-        <div style="font-size:10px;color:#1f2937;">No deposits</div>
+      <div class="nc-tier nc-tier--none rv rv-d1">
+        <div class="nc-tier-score">0</div>
+        <div class="nc-tier-name">NO HISTORY</div>
+        <div class="nc-tier-req">No deposits</div>
       </div>
 
-      <div class="tier-card">
-        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:#6b7280;margin-bottom:8px;">1-149</div>
-        <div style="font-size:10px;letter-spacing:.1em;color:#6b7280;font-weight:600;margin-bottom:6px;">DORMANT</div>
-        <div style="font-size:10px;color:#4b5563;">Active deposit, early stage</div>
+      <div class="nc-tier nc-tier--dormant rv rv-d2">
+        <div class="nc-tier-score">1-149</div>
+        <div class="nc-tier-name">DORMANT</div>
+        <div class="nc-tier-req">Active deposit, early stage</div>
       </div>
 
-      <div class="tier-card">
-        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:#d1d5db;margin-bottom:8px;">150-299</div>
-        <div style="font-size:10px;letter-spacing:.1em;color:#d1d5db;font-weight:600;margin-bottom:6px;">BUILDING</div>
-        <div style="font-size:10px;color:#6b7280;">$5K deposited, some time</div>
+      <div class="nc-tier nc-tier--building rv rv-d3">
+        <div class="nc-tier-score">150-299</div>
+        <div class="nc-tier-name">BUILDING</div>
+        <div class="nc-tier-req">$5K deposited, some time</div>
       </div>
 
-      <div class="tier-card" style="border-color:rgba(96,165,250,0.15);background:rgba(96,165,250,0.04);">
-        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:#60a5fa;margin-bottom:8px;">300-499</div>
-        <div style="font-size:10px;letter-spacing:.1em;color:#60a5fa;font-weight:600;margin-bottom:6px;">ESTABLISHED</div>
-        <div style="font-size:10px;color:#6b7280;">$5K+, 3YR lock, 6mo+</div>
+      <div class="nc-tier nc-tier--established rv rv-d4">
+        <div class="nc-tier-score">300-499</div>
+        <div class="nc-tier-name">ESTABLISHED</div>
+        <div class="nc-tier-req">$5K+, 3YR lock, 6mo+</div>
       </div>
 
-      <div class="tier-card" style="border-color:rgba(167,139,250,0.15);background:rgba(167,139,250,0.04);">
-        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:#a78bfa;margin-bottom:8px;">500-699</div>
-        <div style="font-size:10px;letter-spacing:.1em;color:#a78bfa;font-weight:600;margin-bottom:6px;">TRUSTED</div>
-        <div style="font-size:10px;color:#6b7280;">$25K+, 3YR lock, 1yr+</div>
+      <div class="nc-tier nc-tier--trusted rv rv-d5">
+        <div class="nc-tier-score">500-699</div>
+        <div class="nc-tier-name">TRUSTED</div>
+        <div class="nc-tier-req">$25K+, 3YR lock, 1yr+</div>
       </div>
 
-      <div class="tier-card" style="border-color:rgba(201,168,76,0.2);background:rgba(201,168,76,0.05);">
-        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:#fbbf24;margin-bottom:8px;">700-849</div>
-        <div style="font-size:10px;letter-spacing:.1em;color:#fbbf24;font-weight:600;margin-bottom:6px;">SENIOR</div>
-        <div style="font-size:10px;color:#6b7280;">$25K+, 5YR lock, 2yr+</div>
+      <div class="nc-tier nc-tier--senior rv rv-d1">
+        <div class="nc-tier-score">700-849</div>
+        <div class="nc-tier-name">SENIOR</div>
+        <div class="nc-tier-req">$25K+, 5YR lock, 2yr+</div>
       </div>
 
-      <div class="tier-card" style="border-color:rgba(74,222,128,0.2);background:rgba(74,222,128,0.04);position:relative;overflow:hidden;">
-        <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(74,222,128,0.07),transparent 70%);pointer-events:none;"></div>
-        <div style="font-size:22px;font-family:'Cormorant Garamond',serif;color:#4ade80;margin-bottom:8px;">850-1000</div>
-        <div style="font-size:10px;letter-spacing:.1em;color:#4ade80;font-weight:600;margin-bottom:6px;">ELITE ✦</div>
-        <div style="font-size:10px;color:#6b7280;">$100K+, 5YR lock, 3yr+</div>
+      <div class="nc-tier nc-tier--elite rv rv-d2">
+        <div class="nc-tier-glow"></div>
+        <div class="nc-tier-score">850-1000</div>
+        <div class="nc-tier-name">ELITE</div>
+        <div class="nc-tier-req">$100K+, 5YR lock, 3yr+</div>
       </div>
 
     </div>
   </div>
 
+  <hr class="c-divider">
+
   <!-- ── Four Scoring Categories ── -->
-  <div class="reveal">
-    <div class="section-title" style="text-align:center">How Scores Are Calculated</div>
-    <p class="section-sub" style="text-align:center;max-width:580px;margin:8px auto 32px;">
-      1000 points total across four categories. Scores are computed live from on-chain data
-      every time you check — nothing is stored, nothing can be manipulated.
-    </p>
+  <div class="rv" style="margin-top:80px;">
+    <div class="nc-section-head">
+      <div class="c-label">SCORING MODEL</div>
+      <div class="c-title" style="font-size:clamp(24px,3.5vw,38px)">How Scores Are Calculated</div>
+      <p class="c-desc" style="max-width:600px;margin:0 auto;">
+        1000 points total across four categories. Scores are computed live from on-chain data
+        every time you check — nothing is stored, nothing can be manipulated.
+      </p>
+    </div>
 
-    <div class="cat-grid">
+    <div class="nc-cat-grid">
 
-      <div class="cat-card">
-        <div class="cat-label">Deposit Strength</div>
-        <div class="cat-pts">250 pts</div>
-        <p class="cat-desc" style="margin-bottom:16px;">Based on total active USDX deposited across all your locked positions.</p>
-        <table class="pts-table">
+      <!-- Deposit Strength -->
+      <div class="nc-cat-card rv rv-d1">
+        <div class="nc-cat-label">DEPOSIT STRENGTH</div>
+        <div class="nc-cat-pts">250 pts</div>
+        <p class="nc-cat-desc">Based on total active USDX deposited across all your locked positions.</p>
+        <table class="nc-table">
           <tr><td>Any active deposit</td><td>+30 pts</td></tr>
-          <tr><td>≥ $5,000 USDX active</td><td>+50 pts</td></tr>
-          <tr><td>≥ $25,000 USDX active</td><td>+80 pts</td></tr>
-          <tr><td>≥ $100,000 USDX active</td><td>+90 pts</td></tr>
+          <tr><td>&ge; $5,000 USDX active</td><td>+50 pts</td></tr>
+          <tr><td>&ge; $25,000 USDX active</td><td>+80 pts</td></tr>
+          <tr><td>&ge; $100,000 USDX active</td><td>+90 pts</td></tr>
         </table>
-        <p style="font-size:11px;color:#374151;margin-top:8px;">Cumulative. $100K gets all four bonuses = 250 pts.</p>
+        <p class="nc-table-note">Cumulative. $100K gets all four bonuses = 250 pts.</p>
       </div>
 
-      <div class="cat-card">
-        <div class="cat-label">Lock Commitment</div>
-        <div class="cat-pts">250 pts</div>
-        <p class="cat-desc" style="margin-bottom:16px;">Points for the highest active lock tier. Not cumulative — only the best tier counts.</p>
-        <table class="pts-table">
+      <!-- Lock Commitment -->
+      <div class="nc-cat-card rv rv-d2">
+        <div class="nc-cat-label">LOCK COMMITMENT</div>
+        <div class="nc-cat-pts">250 pts</div>
+        <p class="nc-cat-desc">Points for the highest active lock tier. Not cumulative — only the best tier counts.</p>
+        <table class="nc-table">
           <tr><td>1-Year Lock active</td><td>+20 pts</td></tr>
           <tr><td>3-Year Lock active</td><td>+80 pts</td></tr>
           <tr><td>5-Year Lock active</td><td>+250 pts</td></tr>
         </table>
-        <p style="font-size:11px;color:#374151;margin-top:8px;">5-Year lock is the <em style="color:var(--gold)">only path to Elite.</em></p>
+        <p class="nc-table-note">5-Year lock is the <em>only path to Elite.</em></p>
       </div>
 
-      <div class="cat-card">
-        <div class="cat-label">Protocol Loyalty</div>
-        <div class="cat-pts">250 pts</div>
-        <p class="cat-desc" style="margin-bottom:16px;">Age of your oldest active deposit. Minimum 60 days before any points. 3 years to max.</p>
-        <table class="pts-table">
-          <tr><td>≥ 60 days active</td><td>20 pts</td></tr>
-          <tr><td>≥ 180 days active</td><td>50 pts</td></tr>
-          <tr><td>≥ 365 days active</td><td>100 pts</td></tr>
-          <tr><td>≥ 730 days active</td><td>175 pts</td></tr>
-          <tr><td>≥ 1,095 days (3yr)</td><td>250 pts</td></tr>
+      <!-- Protocol Loyalty -->
+      <div class="nc-cat-card rv rv-d3">
+        <div class="nc-cat-label">PROTOCOL LOYALTY</div>
+        <div class="nc-cat-pts">250 pts</div>
+        <p class="nc-cat-desc">Age of your oldest active deposit. Minimum 60 days before any points. 3 years to max.</p>
+        <table class="nc-table">
+          <tr><td>&ge; 60 days active</td><td>20 pts</td></tr>
+          <tr><td>&ge; 180 days active</td><td>50 pts</td></tr>
+          <tr><td>&ge; 365 days active</td><td>100 pts</td></tr>
+          <tr><td>&ge; 730 days active</td><td>175 pts</td></tr>
+          <tr><td>&ge; 1,095 days (3yr)</td><td>250 pts</td></tr>
         </table>
-        <p style="font-size:11px;color:#374151;margin-top:8px;">Not cumulative — the bracket your age falls into determines points.</p>
+        <p class="nc-table-note">Not cumulative — the bracket your age falls into determines points.</p>
       </div>
 
-      <div class="cat-card">
-        <div class="cat-label">Behavioral Excellence</div>
-        <div class="cat-pts">250 pts</div>
-        <p class="cat-desc" style="margin-bottom:16px;">Five independent behaviors. Each earns independently — stack all five for maximum points.</p>
-        <table class="pts-table">
+      <!-- Behavioral Excellence -->
+      <div class="nc-cat-card rv rv-d4">
+        <div class="nc-cat-label">BEHAVIORAL EXCELLENCE</div>
+        <div class="nc-cat-pts">250 pts</div>
+        <p class="nc-cat-desc">Five independent behaviors. Each earns independently — stack all five for maximum points.</p>
+        <table class="nc-table">
           <tr><td>Compounded yield 3+ times</td><td>+30 pts</td></tr>
           <tr><td>5+ lifetime deposits total</td><td>+50 pts</td></tr>
           <tr><td>3+ active referrals</td><td>+60 pts</td></tr>
           <tr><td>Genesis Badge + $5K+ active</td><td>+60 pts</td></tr>
           <tr><td>2+ simultaneous active deposits</td><td>+50 pts</td></tr>
         </table>
-        <p style="font-size:11px;color:#374151;margin-top:8px;">All five are independent. Max 250 if all conditions met.</p>
+        <p class="nc-table-note">All five are independent. Max 250 if all conditions met.</p>
       </div>
 
     </div>
   </div>
+
+  <hr class="c-divider">
 
   <!-- ── Privacy ── -->
-  <div class="privacy-box reveal">
-    <div style="font-size:32px;margin-bottom:16px;">🔒</div>
-    <div style="font-family:'Playfair Display',serif;font-size:22px;color:#f0ece4;margin-bottom:12px;">
-      Fully Private. Always.
-    </div>
-    <p style="font-size:14px;color:#9ca3af;max-width:520px;margin:0 auto 20px;line-height:1.8;">
-      Your NexCredit score is computed live from on-chain data and is visible 
-      <strong style="color:#f0ece4;">only to you</strong>. No other wallet can see your score. 
-      No fee to check your own score. Nothing is stored on-chain — 
+  <div class="nc-privacy rv" style="margin-top:80px;">
+    <div class="nc-privacy-icon">&#x1F512;</div>
+    <div class="nc-privacy-title">Fully Private. Always.</div>
+    <p class="nc-privacy-desc">
+      Your NexCredit score is computed live from on-chain data and is visible
+      <strong>only to you</strong>. No other wallet can see your score.
+      No fee to check your own score. Nothing is stored on-chain —
       every query reads directly from vault history in real time.
     </p>
-    <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-bottom:24px;">
-      <div style="text-align:center;">
-        <div style="font-size:11px;color:var(--gold);letter-spacing:.12em;font-weight:600;margin-bottom:4px;">SELF-CHECK</div>
-        <div style="font-size:13px;color:#f0ece4;">Free. Always.</div>
+    <div class="nc-priv-stats">
+      <div class="nc-priv-stat">
+        <div class="nc-priv-stat-label">SELF-CHECK</div>
+        <div class="nc-priv-stat-val">Free. Always.</div>
       </div>
-      <div style="text-align:center;">
-        <div style="font-size:11px;color:var(--gold);letter-spacing:.12em;font-weight:600;margin-bottom:4px;">STORED DATA</div>
-        <div style="font-size:13px;color:#f0ece4;">Zero. Live computed.</div>
+      <div class="nc-priv-stat">
+        <div class="nc-priv-stat-label">STORED DATA</div>
+        <div class="nc-priv-stat-val">Zero. Live computed.</div>
       </div>
-      <div style="text-align:center;">
-        <div style="font-size:11px;color:var(--gold);letter-spacing:.12em;font-weight:600;margin-bottom:4px;">EXTERNAL ACCESS</div>
-        <div style="font-size:13px;color:#f0ece4;">None. Private.</div>
+      <div class="nc-priv-stat">
+        <div class="nc-priv-stat-label">EXTERNAL ACCESS</div>
+        <div class="nc-priv-stat-val">None. Private.</div>
       </div>
     </div>
-    <a href="/app" style="display:inline-block;padding:12px 28px;border-radius:10px;border:1px solid rgba(201,168,76,0.3);background:rgba(201,168,76,0.08);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--gold);text-decoration:none;font-weight:600;transition:all .2s;">
-      OPEN DASHBOARD →
-    </a>
+    <a href="/app" class="btn-neon" style="border-color:var(--neon-green);color:var(--neon-green);background:rgba(57,255,20,.06);text-shadow:0 0 8px rgba(57,255,20,.4);box-shadow:0 0 15px rgba(57,255,20,.1),inset 0 0 15px rgba(57,255,20,.03);">OPEN DASHBOARD</a>
   </div>
+
+  <hr class="c-divider">
 
   <!-- ── FAQ ── -->
-  <div class="reveal" style="margin-bottom:48px;">
-    <div class="section-title" style="text-align:center;margin-bottom:8px;">Common Questions</div>
-    <p class="section-sub" style="text-align:center;margin-bottom:32px;">Everything you need to know about how NexCredit works.</p>
+  <div class="nc-faq rv" style="margin-top:80px;">
+    <div class="nc-section-head">
+      <div class="c-label">FAQ</div>
+      <div class="c-title" style="font-size:clamp(24px,3.5vw,38px)">Common Questions</div>
+      <p class="c-desc">Everything you need to know about how NexCredit works.</p>
+    </div>
 
-    <div style="display:flex;flex-direction:column;gap:12px;">
+    <div class="nc-faq-item">
+      <div class="nc-faq-q">When does my score update?</div>
+      <div class="nc-faq-a">Your score is recalculated live every time you check it. There is no cached value — it reads directly from your current vault state on-chain.</div>
+    </div>
 
-      <div style="padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-        <div style="font-size:13px;color:#f0ece4;margin-bottom:8px;font-weight:600;">When does my score update?</div>
-        <div style="font-size:13px;color:#6b7280;line-height:1.7;">Your score is recalculated live every time you check it. There is no cached value — it reads directly from your current vault state on-chain.</div>
-      </div>
+    <div class="nc-faq-item">
+      <div class="nc-faq-q">Can I see another wallet's score?</div>
+      <div class="nc-faq-a">No. The smart contract enforces this at the code level. Any call from a wallet that is not the score owner or the protocol OWNER will revert with a NotAuthorized error.</div>
+    </div>
 
-      <div style="padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-        <div style="font-size:13px;color:#f0ece4;margin-bottom:8px;font-weight:600;">Can I see another wallet's score?</div>
-        <div style="font-size:13px;color:#6b7280;line-height:1.7;">No. The smart contract enforces this at the code level. Any call from a wallet that is not the score owner or the protocol OWNER will revert with a NotAuthorized error.</div>
-      </div>
+    <div class="nc-faq-item">
+      <div class="nc-faq-q">Why is Elite so hard to reach?</div>
+      <div class="nc-faq-a">Elite requires $100K deposited, an active 5-Year lock, 3 years of continuous protocol loyalty, and behavioral consistency. All conditions must be met simultaneously. This makes it a genuine mark of extraordinary commitment — under 1% of wallets will qualify.</div>
+    </div>
 
-      <div style="padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-        <div style="font-size:13px;color:#f0ece4;margin-bottom:8px;font-weight:600;">Why is Elite so hard to reach?</div>
-        <div style="font-size:13px;color:#6b7280;line-height:1.7;">Elite requires $100K deposited, an active 5-Year lock, 3 years of continuous protocol loyalty, and behavioral consistency. All conditions must be met simultaneously. This makes it a genuine mark of extraordinary commitment — under 1% of wallets will qualify.</div>
-      </div>
+    <div class="nc-faq-item">
+      <div class="nc-faq-q">Does my score affect my yield?</div>
+      <div class="nc-faq-a">Not at this time. NexCredit is informational — it reflects your protocol standing and may be used by future Nexus ecosystem protocols to gate access or offer preferential terms.</div>
+    </div>
 
-      <div style="padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-        <div style="font-size:13px;color:#f0ece4;margin-bottom:8px;font-weight:600;">Does my score affect my yield?</div>
-        <div style="font-size:13px;color:#6b7280;line-height:1.7;">Not at this time. NexCredit is informational — it reflects your protocol standing and may be used by future Nexus ecosystem protocols to gate access or offer preferential terms.</div>
-      </div>
-
-      <div style="padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,0.07);background:rgba(8,11,16,0.6);">
-        <div style="font-size:13px;color:#f0ece4;margin-bottom:8px;font-weight:600;">Where is the contract deployed?</div>
-        <div style="font-size:13px;color:#6b7280;line-height:1.7;">NexCredit.sol will be deployed on Nexus mainnet at launch. The contract address will be published here and verifiable on the Nexus block explorer. Source code is open at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank" style="color:var(--gold);">github.com/NexVaultGH/nexvault-contracts</a>.</div>
-      </div>
-
+    <div class="nc-faq-item">
+      <div class="nc-faq-q">Where is the contract deployed?</div>
+      <div class="nc-faq-a">NexCredit.sol will be deployed on Nexus mainnet at launch. The contract address will be published here and verifiable on the Nexus block explorer. Source code is open at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</div>
     </div>
   </div>
 
-</main>
+</div>
 
-<footer>
-  <div class="footer-copy">© 2026 NEXVAULT · BUILT ON NEXUS.XYZ</div>
-  <div class="footer-links">
-    <a class="footer-link" href="/security">Security</a>
-    <a class="footer-link" href="/nexcredit">NexCredit</a>
-    <a class="footer-link" href="/about">About</a>
-    <a class="footer-link" href="/terms">Terms</a>
+<!-- Footer -->
+<footer class="c-footer">
+  <span class="c-footer-copy">&copy; 2026 NexVault</span>
+  <div class="c-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/nexcredit">NexCredit</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/whitepaper">Whitepaper</a>
+    <a href="/terms">Terms</a>
   </div>
 </footer>
 
-<script>
-  // Particle canvas
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-  function initParticles() {
-    particles = [];
-    const count = Math.floor((W * H) / 20000);
-    for (let i = 0; i < count; i++) {
-      particles.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+0.2, vx: (Math.random()-.5)*0.12, vy: (Math.random()-.5)*0.12, o: Math.random()*0.3+0.05 });
-    }
-  }
-  function draw() {
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(p => {
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle = `rgba(201,168,76,${p.o})`; ctx.fill();
-      p.x += p.vx; p.y += p.vy;
-      if (p.x<0) p.x=W; if (p.x>W) p.x=0;
-      if (p.y<0) p.y=H; if (p.y>H) p.y=0;
-    });
-    requestAnimationFrame(draw);
-  }
-  resize(); initParticles(); draw();
-  window.addEventListener('resize', () => { resize(); initParticles(); });
-
-  // Reveal on scroll
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-  }, { threshold: 0.1 });
-  revealEls.forEach(el => io.observe(el));
-</script>
+<script src="/nv-cyber.js"></script>
 
 </body>
 </html>

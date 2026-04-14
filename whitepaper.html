@@ -12,7 +12,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#05050f" />
   <meta name="author" content="NexVault" />
   <meta name="robots" content="index, follow" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -39,99 +39,447 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-cyber.css">
+
   <style>
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,.06);background:rgba(5,6,10,.8);backdrop-filter:blur(20px)}
-    .nav-logo{display:flex;align-items:center;gap:12px}
-    .nav-logomark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#c9a84c,#8b6914);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#05060a}
-    .nav-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;letter-spacing:.12em;color:#e8e2d6}
-    .nav-pill-link{padding:4px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.06);color:#c9a84c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:600;text-decoration:none;transition:all .2s;white-space:nowrap}
-    .nav-pill-link:hover{background:rgba(201,168,76,.14)}
-    .nav-launch-btn{padding:8px 18px;border-radius:9px;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:#c9a84c;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;font-weight:600;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
-    .nav-launch-btn:hover{background:rgba(201,168,76,.15)}
-    .dot-live{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.4)}
-    footer{text-align:center;padding:40px 20px;font-size:11px;color:#5a5650;letter-spacing:.1em;border-top:1px solid rgba(255,255,255,.04)}
+    /* ── Page-specific styles ── */
+    .wp-wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
 
-    .wp-body { max-width: 720px; margin: 0 auto; padding: 100px 24px 80px; }
+    /* ── Cover ── */
+    .wp-cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      z-index: 2;
+    }
+    .wp-cover .c-label { margin-bottom: 24px; font-size: 11px; letter-spacing: .3em; }
+    .wp-cover .c-title {
+      font-size: clamp(36px, 6vw, 64px);
+      margin-bottom: 16px;
+    }
+    .wp-cover-sub {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 48px;
+    }
 
-    /* Cover header */
-    .wp-cover { text-align: center; margin-bottom: 64px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .wp-cover-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: var(--gold); font-weight: 600; text-transform: uppercase; margin-bottom: 20px; }
-    .wp-cover-title { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 52px); font-weight: 400; line-height: 1.1; color: rgba(255,255,255,0.9); margin-bottom: 12px; }
-    .wp-cover-title em { font-style: italic; color: var(--gold); }
-    .wp-cover-sub { font-size: 15px; color: rgba(255,255,255,0.35); line-height: 1.8; max-width: 520px; margin: 0 auto 32px; }
-    .wp-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; max-width: 560px; margin: 0 auto; }
-    .wp-meta-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: left; }
-    .wp-meta-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 4px; }
-    .wp-meta-val { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500; }
-    .wp-meta-val a { color: var(--gold); text-decoration: none; }
+    /* Metadata grid */
+    .wp-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      max-width: 620px;
+      width: 100%;
+    }
+    .wp-meta-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 16px 18px;
+      text-align: left;
+      backdrop-filter: blur(6px);
+      transition: all .3s;
+    }
+    .wp-meta-card:hover {
+      border-color: rgba(0,240,255,.2);
+      box-shadow: 0 0 15px rgba(0,240,255,.06);
+    }
+    .wp-meta-label {
+      font-size: 9px;
+      letter-spacing: .14em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .wp-meta-val {
+      font-size: 13px;
+      color: var(--text-bright);
+      font-weight: 500;
+    }
+    .wp-meta-val a { color: var(--cyan); text-decoration: none; }
+    .wp-meta-val a:hover { text-shadow: 0 0 8px rgba(0,240,255,.4); }
+    .wp-meta-val--green { color: var(--neon-green); text-shadow: 0 0 8px rgba(57,255,20,.4); }
 
-    /* Disclaimer */
-    .wp-disclaimer { background: rgba(201,168,76,0.04); border: 1px solid rgba(201,168,76,0.12); border-radius: 12px; padding: 20px 24px; margin-bottom: 56px; }
-    .wp-disclaimer-title { font-family: var(--font-mono); font-size: 11px; color: var(--gold); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .wp-disclaimer p { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.8; }
+    /* ── Disclaimer ── */
+    .wp-disclaimer {
+      background: rgba(255,0,255,.03);
+      border: 1px solid rgba(255,0,255,.15);
+      border-radius: 6px;
+      padding: 24px 28px;
+      margin-bottom: 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .wp-disclaimer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--magenta), transparent);
+      opacity: .5;
+    }
+    .wp-disclaimer-title {
+      font-size: 11px;
+      color: var(--magenta);
+      font-weight: 600;
+      letter-spacing: .1em;
+      margin-bottom: 10px;
+      text-shadow: 0 0 8px rgba(255,0,255,.3);
+    }
+    .wp-disclaimer p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
 
-    /* TOC */
-    .wp-toc { margin-bottom: 56px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .wp-toc-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; color: var(--gold); font-weight: 600; text-transform: uppercase; margin-bottom: 16px; }
+    /* ── TOC ── */
+    .wp-toc {
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(0,240,255,.06);
+    }
+    .wp-toc-title {
+      font-size: 10px;
+      letter-spacing: .2em;
+      color: var(--cyan);
+      font-weight: 600;
+      text-shadow: 0 0 8px rgba(0,240,255,.3);
+      margin-bottom: 20px;
+    }
     .wp-toc-list { list-style: none; padding: 0; }
     .wp-toc-list li { margin-bottom: 6px; }
-    .wp-toc-list a { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s; display: flex; gap: 10px; }
-    .wp-toc-list a:hover { color: var(--gold); }
-    .wp-toc-num { color: rgba(255,255,255,0.2); font-family: var(--font-mono); font-size: 11px; min-width: 24px; }
+    .wp-toc-list a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      gap: 12px;
+      transition: all .3s;
+      padding: 4px 0;
+    }
+    .wp-toc-list a:hover {
+      color: var(--cyan);
+      text-shadow: 0 0 6px rgba(0,240,255,.3);
+    }
+    .wp-toc-num {
+      color: var(--dim);
+      font-size: 11px;
+      min-width: 24px;
+    }
 
-    /* Sections */
+    /* ── Sections ── */
     .wp-section { margin-bottom: 56px; }
-    .wp-section-num { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--gold); font-weight: 600; margin-bottom: 8px; }
-    .wp-section-title { font-family: 'Playfair Display', serif; font-size: clamp(22px, 3vw, 32px); font-weight: 400; color: rgba(255,255,255,0.85); margin-bottom: 20px; line-height: 1.2; }
-    .wp-h3 { font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.7); margin: 24px 0 10px; }
-    .wp-text { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.9; margin-bottom: 14px; }
-    .wp-text strong { color: rgba(255,255,255,0.6); font-weight: 500; }
-    .wp-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.15), transparent); margin: 0 auto 56px; }
+    .wp-section-num {
+      font-size: 10px;
+      letter-spacing: .2em;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-shadow: 0 0 8px rgba(0,240,255,.3);
+    }
+    .wp-section-title {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 300;
+      color: var(--text-bright);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    .wp-h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      margin: 28px 0 10px;
+    }
+    .wp-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 14px;
+    }
+    .wp-text strong { color: var(--text); font-weight: 500; }
+    .wp-text a { color: var(--cyan); text-decoration: none; }
+    .wp-text a:hover { text-shadow: 0 0 6px rgba(0,240,255,.3); }
+    .wp-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,.15), rgba(255,0,255,.15), transparent);
+      margin: 0 auto 56px;
+      border: none;
+    }
 
-    /* Tier cards */
-    .wp-tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
-    .wp-tier-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 24px 18px; text-align: center; }
-    .wp-tier-card.featured { border-color: rgba(201,168,76,0.2); background: rgba(201,168,76,0.03); }
-    .wp-tier-apy { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 400; margin-bottom: 6px; }
-    .wp-tier-name { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-bottom: 10px; }
-    .wp-tier-detail { font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.7; }
-
-    /* Badge table */
-    .wp-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-    .wp-table th { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--gold); text-align: left; padding: 10px 14px; border-bottom: 1px solid rgba(201,168,76,0.15); font-weight: 600; }
-    .wp-table td { font-size: 12px; color: rgba(255,255,255,0.4); padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .wp-table tr:last-child td { border-bottom: none; }
-
-    /* Bullet list */
+    /* ── Bullet List ── */
     .wp-list { list-style: none; padding: 0; margin: 14px 0; }
-    .wp-list li { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; padding-left: 20px; position: relative; margin-bottom: 4px; }
-    .wp-list li::before { content: '\25C6'; position: absolute; left: 0; color: var(--gold); font-size: 8px; top: 4px; }
+    .wp-list li {
+      font-size: 13px; color: var(--muted);
+      line-height: 1.9; padding-left: 22px;
+      position: relative; margin-bottom: 4px;
+    }
+    .wp-list li::before {
+      content: '\25C6';
+      position: absolute; left: 0;
+      color: var(--cyan); font-size: 8px; top: 5px;
+      text-shadow: 0 0 6px rgba(0,240,255,.4);
+    }
+    .wp-list li strong { color: var(--text); font-weight: 500; }
 
-    /* Contract cards */
-    .wp-contract { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 10px; }
-    .wp-contract-name { font-family: var(--font-mono); font-size: 12px; color: var(--gold); font-weight: 500; letter-spacing: 0.05em; margin-bottom: 4px; }
-    .wp-contract-desc { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.7; }
+    /* ── Tier Cards ── */
+    .wp-tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .wp-tier-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 28px 20px;
+      text-align: center;
+      backdrop-filter: blur(6px);
+      transition: all .4s;
+      position: relative;
+      overflow: hidden;
+    }
+    .wp-tier-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: .3;
+    }
+    .wp-tier-card:hover {
+      border-color: rgba(0,240,255,.25);
+      box-shadow: 0 0 20px rgba(0,240,255,.08);
+      transform: translateY(-3px);
+    }
+    .wp-tier-card.featured {
+      border-color: rgba(255,0,255,.2);
+      background: rgba(255,0,255,.03);
+    }
+    .wp-tier-card.featured::before {
+      background: linear-gradient(90deg, transparent, var(--magenta), transparent);
+      opacity: .5;
+    }
+    .wp-tier-card.featured:hover {
+      border-color: rgba(255,0,255,.35);
+      box-shadow: 0 0 25px rgba(255,0,255,.1);
+    }
+    .wp-tier-apy {
+      font-family: var(--font-display);
+      font-size: 30px;
+      font-weight: 300;
+      margin-bottom: 8px;
+    }
+    .wp-tier-name {
+      font-size: 10px;
+      letter-spacing: .12em;
+      color: var(--dim);
+      margin-bottom: 12px;
+    }
+    .wp-tier-detail {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
 
-    /* Stats row */
-    .wp-stats { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
-    .wp-stat { flex: 1; min-width: 100px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 16px 14px; text-align: center; }
-    .wp-stat-val { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--gold); font-weight: 400; }
-    .wp-stat-lbl { font-family: var(--font-mono); font-size: 9px; color: rgba(255,255,255,0.25); letter-spacing: 0.1em; margin-top: 4px; }
+    /* ── Badge Table ── */
+    .wp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .wp-table th {
+      font-size: 10px;
+      letter-spacing: .12em;
+      color: var(--cyan);
+      text-shadow: 0 0 6px rgba(0,240,255,.3);
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(0,240,255,.15);
+      font-weight: 600;
+    }
+    .wp-table td {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(0,240,255,.06);
+    }
+    .wp-table tr:last-child td { border-bottom: none; }
+    .wp-table td.wp-rarity {
+      color: var(--cyan);
+      text-shadow: 0 0 6px rgba(0,240,255,.3);
+    }
 
-    /* Phase table */
-    .wp-phase { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    /* ── Contract Cards ── */
+    .wp-contract {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(6px);
+      transition: all .3s;
+    }
+    .wp-contract::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px rgba(0,240,255,.3);
+      opacity: .6;
+    }
+    .wp-contract:hover {
+      border-color: rgba(0,240,255,.2);
+      box-shadow: 0 0 15px rgba(0,240,255,.06);
+    }
+    .wp-contract-name {
+      font-size: 12px;
+      color: var(--cyan);
+      font-weight: 500;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+      text-shadow: 0 0 6px rgba(0,240,255,.3);
+    }
+    .wp-contract-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ── Stats Row ── */
+    .wp-stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 24px 0;
+    }
+    .wp-stat {
+      flex: 1;
+      min-width: 100px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 20px 16px;
+      text-align: center;
+      backdrop-filter: blur(6px);
+      transition: all .3s;
+    }
+    .wp-stat:hover {
+      border-color: rgba(0,240,255,.2);
+      box-shadow: 0 0 15px rgba(0,240,255,.06);
+    }
+    .wp-stat-val {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 300;
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(0,240,255,.4);
+    }
+    .wp-stat-val--green {
+      color: var(--neon-green);
+      text-shadow: 0 0 10px rgba(57,255,20,.4);
+    }
+    .wp-stat-lbl {
+      font-size: 9px;
+      color: var(--dim);
+      letter-spacing: .12em;
+      margin-top: 6px;
+    }
+
+    /* ── Phase Table ── */
+    .wp-phase {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(0,240,255,.06);
+    }
     .wp-phase:last-child { border-bottom: none; }
-    .wp-phase-label { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; min-width: 80px; }
-    .wp-phase-action { font-size: 12px; color: rgba(255,255,255,0.5); flex: 1; }
-    .wp-phase-status { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; }
-    .wp-phase-status.done { color: #4ade80; }
-    .wp-phase-status.planned { color: rgba(255,255,255,0.25); }
+    .wp-phase-label {
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: .1em;
+      min-width: 90px;
+    }
+    .wp-phase-action {
+      font-size: 12px;
+      color: var(--muted);
+      flex: 1;
+    }
+    .wp-phase-status {
+      font-size: 10px;
+      letter-spacing: .1em;
+      font-weight: 600;
+    }
+    .wp-phase-status.done {
+      color: var(--neon-green);
+      text-shadow: 0 0 8px rgba(57,255,20,.4);
+    }
+    .wp-phase-status.planned { color: var(--dim); }
 
+    /* ── Conclusion footer ── */
+    .wp-conclusion-footer {
+      text-align: center;
+      margin-top: 48px;
+      padding: 48px 0;
+      border-top: 1px solid rgba(0,240,255,.06);
+    }
+    .wp-conclusion-tagline {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 300;
+      font-style: italic;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 24px;
+    }
+    .wp-conclusion-links {
+      font-size: 10px;
+      letter-spacing: .12em;
+      color: var(--dim);
+      line-height: 2.2;
+    }
+    .wp-conclusion-links a { color: var(--cyan); text-decoration: none; }
+    .wp-conclusion-links a:hover { text-shadow: 0 0 6px rgba(0,240,255,.4); }
+
+    /* ── Mission Quote ── */
+    .wp-mission-quote {
+      font-size: 16px;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 20px;
+      padding-left: 20px;
+      border-left: 2px solid var(--cyan);
+      box-shadow: -2px 0 10px rgba(0,240,255,.15);
+    }
+
+    /* ── Responsive ── */
     @media (max-width: 640px) {
-      .wp-body { padding: 80px 18px 60px; }
+      .wp-cover { min-height: auto; padding: 120px 18px 60px; }
+      .wp-wrap { padding: 0 18px 60px; }
       .wp-tier-grid { grid-template-columns: 1fr; }
       .wp-meta-grid { grid-template-columns: 1fr 1fr; }
       .wp-stats { flex-direction: column; }
+      .wp-phase { flex-wrap: wrap; gap: 6px; }
     }
   </style>
 
@@ -150,77 +498,85 @@
 </head>
 <body>
 
-<nav>
-  <div class="nav-logo">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <div class="nav-logomark">V</div>
-      <span class="nav-name">NEXVAULT</span>
-    </a>
-    <a href="/whitepaper" class="nav-pill-link">WHITEPAPER</a>
-    <a href="/about" class="nav-pill-link">ABOUT US</a>
-    <a href="/security" class="nav-pill-link">SECURITY</a>
-    <a href="/nexcredit" class="nav-pill-link">NEXCREDIT</a>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <div class="dot-live"></div>
-    <a href="/app" class="nav-launch-btn">◈ OPEN VAULT</a>
+<!-- Loader -->
+<div id="cyber-loader">
+  <div class="cl-mark">V</div>
+  <div class="cl-bar"><div class="cl-fill" style="width:0%"></div></div>
+  <div class="cl-pct">0%</div>
+</div>
+
+<!-- Grid Canvas -->
+<canvas id="cyber-grid"></canvas>
+
+<!-- Nav -->
+<nav class="c-nav">
+  <a href="/" class="c-nav-logo">
+    <div class="c-nav-mark">V</div>
+    <span class="c-nav-word">NEXVAULT</span>
+  </a>
+  <div class="c-nav-links">
+    <a href="/security" class="c-nav-link">SECURITY</a>
+    <a href="/nexcredit" class="c-nav-link">NEXCREDIT</a>
+    <a href="/about" class="c-nav-link">ABOUT</a>
+    <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
+    <a href="/app" class="c-nav-cta">OPEN VAULT</a>
   </div>
 </nav>
 
-<!-- Whitepaper Content -->
-<div class="wp-body">
+<!-- ── Cover ── -->
+<div class="wp-cover">
+  <div class="c-label rv">WHITEPAPER</div>
+  <h1 class="c-title glitch rv" data-text="Sovereign Yield Banking">Sovereign<br><em>Yield Banking</em></h1>
+  <p class="wp-cover-sub rv">for Every Human on Earth</p>
 
-  <!-- Cover -->
-  <div class="wp-cover">
-    <div class="wp-cover-label">WHITEPAPER</div>
-    <h1 class="wp-cover-title">Sovereign<br><em>Yield Banking</em></h1>
-    <p class="wp-cover-sub">for Every Human on Earth</p>
-
-    <div class="wp-meta-grid">
-      <div class="wp-meta-item">
-        <div class="wp-meta-label">Version</div>
-        <div class="wp-meta-val">2.0</div>
-      </div>
-      <div class="wp-meta-item">
-        <div class="wp-meta-label">Date</div>
-        <div class="wp-meta-val">2026</div>
-      </div>
-      <div class="wp-meta-item">
-        <div class="wp-meta-label">Network</div>
-        <div class="wp-meta-val">Nexus Exchange Layer 1</div>
-      </div>
-      <div class="wp-meta-item">
-        <div class="wp-meta-label">Asset</div>
-        <div class="wp-meta-val">USDX (Native Stablecoin)</div>
-      </div>
-      <div class="wp-meta-item">
-        <div class="wp-meta-label">Yield Source</div>
-        <div class="wp-meta-val">GYDS</div>
-      </div>
-      <div class="wp-meta-item">
-        <div class="wp-meta-label">Website</div>
-        <div class="wp-meta-val"><a href="https://nexvault.one">nexvault.one</a></div>
-      </div>
-      <div class="wp-meta-item">
-        <div class="wp-meta-label">GitHub</div>
-        <div class="wp-meta-val"><a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">nexvault-contracts</a></div>
-      </div>
-      <div class="wp-meta-item">
-        <div class="wp-meta-label">Test Results</div>
-        <div class="wp-meta-val" style="color:#4ade80">229 / 229 Passing</div>
-      </div>
+  <div class="wp-meta-grid rv">
+    <div class="wp-meta-card">
+      <div class="wp-meta-label">Version</div>
+      <div class="wp-meta-val">2.0</div>
+    </div>
+    <div class="wp-meta-card">
+      <div class="wp-meta-label">Date</div>
+      <div class="wp-meta-val">2026</div>
+    </div>
+    <div class="wp-meta-card">
+      <div class="wp-meta-label">Network</div>
+      <div class="wp-meta-val">Nexus Exchange Layer 1</div>
+    </div>
+    <div class="wp-meta-card">
+      <div class="wp-meta-label">Asset</div>
+      <div class="wp-meta-val">USDX (Native Stablecoin)</div>
+    </div>
+    <div class="wp-meta-card">
+      <div class="wp-meta-label">Yield Source</div>
+      <div class="wp-meta-val">GYDS</div>
+    </div>
+    <div class="wp-meta-card">
+      <div class="wp-meta-label">Website</div>
+      <div class="wp-meta-val"><a href="https://nexvault.one">nexvault.one</a></div>
+    </div>
+    <div class="wp-meta-card">
+      <div class="wp-meta-label">GitHub</div>
+      <div class="wp-meta-val"><a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">nexvault-contracts</a></div>
+    </div>
+    <div class="wp-meta-card">
+      <div class="wp-meta-label">Test Results</div>
+      <div class="wp-meta-val wp-meta-val--green">229 / 229 Passing</div>
     </div>
   </div>
+</div>
+
+<!-- ── Main Content ── -->
+<div class="wp-wrap">
 
   <!-- Disclaimer -->
-  <div class="wp-disclaimer">
+  <div class="wp-disclaimer rv">
     <div class="wp-disclaimer-title">CONFIDENTIAL &mdash; FOR INFORMATIONAL PURPOSES ONLY</div>
     <p>This document contains forward-looking statements and is provided for informational purposes only. NexVault smart contracts are unaudited at the time of initial launch. A professional security audit is actively being funded and will be published publicly upon completion. Deposit only amounts you are comfortable with until the audit report is released.</p>
   </div>
 
   <!-- Table of Contents -->
-  <div class="wp-toc" id="toc">
-    <div class="wp-toc-title">Table of Contents</div>
+  <div class="wp-toc rv" id="toc">
+    <div class="wp-toc-title">TABLE OF CONTENTS</div>
     <ol class="wp-toc-list">
       <li><a href="#abstract"><span class="wp-toc-num">1.</span> Abstract</a></li>
       <li><a href="#problem"><span class="wp-toc-num">2.</span> The Problem</a></li>
@@ -239,7 +595,7 @@
   </div>
 
   <!-- 1. Abstract -->
-  <div class="wp-section" id="abstract">
+  <div class="wp-section rv" id="abstract">
     <div class="wp-section-num">SECTION 1</div>
     <div class="wp-section-title">Abstract</div>
     <p class="wp-text">NexVault is the first dedicated USDX savings protocol built on the Nexus Exchange Layer 1 blockchain. It enables anyone on earth &mdash; regardless of location, net worth, or banking access &mdash; to deposit USDX and earn automatic, continuous yield powered entirely by Nexus's Global Yield Distribution System (GYDS).</p>
@@ -252,7 +608,7 @@
   <div class="wp-divider"></div>
 
   <!-- 2. The Problem -->
-  <div class="wp-section" id="problem">
+  <div class="wp-section rv" id="problem">
     <div class="wp-section-num">SECTION 2</div>
     <div class="wp-section-title">The Problem</div>
 
@@ -276,10 +632,10 @@
   <div class="wp-divider"></div>
 
   <!-- 3. Our Mission -->
-  <div class="wp-section" id="mission">
+  <div class="wp-section rv" id="mission">
     <div class="wp-section-num">SECTION 3</div>
     <div class="wp-section-title">Our Mission</div>
-    <p class="wp-text" style="font-size:16px;color:rgba(255,255,255,0.6);font-style:italic;margin-bottom:20px">Sovereign Yield Banking for Every Human on Earth</p>
+    <p class="wp-mission-quote">Sovereign Yield Banking for Every Human on Earth</p>
     <p class="wp-text">NexVault was built with a mission that extends beyond financial returns. We believe that access to yield-bearing savings is a basic component of financial dignity &mdash; not a privilege reserved for those born into the right banking system.</p>
     <p class="wp-text">A farmer in rural Cambodia with a smartphone and $20 deserves the same 4.44% APY as a fund manager in New York with $50 million. NexVault enforces this equality at the smart contract level &mdash; not as a marketing promise, but as an immutable on-chain reality.</p>
     <p class="wp-text">The protocol's developer earnings are not a destination. They are a vehicle. The vault architect decides where that vehicle is pointed &mdash; and publishes every decision publicly so holders can see exactly where the money goes and what it is building.</p>
@@ -288,7 +644,7 @@
   <div class="wp-divider"></div>
 
   <!-- 4. The NexVault Solution -->
-  <div class="wp-section" id="solution">
+  <div class="wp-section rv" id="solution">
     <div class="wp-section-num">SECTION 4</div>
     <div class="wp-section-title">The NexVault Solution</div>
     <p class="wp-text">NexVault is a non-custodial USDX savings vault deployed on the Nexus blockchain. It solves every problem described above with a single, elegant protocol layer.</p>
@@ -305,7 +661,7 @@
   <div class="wp-divider"></div>
 
   <!-- 5. USDX & the Nexus Ecosystem -->
-  <div class="wp-section" id="usdx">
+  <div class="wp-section rv" id="usdx">
     <div class="wp-section-num">SECTION 5</div>
     <div class="wp-section-title">USDX &amp; the Nexus Ecosystem</div>
     <p class="wp-text">USDX is the native stablecoin of the Nexus blockchain, pegged 1:1 to the U.S. Dollar. Unlike multi-chain stablecoins that fragment liquidity across networks, USDX is purpose-built for Nexus &mdash; optimized for low-cost, high-speed transactions on a chain designed specifically for verifiable finance.</p>
@@ -316,7 +672,7 @@
   <div class="wp-divider"></div>
 
   <!-- 6. GYDS -->
-  <div class="wp-section" id="gyds">
+  <div class="wp-section rv" id="gyds">
     <div class="wp-section-num">SECTION 6</div>
     <div class="wp-section-title">GYDS &mdash; Global Yield Distribution System</div>
     <p class="wp-text">GYDS is the yield engine behind NexVault. It is a protocol-level distribution system built into Nexus that channels yield from real-world assets to on-chain protocols proportional to their USDX TVL.</p>
@@ -336,24 +692,24 @@
   <div class="wp-divider"></div>
 
   <!-- 7. Yield Tier Architecture -->
-  <div class="wp-section" id="tiers">
+  <div class="wp-section rv" id="tiers">
     <div class="wp-section-num">SECTION 7</div>
     <div class="wp-section-title">Yield Tier Architecture</div>
     <p class="wp-text">NexVault offers three yield tiers. Each tier is a fixed-APY lock &mdash; the rate is set at deposit time and does not change for the full term. All tiers are available to everyone equally regardless of deposit size.</p>
 
     <div class="wp-tier-grid">
       <div class="wp-tier-card">
-        <div class="wp-tier-apy" style="color:#60a5fa">3.80%</div>
+        <div class="wp-tier-apy" style="color:var(--cyan);text-shadow:0 0 12px rgba(0,240,255,.4);">3.80%</div>
         <div class="wp-tier-name">1-YEAR LOCK</div>
         <div class="wp-tier-detail">365-day lock period. Entry-level commitment matching the 1-year U.S. Treasury rate. Fixed APY from day one.</div>
       </div>
       <div class="wp-tier-card">
-        <div class="wp-tier-apy" style="color:#a78bfa">4.10%</div>
+        <div class="wp-tier-apy" style="color:#a78bfa;text-shadow:0 0 12px rgba(167,139,250,.4);">4.10%</div>
         <div class="wp-tier-name">3-YEAR LOCK</div>
         <div class="wp-tier-detail">1,095-day lock period. Mid-range commitment for longer TVL stability and higher GYDS earnings per dollar.</div>
       </div>
       <div class="wp-tier-card featured">
-        <div class="wp-tier-apy" style="color:#c9a84c">4.44%</div>
+        <div class="wp-tier-apy" style="color:var(--magenta);text-shadow:0 0 14px rgba(255,0,255,.5);">4.44%</div>
         <div class="wp-tier-name">5-YEAR LOCK</div>
         <div class="wp-tier-detail">1,825-day lock period. Maximum commitment tier matching the 10-year U.S. Treasury yield of 4.44%.</div>
       </div>
@@ -366,10 +722,10 @@
   <div class="wp-divider"></div>
 
   <!-- 8. Vault Genesis Badge -->
-  <div class="wp-section" id="badge">
+  <div class="wp-section rv" id="badge">
     <div class="wp-section-num">SECTION 8</div>
     <div class="wp-section-title">Vault Genesis Badge</div>
-    <p class="wp-text" style="font-size:15px;color:rgba(255,255,255,0.55);font-style:italic;margin-bottom:16px">The First 5,000. Permanent. Irreversible. On-chain forever.</p>
+    <p class="wp-mission-quote">The First 5,000. Permanent. Irreversible. On-chain forever.</p>
     <p class="wp-text">The Vault Genesis Badge is a permanent on-chain ERC-721 NFT awarded automatically to the first 5,000 wallets to make a deposit into NexVault. It is minted by the smart contract on the depositor's first transaction &mdash; no additional steps required.</p>
     <p class="wp-text">The badge supply is hardcoded as a constant in the smart contract. 5,000 is the absolute maximum and can never be increased by any wallet including the deployer.</p>
 
@@ -379,14 +735,14 @@
     <div class="wp-h3">Rarity Tiers</div>
     <table class="wp-table">
       <thead>
-        <tr><th>Position</th><th>Rarity Tier</th><th>Description</th></tr>
+        <tr><th>POSITION</th><th>RARITY TIER</th><th>DESCRIPTION</th></tr>
       </thead>
       <tbody>
-        <tr><td>1 &ndash; 10</td><td style="color:#c9a84c">Founding Ten</td><td>The rarest Vault Genesis badges &mdash; 10 people on earth</td></tr>
-        <tr><td>11 &ndash; 100</td><td style="color:#c9a84c">Vault Sentinel</td><td>Among the earliest NexVault depositors globally</td></tr>
-        <tr><td>101 &ndash; 500</td><td style="color:#c9a84c">Vault Pioneer</td><td>Early protocol participant</td></tr>
-        <tr><td>501 &ndash; 1,000</td><td style="color:#c9a84c">Vault Architect</td><td>Founding thousand</td></tr>
-        <tr><td>1,001 &ndash; 5,000</td><td style="color:#c9a84c">Genesis</td><td>Vault Genesis status &mdash; closed once supply exhausted</td></tr>
+        <tr><td>1 &ndash; 10</td><td class="wp-rarity">Founding Ten</td><td>The rarest Vault Genesis badges &mdash; 10 people on earth</td></tr>
+        <tr><td>11 &ndash; 100</td><td class="wp-rarity">Vault Sentinel</td><td>Among the earliest NexVault depositors globally</td></tr>
+        <tr><td>101 &ndash; 500</td><td class="wp-rarity">Vault Pioneer</td><td>Early protocol participant</td></tr>
+        <tr><td>501 &ndash; 1,000</td><td class="wp-rarity">Vault Architect</td><td>Founding thousand</td></tr>
+        <tr><td>1,001 &ndash; 5,000</td><td class="wp-rarity">Genesis</td><td>Vault Genesis status &mdash; closed once supply exhausted</td></tr>
       </tbody>
     </table>
   </div>
@@ -394,10 +750,10 @@
   <div class="wp-divider"></div>
 
   <!-- 9. Smart Contract Architecture -->
-  <div class="wp-section" id="contracts">
+  <div class="wp-section rv" id="contracts">
     <div class="wp-section-num">SECTION 9</div>
     <div class="wp-section-title">Smart Contract Architecture</div>
-    <p class="wp-text">NexVault is built on four Solidity contracts deployed on NexusEVM &mdash; fully EVM-compatible with standard Hardhat and ethers.js tooling. All contracts are open source at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank" style="color:var(--gold)">github.com/NexVaultGH/nexvault-contracts</a>.</p>
+    <p class="wp-text">NexVault is built on four Solidity contracts deployed on NexusEVM &mdash; fully EVM-compatible with standard Hardhat and ethers.js tooling. All contracts are open source at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</p>
 
     <div class="wp-contract">
       <div class="wp-contract-name">ReferralRegistry.sol &mdash; Deploy 1st</div>
@@ -434,7 +790,7 @@
   <div class="wp-divider"></div>
 
   <!-- 10. Security & Transparency -->
-  <div class="wp-section" id="security">
+  <div class="wp-section rv" id="security">
     <div class="wp-section-num">SECTION 10</div>
     <div class="wp-section-title">Security &amp; Transparency</div>
 
@@ -445,7 +801,7 @@
 
     <div class="wp-stats">
       <div class="wp-stat">
-        <div class="wp-stat-val" style="color:#4ade80">229</div>
+        <div class="wp-stat-val wp-stat-val--green">229</div>
         <div class="wp-stat-lbl">PASSING TESTS</div>
       </div>
       <div class="wp-stat">
@@ -457,39 +813,39 @@
         <div class="wp-stat-lbl">ADMIN KEYS</div>
       </div>
       <div class="wp-stat">
-        <div class="wp-stat-val" style="color:#4ade80">OSS</div>
+        <div class="wp-stat-val wp-stat-val--green">OSS</div>
         <div class="wp-stat-lbl">OPEN SOURCE</div>
       </div>
     </div>
 
-    <p class="wp-text" style="margin-top:20px">All 229 unit tests pass across all four contracts. Tests cover deposits, withdrawals, yield calculations, lock enforcement, referral bonuses, genesis badges, compounding, GYDS integration, admin functions, dev earnings protection, and security edge cases. Full results available at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank" style="color:var(--gold)">github.com/NexVaultGH/nexvault-contracts</a>.</p>
+    <p class="wp-text" style="margin-top:20px">All 229 unit tests pass across all four contracts. Tests cover deposits, withdrawals, yield calculations, lock enforcement, referral bonuses, genesis badges, compounding, GYDS integration, admin functions, dev earnings protection, and security edge cases. Full results available at <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a>.</p>
 
     <div class="wp-h3">Our Transparency Pledge</div>
     <p class="wp-text">We will be honest about what is built and what is not. We will disclose risks openly. We will publish our audit when complete regardless of findings, and fix every issue before expanding marketing or TVL targets.</p>
 
     <div style="margin-top:20px">
       <div class="wp-phase">
-        <div class="wp-phase-label">Testing</div>
+        <div class="wp-phase-label">TESTING</div>
         <div class="wp-phase-action">Full test suite &mdash; 229/229 tests, all functions</div>
         <div class="wp-phase-status done">COMPLETE</div>
       </div>
       <div class="wp-phase">
-        <div class="wp-phase-label">Open Source</div>
+        <div class="wp-phase-label">OPEN SOURCE</div>
         <div class="wp-phase-action">All contracts published on GitHub</div>
         <div class="wp-phase-status done">COMPLETE</div>
       </div>
       <div class="wp-phase">
-        <div class="wp-phase-label">Community</div>
+        <div class="wp-phase-label">COMMUNITY</div>
         <div class="wp-phase-action">Community audit &mdash; first external review</div>
         <div class="wp-phase-status planned">PLANNED</div>
       </div>
       <div class="wp-phase">
-        <div class="wp-phase-label">Formal</div>
+        <div class="wp-phase-label">FORMAL</div>
         <div class="wp-phase-action">Full formal audit &mdash; primary target</div>
         <div class="wp-phase-status planned">PLANNED</div>
       </div>
       <div class="wp-phase">
-        <div class="wp-phase-label">Publication</div>
+        <div class="wp-phase-label">PUBLICATION</div>
         <div class="wp-phase-action">Public audit report at nexvault.one/security</div>
         <div class="wp-phase-status planned">UPON COMPLETION</div>
       </div>
@@ -499,7 +855,7 @@
   <div class="wp-divider"></div>
 
   <!-- 11. Tokenomics & Developer Economics -->
-  <div class="wp-section" id="tokenomics">
+  <div class="wp-section rv" id="tokenomics">
     <div class="wp-section-num">SECTION 11</div>
     <div class="wp-section-title">Tokenomics &amp; Developer Economics</div>
     <p class="wp-text">NexVault does not have a protocol token. No governance tokens, no liquidity mining rewards, no inflationary emissions. All yield comes from real USDX underlying asset returns distributed through GYDS.</p>
@@ -523,7 +879,7 @@
   <div class="wp-divider"></div>
 
   <!-- 12. Risk Disclosures -->
-  <div class="wp-section" id="risk">
+  <div class="wp-section rv" id="risk">
     <div class="wp-section-num">SECTION 12</div>
     <div class="wp-section-title">Risk Disclosures</div>
     <p class="wp-text">Interacting with any DeFi protocol involves risks. NexVault is committed to disclosing these clearly and honestly. Do not deposit funds you cannot afford to lose.</p>
@@ -556,26 +912,41 @@
   <div class="wp-divider"></div>
 
   <!-- 13. Conclusion -->
-  <div class="wp-section" id="conclusion">
+  <div class="wp-section rv" id="conclusion">
     <div class="wp-section-num">SECTION 13</div>
     <div class="wp-section-title">Conclusion</div>
     <p class="wp-text">NexVault exists because the current financial system was not built for everyone. It was built for those who already have access &mdash; to institutions, to yield, to capital formation. We are building something different.</p>
     <p class="wp-text">A non-custodial savings vault where a person with $20 and a phone earns the same percentage return as an institution with $20 million. Where yield is automatic, transparent, and sourced entirely from Nexus GYDS. Where the protocol's success is directed by the vault architect toward initiatives they choose &mdash; each decision published on-chain so every holder can see exactly where it goes.</p>
     <p class="wp-text">We are not the first DeFi protocol. We are not trying to be the most technically complex. We are trying to be the most honest, the most accessible, and the most purposefully directed toward something beyond profit. On Nexus &mdash; the first blockchain built specifically for verifiable finance &mdash; NexVault is the savings layer the world needs.</p>
 
-    <div style="text-align:center;margin-top:40px;padding:40px 0;border-top:1px solid rgba(255,255,255,0.04)">
-      <div style="font-family:'Playfair Display',serif;font-size:22px;color:rgba(255,255,255,0.7);font-weight:400;margin-bottom:20px;font-style:italic">Sovereign Yield Banking for Every Human on Earth</div>
-      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;color:rgba(255,255,255,0.2);line-height:2">
+    <div class="wp-conclusion-footer">
+      <div class="wp-conclusion-tagline">Sovereign Yield Banking for Every Human on Earth</div>
+      <div class="wp-conclusion-links">
         Built on Nexus &middot; Powered by GYDS &middot; Treasury-Backed Yield &middot; Non-Custodial &middot; Open Source &middot; 229/229 Tests Passing<br>
-        <a href="https://nexvault.one" style="color:var(--gold)">nexvault.one</a> &middot;
-        <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank" style="color:var(--gold)">github.com/NexVaultGH/nexvault-contracts</a> &middot;
-        <a href="/security" style="color:var(--gold)">nexvault.one/security</a>
+        <a href="https://nexvault.one">nexvault.one</a> &middot;
+        <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank">github.com/NexVaultGH/nexvault-contracts</a> &middot;
+        <a href="/security">nexvault.one/security</a>
       </div>
     </div>
   </div>
 
 </div>
 
-<footer>© 2026 NEXVAULT · BUILT ON NEXUS.XYZ</footer>
+<!-- Footer -->
+<footer class="c-footer">
+  <span class="c-footer-copy">&copy; 2026 NexVault</span>
+  <div class="c-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/nexcredit">NexCredit</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/whitepaper">Whitepaper</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script src="/nv-cyber.js"></script>
+
 </body>
 </html>

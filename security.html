@@ -1,551 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Security — NexVault Protocol</title>
-  <meta name="description" content="NexVault smart contract security — 229 passing tests, open source contracts, and full transparency on audit status." />
-
+  <meta name="description" content="NexVault smart contract security — 229 passing tests, open source contracts, and full transparency on audit status."/>
+  <link rel="icon" href="/favicon.ico" sizes="any"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-cyber.css">
   <style>
-    :root {
-      --gold: #c9a84c;
-      --gold-bright: #f0c040;
-      --gold-dim: rgba(201,168,76,0.15);
-      --bg: #05060a;
-      --bg2: #080b10;
-      --text: #e8e2d6;
-      --muted: #5a5650;
-      --border: rgba(201,168,76,0.12);
-      --green: #4ade80;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    #bg-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.4;
-    }
-
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 22px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(201,168,76,0.06);
-      background: rgba(5,6,10,0.7);
-      backdrop-filter: blur(20px);
-    }
-
-    .nav-logo { display: flex; align-items: center; gap: 12px; }
-    .nav-logomark {
-      width: 34px; height: 34px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #c9a84c, #8b6914);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 17px; font-weight: 700; color: #05060a;
-    }
-    .nav-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px; font-weight: 400;
-      letter-spacing: .12em; color: var(--text);
-    }
-    .nav-pill-link {
-      padding: 4px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(201,168,76,.2);
-      background: rgba(201,168,76,.06);
-      color: #c9a84c;
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: .1em;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all .2s;
-      white-space: nowrap;
-    }
-    .nav-pill-link:hover { background: rgba(201,168,76,.14); }
-    .nav-pill-link.active { background: rgba(201,168,76,.14); border-color: rgba(201,168,76,.35); }
-    .nav-launch-btn {
-      padding: 8px 18px;
-      border-radius: 9px;
-      border: 1px solid rgba(201,168,76,0.35);
-      background: rgba(201,168,76,0.08);
-      color: #c9a84c;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      letter-spacing: .08em;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all .2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      white-space: nowrap;
-    }
-    .nav-launch-btn:hover { background: rgba(201,168,76,0.15); }
-
-    /* hamburger */
-    .hamburger {
-      display: none; flex-direction: column; justify-content: center;
-      gap: 5px; cursor: pointer; padding: 6px;
-      border-radius: 6px; background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.08); margin-left: 8px;
-    }
-    .hamburger span { display: block; width: 20px; height: 2px; background: var(--gold); border-radius: 2px; }
-    .mobile-menu {
-      display: none; position: fixed; top: 56px; left: 0; right: 0;
-      background: rgba(5,6,10,.97); backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(201,168,76,.12);
-      flex-direction: column; align-items: stretch;
-      padding: 12px 16px 16px; gap: 6px; z-index: 999;
-    }
-    .mobile-menu a {
-      display: block; padding: 12px 16px; color: var(--text);
-      text-decoration: none; font-size: 13px; font-weight: 600;
-      letter-spacing: .08em; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.03);
-    }
-    .mobile-menu a.active { color: var(--gold); border-color: rgba(201,168,76,.2); background: rgba(201,168,76,.06); }
-    .mobile-menu a.launch { background: rgba(201,168,76,.1); border-color: rgba(201,168,76,.2); color: var(--gold); text-align: center; margin-top: 4px; }
-    .mobile-menu.open { display: flex; }
-
-    main {
+    /* ── Layout ── */
+    .sc-main {
       position: relative; z-index: 2;
       max-width: 900px; margin: 0 auto;
-      padding: 140px 24px 80px;
+      padding: 160px 24px 80px;
     }
 
     /* ── Hero ── */
-    .hero-eyebrow {
-      font-size: 10px; letter-spacing: .18em; color: var(--gold);
-      margin-bottom: 20px; font-weight: 500;
-    }
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(42px, 7vw, 72px);
-      font-weight: 300; line-height: 1.1;
-      color: var(--text); margin-bottom: 20px;
-    }
-    .hero-title em { font-style: italic; color: var(--gold); }
-    .hero-sub {
+    .sc-hero-title { font-size: clamp(42px,7vw,72px); }
+    .sc-hero-sub {
       font-size: 13px; color: var(--muted);
       line-height: 1.8; max-width: 560px; margin-bottom: 48px;
     }
 
-    /* ── Score banner ── */
-    .score-banner {
-      background: rgba(74,222,128,.04);
-      border: 1px solid rgba(74,222,128,.15);
-      border-radius: 16px;
-      padding: 32px 36px;
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      margin-bottom: 56px;
+    /* ── Score Banner ── */
+    .sc-score-banner {
+      background: rgba(57,255,20,.03);
+      border: 1px solid rgba(57,255,20,.12);
+      border-radius: 8px; padding: 36px 40px;
+      display: flex; align-items: center;
+      gap: 36px; margin-bottom: 60px;
       flex-wrap: wrap;
+      position: relative; overflow: hidden;
     }
-    .score-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 80px; font-weight: 300;
-      color: var(--green); line-height: 1;
-      flex-shrink: 0;
+    .sc-score-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(57,255,20,.4), transparent);
     }
-    .score-label { font-size: 11px; color: var(--green); letter-spacing: .12em; margin-bottom: 6px; }
-    .score-desc { font-size: 13px; color: var(--muted); line-height: 1.8; max-width: 420px; }
-    .score-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.2);
-      border-radius: 20px; padding: 5px 14px;
-      font-size: 10px; color: var(--green); letter-spacing: .1em;
-      font-weight: 500; margin-top: 12px;
+    .sc-score-num {
+      font-family: var(--font-display);
+      font-size: 88px; font-weight: 300;
+      color: var(--neon-green);
+      text-shadow: 0 0 20px rgba(57,255,20,.4), 0 0 60px rgba(57,255,20,.15);
+      line-height: 1; flex-shrink: 0;
     }
-    .score-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .sc-score-label {
+      font-size: 10px; color: var(--neon-green);
+      letter-spacing: .14em; margin-bottom: 8px;
+      text-shadow: 0 0 8px rgba(57,255,20,.3);
+    }
+    .sc-score-desc {
+      font-size: 13px; color: var(--muted);
+      line-height: 1.8; max-width: 440px;
+    }
+    .sc-score-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(57,255,20,.06);
+      border: 1px solid rgba(57,255,20,.18);
+      border-radius: 20px; padding: 6px 16px;
+      font-size: 10px; color: var(--neon-green);
+      letter-spacing: .1em; font-weight: 500;
+      margin-top: 14px;
+      text-shadow: 0 0 6px rgba(57,255,20,.3);
+    }
+    .sc-score-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--neon-green);
+      box-shadow: 0 0 8px rgba(57,255,20,.6);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+      0%,100% { box-shadow: 0 0 6px rgba(57,255,20,.4); }
+      50% { box-shadow: 0 0 14px rgba(57,255,20,.8); }
+    }
 
     /* ── Section ── */
-    .section { margin-bottom: 56px; }
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
+    .sc-section { margin-bottom: 60px; }
+    .sc-section-title {
+      font-family: var(--font-display);
       font-size: 28px; font-weight: 400;
-      color: var(--text); margin-bottom: 6px;
+      color: var(--text-bright); margin-bottom: 8px;
     }
-    .section-line {
-      width: 40px; height: 1px; background: var(--gold);
-      opacity: .4; margin-bottom: 24px;
+    .sc-section-line {
+      width: 48px; height: 1px;
+      background: var(--cyan);
+      box-shadow: 0 0 8px rgba(0,240,255,.3);
+      margin-bottom: 28px;
     }
 
-    /* ── Test grid ── */
-    .test-grid {
+    /* ── Test Grid ── */
+    .sc-test-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 12px;
+      gap: 14px;
     }
-    .test-card {
-      background: rgba(255,255,255,.02);
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: 10px;
-      padding: 14px 16px;
+    .sc-test-card { padding: 24px; }
+    .sc-test-card:hover {
+      border-color: rgba(57,255,20,.2);
+      box-shadow: 0 0 30px rgba(57,255,20,.06), inset 0 0 30px rgba(57,255,20,.02);
     }
-    .test-card-title {
-      font-size: 11px; color: var(--gold); letter-spacing: .08em;
-      font-weight: 500; margin-bottom: 8px; text-transform: uppercase;
+    .sc-test-card::before {
+      background: linear-gradient(90deg, transparent, rgba(57,255,20,.3), transparent);
     }
-    .test-item {
-      display: flex; align-items: flex-start; gap: 8px;
+    .sc-test-card-title {
+      font-size: 11px; color: var(--cyan);
+      letter-spacing: .1em; font-weight: 500;
+      margin-bottom: 12px; text-transform: uppercase;
+      text-shadow: 0 0 6px rgba(0,240,255,.3);
+    }
+    .sc-test-item {
+      display: flex; align-items: flex-start; gap: 10px;
       font-size: 11px; color: var(--muted); line-height: 1.6;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
-    .test-check { color: var(--green); flex-shrink: 0; margin-top: 1px; }
-
-    /* ── Property rows ── */
-    .prop-row {
-      display: flex; align-items: flex-start; gap: 14px;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(255,255,255,.04);
+    .sc-test-check {
+      color: var(--neon-green);
+      flex-shrink: 0; margin-top: 1px;
+      text-shadow: 0 0 6px rgba(57,255,20,.5);
+      font-weight: 700;
     }
-    .prop-row:last-child { border-bottom: none; }
-    .prop-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-    .prop-title { font-size: 13px; color: var(--text); font-weight: 500; margin-bottom: 3px; }
-    .prop-desc { font-size: 11px; color: var(--muted); line-height: 1.7; }
 
-    /* ── Audit notice ── */
-    .audit-box {
-      background: rgba(251,191,36,.04);
-      border: 1px solid rgba(251,191,36,.14);
-      border-radius: 12px;
-      padding: 24px 28px;
+    /* ── Security Properties ── */
+    .sc-prop-row {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(0,240,255,.05);
     }
-    .audit-title { font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 8px; letter-spacing: .05em; }
-    .audit-desc { font-size: 12px; color: var(--muted); line-height: 1.8; }
-
-    /* ── GitHub link ── */
-    .github-row {
-      display: flex; align-items: center; gap: 16px;
-      background: rgba(255,255,255,.02);
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 12px;
-      padding: 20px 24px;
-      text-decoration: none;
-      transition: border-color .2s;
-      margin-bottom: 12px;
+    .sc-prop-row:last-child { border-bottom: none; }
+    .sc-prop-icon {
+      font-size: 22px; flex-shrink: 0; margin-top: 2px;
+      filter: drop-shadow(0 0 6px rgba(0,240,255,.3));
     }
-    .github-row:hover { border-color: rgba(201,168,76,.2); }
-    .github-icon { font-size: 24px; flex-shrink: 0; }
-    .github-label { font-size: 12px; color: var(--text); font-weight: 500; margin-bottom: 3px; }
-    .github-sub { font-size: 10px; color: var(--muted); letter-spacing: .06em; }
-    .github-arrow { margin-left: auto; color: var(--muted); font-size: 16px; }
+    .sc-prop-title {
+      font-size: 13px; color: var(--text-bright);
+      font-weight: 500; margin-bottom: 4px;
+    }
+    .sc-prop-desc {
+      font-size: 11px; color: var(--muted); line-height: 1.7;
+    }
 
-    footer {
-      position: relative; z-index: 2;
-      padding: 32px 40px;
-      border-top: 1px solid rgba(255,255,255,.04);
-      text-align: center;
+    /* ── GitHub Card ── */
+    .sc-github {
+      display: flex; align-items: center; gap: 18px;
+      text-decoration: none; margin-bottom: 14px;
+    }
+    .sc-github:hover {
+      border-color: rgba(0,240,255,.3);
+      box-shadow: 0 0 30px rgba(0,240,255,.1), inset 0 0 30px rgba(0,240,255,.03);
+    }
+    .sc-github-icon {
+      font-size: 26px; flex-shrink: 0;
+      filter: drop-shadow(0 0 8px rgba(0,240,255,.3));
+    }
+    .sc-github-label {
+      font-size: 13px; color: var(--text-bright);
+      font-weight: 500; margin-bottom: 3px;
+    }
+    .sc-github-sub {
       font-size: 10px; color: var(--muted);
-      letter-spacing: .1em;
+      letter-spacing: .08em;
+    }
+    .sc-github-arrow {
+      margin-left: auto;
+      color: var(--cyan);
+      font-size: 18px;
+      text-shadow: 0 0 8px rgba(0,240,255,.4);
     }
 
+    /* ── Audit Box ── */
+    .sc-audit-box {
+      border: 1px solid rgba(255,0,255,.2);
+      border-left: 3px solid var(--magenta);
+      box-shadow: -4px 0 30px rgba(255,0,255,.06);
+    }
+    .sc-audit-box::before {
+      background: linear-gradient(90deg, transparent, rgba(255,0,255,.3), transparent);
+    }
+    .sc-audit-title {
+      font-size: 13px; color: var(--magenta);
+      font-weight: 600; margin-bottom: 10px;
+      letter-spacing: .06em;
+      text-shadow: 0 0 8px rgba(255,0,255,.4);
+    }
+    .sc-audit-desc {
+      font-size: 12px; color: var(--muted); line-height: 1.8;
+    }
+    .sc-audit-desc strong {
+      color: var(--text-bright); font-weight: 500;
+    }
+
+    /* ── Open Source Text ── */
+    .sc-oss-note {
+      font-size: 11px; color: var(--muted); line-height: 1.8;
+    }
+
+    /* ── Responsive ── */
     @media (max-width: 640px) {
-      nav { padding: 16px 20px; }
-      .nav-pill-link { display: none; }
-      .hamburger { display: flex !important; }
-      main { padding: 110px 18px 60px; }
-      .score-banner { padding: 24px 20px; gap: 20px; }
-      .score-num { font-size: 60px; }
-      .audit-box { padding: 20px; }
+      .sc-main { padding: 120px 18px 60px; }
+      .sc-score-banner { padding: 24px 20px; gap: 20px; }
+      .sc-score-num { font-size: 60px; }
     }
   </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<div id="cyber-loader"><div class="cl-mark">V</div><div class="cl-bar"><div class="cl-fill"></div></div><div class="cl-pct">0%</div></div>
+<canvas id="cyber-grid"></canvas>
 
-<nav>
-  <div class="nav-logo">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <div class="nav-logomark">V</div>
-      <span class="nav-name">NEXVAULT</span>
-    </a>
-    <a href="/whitepaper" target="_blank" class="nav-pill-link">↓ WHITEPAPER</a>
-    <a href="/about" class="nav-pill-link">ABOUT US</a>
-    <a href="/security" class="nav-pill-link active">SECURITY</a>
-    <a href="/nexcredit" class="nav-pill-link">NEXCREDIT</a>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <a href="/app" class="nav-launch-btn">◈ LAUNCH APP</a>
-    <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
-      <span></span><span></span><span></span>
-    </div>
+<!-- Nav -->
+<nav class="c-nav">
+  <a href="/" class="c-nav-logo"><div class="c-nav-mark">V</div><span class="c-nav-word">NEXVAULT</span></a>
+  <div class="c-nav-links">
+    <a href="/security" class="c-nav-link">SECURITY</a>
+    <a href="/nexcredit" class="c-nav-link">NEXCREDIT</a>
+    <a href="/about" class="c-nav-link">ABOUT</a>
+    <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
+    <a href="/app" class="c-nav-cta">OPEN VAULT</a>
   </div>
 </nav>
 
-<div class="mobile-menu" id="mobile-menu">
-  <a href="/whitepaper" target="_blank">↓ WHITEPAPER</a>
-  <a href="/about">ABOUT US</a>
-  <a href="/security" class="active">SECURITY</a>
-  <a href="/app" class="launch">◈ LAUNCH APP</a>
-</div>
-
-<main>
+<main class="sc-main">
 
   <!-- Hero -->
-  <div class="hero-eyebrow">◈ CONTRACT SECURITY</div>
-  <h1 class="hero-title">Built to be<br><em>Verified</em></h1>
-  <p class="hero-sub">
+  <div class="c-label rv">CONTRACT SECURITY</div>
+  <h1 class="c-title sc-hero-title rv rv-d1">Built to be<br><em>Verified</em></h1>
+  <p class="sc-hero-sub rv rv-d2">
     NexVault smart contracts are open source, fully tested, and written with security as the first priority.
     Every critical property is enforced on-chain — not by trust.
   </p>
 
-  <!-- Score banner -->
-  <div class="score-banner">
-    <div class="score-num">229</div>
+  <!-- Score Banner -->
+  <div class="sc-score-banner rv rv-d3">
+    <div class="sc-score-num"><span class="counter" data-target="229">0</span></div>
     <div>
-      <div class="score-label">TEST RESULTS · APRIL 2026</div>
-      <div class="score-desc">
+      <div class="sc-score-label">TEST RESULTS · APRIL 2026</div>
+      <div class="sc-score-desc">
         229 out of 229 unit tests passing across all five contracts.
         Tests cover deposits, withdrawals, yield calculations, lock periods,
         referral bonuses, genesis badges, compounding, credit scoring, and security edge cases.
       </div>
-      <div class="score-badge">
-        <div class="score-dot"></div>
+      <div class="sc-score-badge">
+        <div class="sc-score-dot"></div>
         229 / 229 PASSING · 0 FAILING
       </div>
     </div>
   </div>
 
-  <!-- Test coverage -->
-  <div class="section">
-    <div class="section-title">Test Coverage</div>
-    <div class="section-line"></div>
-    <div class="test-grid">
+  <!-- Test Coverage -->
+  <div class="sc-section rv">
+    <div class="sc-section-title">Test Coverage</div>
+    <div class="sc-section-line"></div>
+    <div class="sc-test-grid">
 
-      <div class="test-card">
-        <div class="test-card-title">Deployment</div>
-        <div class="test-item"><span class="test-check">✓</span>All 4 contracts deploy correctly</div>
-        <div class="test-item"><span class="test-check">✓</span>Non-owner deploy rejected on-chain</div>
-        <div class="test-item"><span class="test-check">✓</span>Owner constant verified across all contracts</div>
-        <div class="test-item"><span class="test-check">✓</span>Zero balances at deploy confirmed</div>
+      <div class="c-card sc-test-card rv rv-d1">
+        <div class="sc-test-card-title">Deployment</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>All 4 contracts deploy correctly</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Non-owner deploy rejected on-chain</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Owner constant verified across all contracts</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Zero balances at deploy confirmed</div>
       </div>
 
-      <div class="test-card">
-        <div class="test-card-title">Deposits</div>
-        <div class="test-item"><span class="test-check">✓</span>All 3 yield tiers accepted (1-Year, 3-Year, 5-Year)</div>
-        <div class="test-item"><span class="test-check">✓</span>Lock end timestamps verified per tier (365d, 1095d, 1825d)</div>
-        <div class="test-item"><span class="test-check">✓</span>Zero deposit reverts correctly</div>
-        <div class="test-item"><span class="test-check">✓</span>Emergency pause blocks deposits only</div>
-        <div class="test-item"><span class="test-check">✓</span>Genesis badge minted on first deposit</div>
+      <div class="c-card sc-test-card rv rv-d2">
+        <div class="sc-test-card-title">Deposits</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>All 3 yield tiers accepted (1-Year, 3-Year, 5-Year)</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Lock end timestamps verified per tier (365d, 1095d, 1825d)</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Zero deposit reverts correctly</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Emergency pause blocks deposits only</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Genesis badge minted on first deposit</div>
       </div>
 
-      <div class="test-card">
-        <div class="test-card-title">Withdrawals</div>
-        <div class="test-item"><span class="test-check">✓</span>LOCK_1YR, LOCK_3YR, LOCK_5YR enforced</div>
-        <div class="test-item"><span class="test-check">✓</span>Early withdrawal reverts before lock expires</div>
-        <div class="test-item"><span class="test-check">✓</span>Full principal returned on exit</div>
-        <div class="test-item"><span class="test-check">✓</span>Double-withdrawal rejected</div>
-        <div class="test-item"><span class="test-check">✓</span>Cross-user isolation confirmed</div>
+      <div class="c-card sc-test-card rv rv-d3">
+        <div class="sc-test-card-title">Withdrawals</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>LOCK_1YR, LOCK_3YR, LOCK_5YR enforced</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Early withdrawal reverts before lock expires</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Full principal returned on exit</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Double-withdrawal rejected</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Cross-user isolation confirmed</div>
       </div>
 
-      <div class="test-card">
-        <div class="test-card-title">Yield & Compounding</div>
-        <div class="test-item"><span class="test-check">✓</span>Yield accrues correctly per tier APY</div>
-        <div class="test-item"><span class="test-check">✓</span>5YR > 3YR > 1YR ordering</div>
-        <div class="test-item"><span class="test-check">✓</span>No funds leave vault when compounding</div>
-        <div class="test-item"><span class="test-check">✓</span>Dev 10% cut calculated correctly</div>
-        <div class="test-item"><span class="test-check">✓</span>Unauthorized compound rejected</div>
+      <div class="c-card sc-test-card rv rv-d1">
+        <div class="sc-test-card-title">Yield & Compounding</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Yield accrues correctly per tier APY</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>5YR > 3YR > 1YR ordering</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>No funds leave vault when compounding</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Dev 10% cut calculated correctly</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Unauthorized compound rejected</div>
       </div>
 
-      <div class="test-card">
-        <div class="test-card-title">Referral Registry</div>
-        <div class="test-item"><span class="test-check">✓</span>Referral registered on first deposit</div>
-        <div class="test-item"><span class="test-check">✓</span>Self-referral silently blocked</div>
-        <div class="test-item"><span class="test-check">✓</span>Max 4 referrals cap enforced</div>
-        <div class="test-item"><span class="test-check">✓</span>+50 bps bonus per referral confirmed</div>
-        <div class="test-item"><span class="test-check">✓</span>Bonus reflected in yield earned</div>
+      <div class="c-card sc-test-card rv rv-d2">
+        <div class="sc-test-card-title">Referral Registry</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Referral registered on first deposit</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Self-referral silently blocked</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Max 4 referrals cap enforced</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>+50 bps bonus per referral confirmed</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Bonus reflected in yield earned</div>
       </div>
 
-      <div class="test-card">
-        <div class="test-card-title">Security</div>
-        <div class="test-item"><span class="test-check">✓</span>Owner cannot touch user principal</div>
-        <div class="test-item"><span class="test-check">✓</span>Reentrancy guard verified</div>
-        <div class="test-item"><span class="test-check">✓</span>All admin functions owner-only</div>
-        <div class="test-item"><span class="test-check">✓</span>Withdrawals open while paused</div>
-        <div class="test-item"><span class="test-check">✓</span>Dev earnings capped by invariant</div>
+      <div class="c-card sc-test-card rv rv-d3">
+        <div class="sc-test-card-title">Security</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Owner cannot touch user principal</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Reentrancy guard verified</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>All admin functions owner-only</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Withdrawals open while paused</div>
+        <div class="sc-test-item"><span class="sc-test-check">&#10003;</span>Dev earnings capped by invariant</div>
       </div>
 
     </div>
   </div>
 
-  <!-- Security properties -->
-  <div class="section">
-    <div class="section-title">On-Chain Security Properties</div>
-    <div class="section-line"></div>
+  <!-- On-Chain Security Properties -->
+  <div class="sc-section rv">
+    <div class="sc-section-title">On-Chain Security Properties</div>
+    <div class="sc-section-line"></div>
     <div>
-      <div class="prop-row">
-        <div class="prop-icon">🔒</div>
+      <div class="sc-prop-row rv rv-d1">
+        <div class="sc-prop-icon">&#128274;</div>
         <div>
-          <div class="prop-title">Principal is mathematically protected</div>
-          <div class="prop-desc">The owner can never withdraw user principal. The contract enforces that vault balance must always cover total deposits before any dev earnings can be claimed. This check cannot be bypassed.</div>
+          <div class="sc-prop-title">Principal is mathematically protected</div>
+          <div class="sc-prop-desc">The owner can never withdraw user principal. The contract enforces that vault balance must always cover total deposits before any dev earnings can be claimed. This check cannot be bypassed.</div>
         </div>
       </div>
-      <div class="prop-row">
-        <div class="prop-icon">⏱</div>
+      <div class="sc-prop-row rv rv-d2">
+        <div class="sc-prop-icon">&#9201;</div>
         <div>
-          <div class="prop-title">Lock periods enforced by the blockchain</div>
-          <div class="prop-desc">1-year, 3-year, and 5-year locks are enforced by on-chain timestamps. No one — including the owner — can unlock a deposit early.</div>
+          <div class="sc-prop-title">Lock periods enforced by the blockchain</div>
+          <div class="sc-prop-desc">1-year, 3-year, and 5-year locks are enforced by on-chain timestamps. No one — including the owner — can unlock a deposit early.</div>
         </div>
       </div>
-      <div class="prop-row">
-        <div class="prop-icon">🛡</div>
+      <div class="sc-prop-row rv rv-d3">
+        <div class="sc-prop-icon">&#128737;</div>
         <div>
-          <div class="prop-title">Reentrancy protection on all state-changing functions</div>
-          <div class="prop-desc">Every deposit, withdrawal, claim, and compound function uses OpenZeppelin's ReentrancyGuard. Follows the Checks-Effects-Interactions pattern throughout.</div>
+          <div class="sc-prop-title">Reentrancy protection on all state-changing functions</div>
+          <div class="sc-prop-desc">Every deposit, withdrawal, claim, and compound function uses OpenZeppelin's ReentrancyGuard. Follows the Checks-Effects-Interactions pattern throughout.</div>
         </div>
       </div>
-      <div class="prop-row">
-        <div class="prop-icon">🔑</div>
+      <div class="sc-prop-row rv rv-d1">
+        <div class="sc-prop-icon">&#128273;</div>
         <div>
-          <div class="prop-title">Hardcoded owner — no ownership transfer possible</div>
-          <div class="prop-desc">The owner address is a compile-time constant. There is no transfer function, no proxy, and no upgradeable pattern. What is deployed is permanent.</div>
+          <div class="sc-prop-title">Hardcoded owner — no ownership transfer possible</div>
+          <div class="sc-prop-desc">The owner address is a compile-time constant. There is no transfer function, no proxy, and no upgradeable pattern. What is deployed is permanent.</div>
         </div>
       </div>
-      <div class="prop-row">
-        <div class="prop-icon">🚨</div>
+      <div class="sc-prop-row rv rv-d2">
+        <div class="sc-prop-icon">&#128680;</div>
         <div>
-          <div class="prop-title">Emergency pause only blocks deposits</div>
-          <div class="prop-desc">If the owner activates emergency pause, new deposits stop. Withdrawals remain open at all times. Users can always retrieve their funds.</div>
+          <div class="sc-prop-title">Emergency pause only blocks deposits</div>
+          <div class="sc-prop-desc">If the owner activates emergency pause, new deposits stop. Withdrawals remain open at all times. Users can always retrieve their funds.</div>
         </div>
       </div>
-      <div class="prop-row">
-        <div class="prop-icon">⚡</div>
+      <div class="sc-prop-row rv rv-d3">
+        <div class="sc-prop-icon">&#9889;</div>
         <div>
-          <div class="prop-title">No flash loan surface, no price oracle</div>
-          <div class="prop-desc">Yield is calculated on elapsed time only — no spot price, no oracle, no external dependency. Flash loans cannot manipulate yield calculations.</div>
+          <div class="sc-prop-title">No flash loan surface, no price oracle</div>
+          <div class="sc-prop-desc">Yield is calculated on elapsed time only — no spot price, no oracle, no external dependency. Flash loans cannot manipulate yield calculations.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- GitHub -->
-  <div class="section">
-    <div class="section-title">Open Source</div>
-    <div class="section-line"></div>
-    <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank" class="github-row">
-      <div class="github-icon">⌥</div>
+  <!-- Open Source -->
+  <div class="sc-section rv">
+    <div class="sc-section-title">Open Source</div>
+    <div class="sc-section-line"></div>
+    <a href="https://github.com/NexVaultGH/nexvault-contracts" target="_blank" class="c-card sc-github rv rv-d1">
+      <div class="sc-github-icon">&#9256;</div>
       <div>
-        <div class="github-label">NexVaultGH / nexvault-contracts</div>
-        <div class="github-sub">GITHUB · PUBLIC REPOSITORY · VIEW SOURCE CODE & TEST RESULTS</div>
+        <div class="sc-github-label">NexVaultGH / nexvault-contracts</div>
+        <div class="sc-github-sub">GITHUB · PUBLIC REPOSITORY · VIEW SOURCE CODE & TEST RESULTS</div>
       </div>
-      <div class="github-arrow">↗</div>
+      <div class="sc-github-arrow">&#8599;</div>
     </a>
-    <p style="font-size:11px;color:var(--muted);line-height:1.8">
+    <p class="sc-oss-note rv rv-d2">
       All contract source code, the full test suite, and raw test output are publicly available.
       Anyone can clone the repository, run the tests, and verify the results independently.
     </p>
   </div>
 
-  <!-- Audit notice -->
-  <div class="section">
-    <div class="section-title">Audit Status</div>
-    <div class="section-line"></div>
-    <div class="audit-box">
-      <div class="audit-title">⏳ INDEPENDENT AUDIT — IN PROGRESS</div>
-      <div class="audit-desc">
+  <!-- Audit Status -->
+  <div class="sc-section rv">
+    <div class="sc-section-title">Audit Status</div>
+    <div class="sc-section-line"></div>
+    <div class="c-card sc-audit-box rv rv-d1">
+      <div class="sc-audit-title">INDEPENDENT AUDIT — IN PROGRESS</div>
+      <div class="sc-audit-desc">
         NexVault will launch on Nexus mainnet before a formal third-party audit is complete.
         A professional security audit is actively being funded and will be published here publicly once complete.<br><br>
         The 229 passing tests above verify that the contracts behave as intended.
         An audit looks for unknown attack vectors beyond the test suite.
         We are transparent about this distinction.<br><br>
-        <strong style="color:var(--text);font-weight:500">Deposit only what you are comfortable with during this pre-audit period.</strong>
+        <strong>Deposit only what you are comfortable with during this pre-audit period.</strong>
       </div>
     </div>
   </div>
 
 </main>
 
-<footer>© 2026 NEXVAULT · BUILT ON NEXUS.XYZ</footer>
+<!-- Footer -->
+<footer class="c-footer">
+  <span class="c-footer-copy">&copy; 2026 NexVault</span>
+  <div class="c-footer-links">
+    <a href="/about">About</a><a href="/security">Security</a><a href="/nexcredit">NexCredit</a>
+    <a href="/proof">Proof</a><a href="/news">News</a><a href="/whitepaper">Whitepaper</a><a href="/terms">Terms</a>
+  </div>
+</footer>
 
-<script>
-  // ── Particle background ────────────────────────────
-  const canvas = document.getElementById('bg-canvas')
-  const ctx = canvas.getContext('2d')
-  let W, H, particles = []
-
-  function resize() {
-    W = canvas.width  = window.innerWidth
-    H = canvas.height = window.innerHeight
-  }
-  resize()
-  window.addEventListener('resize', resize)
-
-  for (let i = 0; i < 60; i++) {
-    particles.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      r: Math.random() * 1.2 + .3,
-      dx: (Math.random() - .5) * .18,
-      dy: (Math.random() - .5) * .18,
-      a: Math.random() * .5 + .1
-    })
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H)
-    particles.forEach(p => {
-      ctx.beginPath()
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(201,168,76,${p.a})`
-      ctx.fill()
-      p.x += p.dx; p.y += p.dy
-      if (p.x < 0 || p.x > W) p.dx *= -1
-      if (p.y < 0 || p.y > H) p.dy *= -1
-    })
-    requestAnimationFrame(draw)
-  }
-  draw()
-
-  // ── Mobile menu ──────────────────────────────────
-  function toggleMobileMenu() {
-    const menu   = document.getElementById('mobile-menu')
-    const burger = document.getElementById('hamburger')
-    const isOpen = menu.classList.toggle('open')
-    burger.style.background = isOpen ? 'rgba(201,168,76,.15)' : 'rgba(255,255,255,.05)'
-  }
-  document.addEventListener('click', e => {
-    const menu   = document.getElementById('mobile-menu')
-    const burger = document.getElementById('hamburger')
-    if (!menu.contains(e.target) && !burger.contains(e.target)) {
-      menu.classList.remove('open')
-      burger.style.background = 'rgba(255,255,255,.05)'
-    }
-  })
-</script>
-
+<script src="/nv-cyber.js"></script>
 </body>
 </html>

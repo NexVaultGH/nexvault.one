@@ -11,7 +11,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#05050f" />
 
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://nexvault.one/news" />
@@ -55,23 +55,14 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,.06);background:rgba(5,6,10,.8);backdrop-filter:blur(20px)}
-    .nav-logo{display:flex;align-items:center;gap:12px}
-    .nav-logomark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#c9a84c,#8b6914);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#05060a}
-    .nav-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;letter-spacing:.12em;color:#e8e2d6}
-    .nav-pill-link{padding:4px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.06);color:#c9a84c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:600;text-decoration:none;transition:all .2s;white-space:nowrap}
-    .nav-pill-link:hover{background:rgba(201,168,76,.14)}
-    .nav-launch-btn{padding:8px 18px;border-radius:9px;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:#c9a84c;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;font-weight:600;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
-    .nav-launch-btn:hover{background:rgba(201,168,76,.15)}
-    .dot-live{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.4)}
-    footer{text-align:center;padding:40px 20px;font-size:11px;color:#5a5650;letter-spacing:.1em;border-top:1px solid rgba(255,255,255,.04)}
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-cyber.css">
 
+  <style>
     /* ── Hero ── */
     .news-hero {
       min-height: 50vh; display: flex; align-items: center; justify-content: center;
-      text-align: center; padding: 140px 24px 80px;
+      text-align: center; padding: 140px 24px 80px; position: relative; z-index: 1;
     }
     .news-hero-content { max-width: 680px; }
 
@@ -79,76 +70,129 @@
     .filter-bar {
       max-width: 900px; margin: 0 auto 48px; padding: 0 24px;
       display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      position: relative; z-index: 2;
     }
     .filter-btn {
-      padding: 6px 16px; border-radius: 20px;
-      border: 1px solid var(--border); background: transparent;
-      color: var(--text-muted); font-family: var(--font); font-size: 11px;
-      letter-spacing: 0.08em; font-weight: 500; cursor: pointer; transition: all 0.2s;
+      padding: 7px 18px; border-radius: 3px;
+      border: 1px solid rgba(0,240,255,.1); background: transparent;
+      color: var(--muted); font-family: var(--font); font-size: 11px;
+      letter-spacing: .1em; font-weight: 500; cursor: pointer;
+      transition: all .3s;
     }
-    .filter-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
-    .filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.06); }
+    .filter-btn:hover {
+      border-color: rgba(0,240,255,.25); color: var(--text);
+      text-shadow: 0 0 6px rgba(0,240,255,.2);
+    }
+    .filter-btn.active {
+      border-color: var(--cyan); color: var(--cyan);
+      background: rgba(0,240,255,.06);
+      text-shadow: 0 0 8px rgba(0,240,255,.4);
+      box-shadow: 0 0 12px rgba(0,240,255,.1);
+    }
 
     /* ── Tag pills ── */
     .tag-pill {
-      display: inline-block; padding: 3px 10px; border-radius: 4px;
-      font-size: 9px; letter-spacing: 0.12em; font-weight: 700;
+      display: inline-block; padding: 3px 10px; border-radius: 3px;
+      font-size: 9px; letter-spacing: .14em; font-weight: 700;
     }
-    .tag-protocol { background: rgba(201,168,76,0.10); color: #c9a84c; }
-    .tag-defi     { background: rgba(99,102,241,0.10); color: #818cf8; }
-    .tag-market   { background: rgba(34,197,94,0.08);  color: #4ade80; }
-    .tag-education{ background: rgba(56,189,248,0.08); color: #38bdf8; }
-    .tag-security { background: rgba(239,68,68,0.08);  color: #f87171; }
-    .tag-ai       { background: rgba(168,85,247,0.10); color: #c084fc; }
+    .tag-protocol {
+      background: rgba(0,240,255,.08); color: var(--cyan);
+      text-shadow: 0 0 6px rgba(0,240,255,.3);
+    }
+    .tag-defi {
+      background: rgba(255,0,255,.08); color: var(--magenta);
+      text-shadow: 0 0 6px rgba(255,0,255,.3);
+    }
+    .tag-market {
+      background: rgba(57,255,20,.06); color: var(--neon-green);
+      text-shadow: 0 0 6px rgba(57,255,20,.3);
+    }
+    .tag-education {
+      background: rgba(56,189,248,.08); color: #38bdf8;
+      text-shadow: 0 0 6px rgba(56,189,248,.3);
+    }
+    .tag-security {
+      background: rgba(239,68,68,.08); color: #f87171;
+      text-shadow: 0 0 6px rgba(239,68,68,.3);
+    }
+    .tag-ai {
+      background: rgba(168,85,247,.08); color: #c084fc;
+      text-shadow: 0 0 6px rgba(168,85,247,.3);
+    }
 
     /* ── Article list ── */
     .news-list {
       max-width: 900px; margin: 0 auto; padding: 0 24px;
+      position: relative; z-index: 2;
     }
 
     .news-item {
-      display: block; padding: 40px 0; border-bottom: 1px solid var(--border);
-      text-decoration: none; transition: opacity 0.2s;
+      display: block; padding: 40px 0;
+      border-bottom: 1px solid rgba(0,240,255,.06);
+      text-decoration: none; transition: all .3s;
+      position: relative;
     }
-    .news-item:first-child { border-top: 1px solid var(--border); }
-    .news-item:hover { opacity: 0.75; }
+    .news-item:first-child { border-top: 1px solid rgba(0,240,255,.06); }
+    .news-item:hover { padding-left: 12px; }
+    .news-item::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 0; background: var(--cyan); transition: width .3s;
+      box-shadow: 0 0 8px var(--cyan);
+    }
+    .news-item:hover::before { width: 2px; }
 
     .news-item-meta {
       display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
     }
 
     .news-item-date {
-      font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);
-      letter-spacing: 0.06em;
+      font-size: 11px; color: var(--dim); letter-spacing: .06em;
     }
 
     .news-item-title {
-      font-family: var(--font); font-weight: 300; font-size: clamp(20px, 3vw, 32px);
+      font-family: var(--font-display); font-weight: 300;
+      font-size: clamp(20px, 3vw, 32px);
       color: var(--text); line-height: 1.25; letter-spacing: -0.01em;
+      transition: color .3s;
+    }
+    .news-item:hover .news-item-title {
+      color: var(--text-bright);
+      text-shadow: 0 0 12px rgba(0,240,255,.15);
     }
 
     /* ── Pagination ── */
     .pagination {
       display: flex; align-items: center; justify-content: center;
-      gap: 8px; margin-top: 64px; padding: 0 24px; flex-wrap: wrap;
+      gap: 8px; margin-top: 64px; padding: 0 24px 80px; flex-wrap: wrap;
+      position: relative; z-index: 2;
     }
     .page-btn {
-      width: 40px; height: 40px; border-radius: 6px;
-      border: 1px solid var(--border); background: transparent;
-      color: var(--text-muted); font-family: var(--font-mono); font-size: 12px;
-      font-weight: 500; cursor: pointer; transition: all 0.2s;
+      width: 40px; height: 40px; border-radius: 4px;
+      border: 1px solid rgba(0,240,255,.1); background: transparent;
+      color: var(--muted); font-family: var(--font); font-size: 12px;
+      font-weight: 500; cursor: pointer; transition: all .3s;
       display: flex; align-items: center; justify-content: center;
     }
-    .page-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
-    .page-btn.active { border-color: var(--gold); color: var(--gold); }
-    .page-btn:disabled { opacity: 0.25; cursor: default; pointer-events: none; }
+    .page-btn:hover {
+      border-color: rgba(0,240,255,.3); color: var(--text);
+      box-shadow: 0 0 10px rgba(0,240,255,.1);
+    }
+    .page-btn.active {
+      border-color: var(--cyan); color: var(--cyan);
+      background: rgba(0,240,255,.06);
+      box-shadow: 0 0 15px rgba(0,240,255,.15);
+      text-shadow: 0 0 6px rgba(0,240,255,.4);
+    }
+    .page-btn:disabled {
+      opacity: 0.2; cursor: default; pointer-events: none;
+    }
     .page-info {
-      font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em;
-      font-family: var(--font-mono); padding: 0 8px;
+      font-size: 11px; color: var(--dim); letter-spacing: .1em; padding: 0 8px;
     }
 
     .news-empty {
-      text-align: center; padding: 80px 24px; color: var(--text-muted); font-size: 14px;
+      text-align: center; padding: 80px 24px; color: var(--muted); font-size: 14px;
+      position: relative; z-index: 2;
     }
 
     @media (max-width: 768px) {
@@ -160,35 +204,41 @@
 </head>
 <body>
 
-<div class="nv-grain"></div>
+<!-- Loader -->
+<div id="cyber-loader">
+  <div class="cl-mark">V</div>
+  <div class="cl-bar"><div class="cl-fill" id="cl-fill"></div></div>
+  <div class="cl-pct" id="cl-pct">0 %</div>
+</div>
 
-<nav>
-  <div class="nav-logo">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <div class="nav-logomark">V</div>
-      <span class="nav-name">NEXVAULT</span>
-    </a>
-    <a href="/whitepaper" class="nav-pill-link">WHITEPAPER</a>
-    <a href="/about" class="nav-pill-link">ABOUT US</a>
-    <a href="/security" class="nav-pill-link">SECURITY</a>
-    <a href="/nexcredit" class="nav-pill-link">NEXCREDIT</a>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <div class="dot-live"></div>
-    <a href="/app" class="nav-launch-btn">◈ OPEN VAULT</a>
+<!-- Grid Background -->
+<canvas id="cyber-grid"></canvas>
+
+<!-- Nav -->
+<nav class="c-nav">
+  <a href="/" class="c-nav-logo">
+    <div class="c-nav-mark">V</div>
+    <span class="c-nav-word">NEXVAULT</span>
+  </a>
+  <div class="c-nav-links">
+    <a href="/security" class="c-nav-link">SECURITY</a>
+    <a href="/nexcredit" class="c-nav-link">NEXCREDIT</a>
+    <a href="/about" class="c-nav-link">ABOUT</a>
+    <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
+    <a href="/app" class="c-nav-cta">OPEN VAULT</a>
   </div>
 </nav>
 
 <!-- Hero -->
 <section class="news-hero">
   <div class="news-hero-content">
-    <div class="label label-gold fi fi1" style="margin-bottom:20px">NEWS &amp; INSIGHTS</div>
-    <h1 class="hlg fi fi2">News</h1>
+    <div class="c-label rv">NEWS &amp; INSIGHTS</div>
+    <h1 class="c-title rv rv-d1"><em>News</em></h1>
   </div>
 </section>
 
 <!-- Filter Bar -->
-<div class="filter-bar fi fi3">
+<div class="filter-bar rv rv-d2">
   <button class="filter-btn active" data-tag="all">ALL</button>
   <button class="filter-btn" data-tag="protocol">PROTOCOL</button>
   <button class="filter-btn" data-tag="defi">DEFI</button>
@@ -207,8 +257,21 @@
 <!-- Empty state -->
 <div class="news-empty" id="news-empty" style="display:none">No articles found.</div>
 
-<footer>© 2026 NEXVAULT · BUILT ON NEXUS.XYZ</footer>
+<!-- Footer -->
+<footer class="c-footer">
+  <span class="c-footer-copy">&copy; 2026 NexVault</span>
+  <div class="c-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/nexcredit">NexCredit</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/whitepaper">Whitepaper</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
 
+<script src="/nv-cyber.js"></script>
 <script>
 // ── Load articles from _posts_data.json ──
 const PER_PAGE = 15;

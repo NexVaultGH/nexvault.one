@@ -11,7 +11,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#05050f" />
   <meta name="author" content="NexVault" />
   <meta name="robots" content="index, follow" />
 
@@ -28,98 +28,92 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-cyber.css">
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
 
   <style>
-    /* ── Nav ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,.06);background:rgba(5,6,10,.8);backdrop-filter:blur(20px)}
-    .nav-logo{display:flex;align-items:center;gap:12px}
-    .nav-logomark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#c9a84c,#8b6914);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#05060a}
-    .nav-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;letter-spacing:.12em;color:#e8e2d6}
-    .nav-pill-link{padding:4px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.06);color:#c9a84c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:600;text-decoration:none;transition:all .2s;white-space:nowrap}
-    .nav-pill-link:hover{background:rgba(201,168,76,.14)}
-    .nav-pill-link.active{background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.35)}
-    .nav-launch-btn{padding:8px 18px;border-radius:9px;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:#c9a84c;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;font-weight:600;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
-    .nav-launch-btn:hover{background:rgba(201,168,76,.15)}
-    .dot-live{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.4)}
-    footer{text-align:center;padding:40px 20px;font-size:11px;color:#5a5650;letter-spacing:.1em;border-top:1px solid rgba(255,255,255,.04)}
-
     /* ── Hero ── */
     .proof-hero {
       position: relative; min-height: 100vh; display: flex; align-items: center;
-      justify-content: center; text-align: center; overflow: hidden;
-    }
-    .proof-hero-canvas {
-      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      justify-content: center; text-align: center; overflow: hidden; z-index: 1;
     }
     .proof-hero-content {
-      position: relative; z-index: 1; padding: 0 24px; max-width: 680px;
+      position: relative; z-index: 2; padding: 0 24px; max-width: 700px;
     }
     .proof-hero-sub {
-      font-family: var(--font); font-weight: 300; font-size: 15px;
-      color: rgba(255,255,255,0.4); line-height: 1.8; max-width: 520px;
-      margin: 20px auto 32px;
+      font-size: 14px; color: var(--muted); line-height: 1.9;
+      max-width: 540px; margin: 20px auto 32px;
     }
     .proof-hero-badge {
       display: inline-flex; align-items: center; gap: 10px;
-      padding: 10px 18px; border-radius: 6px;
-      background: rgba(74,222,128,0.04); border: 1px solid rgba(74,222,128,0.12);
-      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
-      color: var(--green);
+      padding: 10px 20px; border-radius: 4px;
+      background: rgba(57,255,20,.04); border: 1px solid rgba(57,255,20,.15);
+      font-size: 10px; letter-spacing: .12em;
+      color: var(--neon-green); text-shadow: 0 0 8px rgba(57,255,20,.4);
     }
 
     /* ── Stats bar ── */
     .stats-bar {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-      background: var(--border); border: 1px solid var(--border); border-radius: 10px;
-      overflow: hidden; max-width: 900px; margin: 0 auto 32px;
+      background: rgba(0,240,255,.06); border: 1px solid rgba(0,240,255,.1);
+      border-radius: 8px; overflow: hidden;
+      max-width: 900px; margin: 0 auto 32px;
+      position: relative; z-index: 2;
     }
     .stat-cell {
-      padding: 20px 24px; background: var(--bg-card);
+      padding: 22px 24px; background: var(--card-bg);
       display: flex; flex-direction: column; gap: 4px;
+      backdrop-filter: blur(8px);
     }
     .stat-cell-label {
-      font-family: var(--font); font-weight: 700; font-size: 9px;
-      letter-spacing: 0.14em; color: var(--text-muted); text-transform: uppercase;
+      font-size: 9px; letter-spacing: .16em; font-weight: 500;
+      color: var(--muted); text-transform: uppercase;
     }
     .stat-cell-val {
-      font-family: var(--font-mono); font-size: 24px; font-weight: 400; color: var(--gold);
+      font-size: 24px; font-weight: 400; color: var(--cyan);
+      text-shadow: 0 0 12px rgba(0,240,255,.4);
     }
     .stat-cell-sub {
-      font-family: var(--font-mono); font-size: 9px; color: var(--text-dim);
+      font-size: 9px; color: var(--dim); letter-spacing: .04em;
     }
 
     /* ── Content area ── */
     .proof-content {
       max-width: 900px; margin: 0 auto; padding: 0 24px 80px;
-      position: relative; z-index: 1;
+      position: relative; z-index: 2;
     }
 
     /* ── Status row ── */
     .status-row {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 16px; border-radius: 6px;
-      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
-      margin-bottom: 24px; font-family: var(--font-mono); font-size: 10px;
+      padding: 12px 18px; border-radius: 4px;
+      background: rgba(0,240,255,.02); border: 1px solid rgba(0,240,255,.08);
+      margin-bottom: 28px; font-size: 10px;
     }
-    .status-left { display: flex; align-items: center; gap: 8px; color: var(--text-muted); }
-    .status-chain { color: var(--text-muted); letter-spacing: 0.06em; }
-    .status-contract { color: var(--gold); cursor: pointer; transition: color 0.15s; }
-    .status-contract:hover { color: var(--gold-bright); }
+    .status-left { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+    .status-chain { color: var(--muted); letter-spacing: .08em; }
+    .status-contract {
+      color: var(--cyan); cursor: pointer; transition: all .2s;
+      text-shadow: 0 0 6px rgba(0,240,255,.3);
+    }
+    .status-contract:hover { color: #fff; text-shadow: 0 0 12px rgba(0,240,255,.6); }
 
     /* ── Section header ── */
     .sec-hdr {
       display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
     }
     .sec-hdr-label {
-      font-family: var(--font); font-weight: 700; font-size: 9px;
-      letter-spacing: 0.18em; color: var(--text-muted); text-transform: uppercase;
-      white-space: nowrap;
+      font-size: 9px; letter-spacing: .2em; font-weight: 500;
+      color: var(--cyan); text-shadow: 0 0 8px rgba(0,240,255,.3);
+      text-transform: uppercase; white-space: nowrap;
     }
-    .sec-hdr-line { flex: 1; height: 1px; background: var(--border); }
+    .sec-hdr-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, rgba(0,240,255,.2), transparent);
+    }
     .sec-hdr-count {
-      font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; color: var(--text-muted);
+      font-size: 9px; letter-spacing: .1em; color: var(--muted);
     }
 
     /* ── Receipt cards ── */
@@ -127,106 +121,117 @@
 
     .receipt-card {
       position: relative; overflow: hidden;
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
-      padding: 20px 24px;
+      background: var(--card-bg); border: 1px solid rgba(0,240,255,.08);
+      border-radius: 8px; padding: 22px 24px;
       display: grid; grid-template-columns: 48px 1fr auto; gap: 0 20px;
-      align-items: start; transition: border-color 0.2s;
+      align-items: start; transition: all .3s; backdrop-filter: blur(8px);
     }
-    .receipt-card:hover { border-color: var(--border-bright); }
+    .receipt-card:hover {
+      border-color: rgba(0,240,255,.25);
+      box-shadow: 0 0 25px rgba(0,240,255,.06);
+    }
     .receipt-card::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.15), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0,240,255,.2), transparent);
     }
 
     @keyframes scan { 0% { top: -100%; } 100% { top: 200%; } }
     @keyframes stamp { 0% { opacity:0; transform: scale(1.4) rotate(-8deg); } 60% { transform: scale(0.95) rotate(2deg); } 100% { opacity:1; transform: scale(1) rotate(-4deg); } }
-    @keyframes slideIn { from { opacity:0; transform: translateX(-12px); } to { opacity:1; transform: translateX(0); } }
 
     .receipt-card.new-receipt::after {
       content: ''; position: absolute; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
       animation: scan 1.2s ease forwards; pointer-events: none;
     }
 
     .receipt-num { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 2px; }
     .receipt-hash-icon {
-      width: 36px; height: 36px; border-radius: 8px;
-      border: 1px solid rgba(201,168,76,0.12); background: var(--gold-dim);
+      width: 38px; height: 38px; border-radius: 6px;
+      border: 1px solid rgba(0,240,255,.2);
+      background: rgba(0,240,255,.05);
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; color: var(--gold);
+      font-family: var(--font-display); font-size: 14px;
+      color: var(--cyan); text-shadow: 0 0 10px rgba(0,240,255,.4);
     }
-    .receipt-n { font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); letter-spacing: 0.06em; }
+    .receipt-n { font-size: 9px; color: var(--dim); letter-spacing: .06em; }
 
     .receipt-amount {
-      font-family: var(--font-mono); font-size: 22px; font-weight: 400;
-      color: var(--gold); line-height: 1.1; margin-bottom: 8px;
+      font-size: 22px; font-weight: 400;
+      color: var(--cyan); line-height: 1.1; margin-bottom: 8px;
+      text-shadow: 0 0 12px rgba(0,240,255,.3);
     }
-    .receipt-amount span { font-size: 13px; color: var(--text-dim); margin-left: 4px; }
+    .receipt-amount span { font-size: 13px; color: var(--dim); margin-left: 4px; text-shadow: none; }
     .receipt-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
     .receipt-meta-item {
       display: flex; align-items: center; gap: 5px;
-      font-family: var(--font-mono); font-size: 10px; color: var(--text-dim);
+      font-size: 10px; color: var(--dim);
     }
-    .receipt-meta-item strong { color: var(--text-muted); }
+    .receipt-meta-item strong { color: var(--muted); }
     .receipt-tx {
       display: flex; align-items: center; gap: 8px;
-      font-family: var(--font-mono); font-size: 10px; color: var(--text-dim);
+      font-size: 10px; color: var(--dim);
     }
     .receipt-tx-hash {
-      color: var(--blue); cursor: pointer; transition: color 0.15s; text-decoration: none;
+      color: var(--magenta); cursor: pointer; transition: all .2s;
+      text-decoration: none; text-shadow: 0 0 6px rgba(255,0,255,.3);
     }
-    .receipt-tx-hash:hover { color: #93c5fd; }
+    .receipt-tx-hash:hover { color: #ff66ff; text-shadow: 0 0 12px rgba(255,0,255,.5); }
     .copy-btn {
-      background: none; border: none; padding: 0; color: var(--text-dim);
-      font-size: 11px; cursor: pointer; transition: color 0.15s; line-height: 1;
+      background: none; border: none; padding: 0; color: var(--dim);
+      font-size: 11px; cursor: pointer; transition: color .2s; line-height: 1;
     }
-    .copy-btn:hover { color: var(--text-muted); }
+    .copy-btn:hover { color: var(--cyan); }
 
     .receipt-stamp { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding-top: 2px; }
     .stamp {
       display: flex; align-items: center; gap: 5px;
-      padding: 5px 10px; border-radius: 4px;
-      border: 1px solid rgba(74,222,128,0.25); background: rgba(74,222,128,0.04);
-      font-family: var(--font); font-size: 9px; letter-spacing: 0.12em; color: var(--green);
+      padding: 5px 10px; border-radius: 3px;
+      border: 1px solid rgba(57,255,20,.3); background: rgba(57,255,20,.05);
+      font-size: 9px; letter-spacing: .12em; color: var(--neon-green);
       font-weight: 700; animation: stamp 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both;
-      white-space: nowrap;
+      white-space: nowrap; text-shadow: 0 0 8px rgba(57,255,20,.4);
     }
-    .stamp-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
-    .receipt-time { font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); letter-spacing: 0.04em; }
+    .stamp-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--neon-green); box-shadow: 0 0 6px var(--neon-green); }
+    .receipt-time { font-size: 9px; color: var(--dim); letter-spacing: .04em; }
     .proof-hash {
-      font-family: var(--font-mono); font-size: 8px; color: rgba(201,168,76,0.25);
-      letter-spacing: 0.06em; cursor: pointer; transition: color 0.15s;
+      font-size: 8px; color: rgba(0,240,255,.25);
+      letter-spacing: .06em; cursor: pointer; transition: color .2s;
       text-align: right; max-width: 180px; word-break: break-all; line-height: 1.5;
     }
-    .proof-hash:hover { color: rgba(201,168,76,0.5); }
+    .proof-hash:hover { color: rgba(0,240,255,.5); text-shadow: 0 0 6px rgba(0,240,255,.2); }
 
     .cum-track {
       display: flex; align-items: center; justify-content: space-between;
       padding: 10px 16px; margin-top: -2px;
-      background: rgba(201,168,76,0.02); border: 1px solid rgba(201,168,76,0.04);
-      border-radius: 0 0 10px 10px; font-family: var(--font-mono); font-size: 10px;
+      background: rgba(0,240,255,.02); border: 1px solid rgba(0,240,255,.04);
+      border-radius: 0 0 8px 8px; font-size: 10px;
     }
-    .cum-label { color: var(--text-dim); letter-spacing: 0.08em; }
-    .cum-val { color: var(--gold); font-size: 14px; }
+    .cum-label { color: var(--dim); letter-spacing: .08em; }
+    .cum-val { color: var(--cyan); font-size: 14px; text-shadow: 0 0 8px rgba(0,240,255,.3); }
 
     /* ── States ── */
     #state-loading, #state-empty, #state-error {
       padding: 72px 24px; text-align: center;
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+      background: var(--card-bg); border: 1px solid rgba(0,240,255,.08);
+      border-radius: 8px; backdrop-filter: blur(8px);
     }
-    .state-icon { font-size: 36px; margin-bottom: 20px; display: block; color: var(--gold); }
+    .state-icon {
+      font-size: 36px; margin-bottom: 20px; display: block;
+      color: var(--cyan); text-shadow: 0 0 20px rgba(0,240,255,.5);
+    }
     .state-title {
-      font-family: var(--font); font-weight: 300; font-size: 22px;
-      color: var(--text); margin-bottom: 10px;
+      font-family: var(--font-display); font-weight: 300; font-size: 22px;
+      color: var(--text-bright); margin-bottom: 10px;
     }
     .state-sub {
-      font-family: var(--font); font-weight: 300; font-size: 13px;
-      color: var(--text-muted); line-height: 1.8; max-width: 420px; margin: 0 auto;
+      font-size: 13px; color: var(--muted); line-height: 1.8;
+      max-width: 420px; margin: 0 auto;
     }
     .spinner {
-      width: 36px; height: 36px; border: 2px solid rgba(201,168,76,0.08);
-      border-top-color: var(--gold); border-radius: 50%;
+      width: 36px; height: 36px; border: 2px solid rgba(0,240,255,.08);
+      border-top-color: var(--cyan); border-radius: 50%;
       animation: spin 0.8s linear infinite; margin: 0 auto 20px;
+      box-shadow: 0 0 12px rgba(0,240,255,.15);
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -234,48 +239,57 @@
     @keyframes ripple { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2.4); opacity: 0; } }
     .empty-orb-ring {
       position: absolute; inset: 0; border-radius: 50%;
-      border: 1px solid rgba(201,168,76,0.12); animation: ripple 2.5s ease infinite;
+      border: 1px solid rgba(0,240,255,.15); animation: ripple 2.5s ease infinite;
     }
     .empty-orb-ring:nth-child(2) { animation-delay: 0.8s; }
     .empty-orb-ring:nth-child(3) { animation-delay: 1.6s; }
     .empty-orb-core {
       position: absolute; inset: 20px; border-radius: 50%;
-      background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.15);
+      background: rgba(0,240,255,.06); border: 1px solid rgba(0,240,255,.2);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; color: var(--gold);
+      font-family: var(--font-display); font-size: 16px;
+      color: var(--cyan); text-shadow: 0 0 12px rgba(0,240,255,.5);
     }
 
     /* ── Explainer panel ── */
     .explainer {
       margin-top: 48px; padding: 32px;
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+      background: var(--card-bg); border: 1px solid rgba(0,240,255,.08);
+      border-radius: 8px; backdrop-filter: blur(8px);
+      position: relative; overflow: hidden;
+    }
+    .explainer::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: .4;
     }
     .explainer-title {
-      font-family: var(--font); font-weight: 700; font-size: 9px;
-      letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase;
-      margin-bottom: 20px;
+      font-size: 9px; letter-spacing: .25em; font-weight: 500;
+      color: var(--cyan); text-shadow: 0 0 8px rgba(0,240,255,.3);
+      text-transform: uppercase; margin-bottom: 24px;
     }
-    .explainer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .explainer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
     .explainer-item { display: flex; flex-direction: column; gap: 8px; }
     .explainer-item-label {
-      font-family: var(--font); font-weight: 600; font-size: 11px;
-      color: var(--gold); letter-spacing: 0.06em;
+      font-size: 12px; font-weight: 500; letter-spacing: .06em;
+      color: var(--magenta); text-shadow: 0 0 8px rgba(255,0,255,.3);
     }
     .explainer-item-text {
-      font-family: var(--font); font-weight: 300; font-size: 13px;
-      color: rgba(255,255,255,0.4); line-height: 1.7;
+      font-size: 13px; color: var(--muted); line-height: 1.8;
     }
     .explainer-item-text code {
-      color: var(--gold); font-family: var(--font-mono); font-size: 11px;
+      color: var(--cyan); font-size: 11px;
+      background: rgba(0,240,255,.06); border: 1px solid rgba(0,240,255,.1);
+      border-radius: 3px; padding: 1px 6px;
     }
 
     /* ── Toast ── */
     #toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px);
-      background: rgba(0,0,0,0.96); border: 1px solid rgba(201,168,76,0.15); border-radius: 6px;
-      padding: 10px 20px; font-family: var(--font-mono); font-size: 11px;
-      letter-spacing: 0.06em; color: var(--gold); z-index: 999;
-      transition: transform 0.3s, opacity 0.3s; opacity: 0;
+      background: rgba(5,5,15,.96); border: 1px solid rgba(0,240,255,.2); border-radius: 4px;
+      padding: 10px 20px; font-size: 11px; letter-spacing: .06em;
+      color: var(--cyan); text-shadow: 0 0 8px rgba(0,240,255,.3);
+      z-index: 999; transition: transform .3s, opacity .3s; opacity: 0;
+      box-shadow: 0 0 20px rgba(0,240,255,.1);
     }
     #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
@@ -292,39 +306,43 @@
 </head>
 <body>
 
-<div class="nv-grain"></div>
+<!-- Loader -->
+<div id="cyber-loader">
+  <div class="cl-mark">V</div>
+  <div class="cl-bar"><div class="cl-fill" id="cl-fill"></div></div>
+  <div class="cl-pct" id="cl-pct">0 %</div>
+</div>
+
+<!-- Grid Background -->
+<canvas id="cyber-grid"></canvas>
 
 <!-- Nav -->
-<nav>
-  <div class="nav-logo">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <div class="nav-logomark">V</div>
-      <span class="nav-name">NEXVAULT</span>
-    </a>
-    <a href="/whitepaper" class="nav-pill-link">WHITEPAPER</a>
-    <a href="/about" class="nav-pill-link">ABOUT US</a>
-    <a href="/security" class="nav-pill-link">SECURITY</a>
-    <a href="/nexcredit" class="nav-pill-link">NEXCREDIT</a>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <div class="dot-live"></div>
-    <a href="/app" class="nav-launch-btn">◈ OPEN VAULT</a>
+<nav class="c-nav">
+  <a href="/" class="c-nav-logo">
+    <div class="c-nav-mark">V</div>
+    <span class="c-nav-word">NEXVAULT</span>
+  </a>
+  <div class="c-nav-links">
+    <a href="/security" class="c-nav-link">SECURITY</a>
+    <a href="/nexcredit" class="c-nav-link">NEXCREDIT</a>
+    <a href="/about" class="c-nav-link">ABOUT</a>
+    <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
+    <a href="/app" class="c-nav-cta">OPEN VAULT</a>
   </div>
 </nav>
 
-<!-- Hero with canvas -->
+<!-- Hero -->
 <section class="proof-hero">
-  <canvas class="proof-hero-canvas nv-section-canvas" id="proof-canvas"></canvas>
   <div class="proof-hero-content">
-    <div class="label label-gold fi fi1" style="margin-bottom:20px">PROOF OF YIELD</div>
-    <h1 class="hlg fi fi2">Every yield delivery,<br>proven on-chain.</h1>
-    <p class="proof-hero-sub fi fi3">
+    <div class="c-label rv">PROOF OF YIELD</div>
+    <h1 class="c-title rv rv-d1">Every yield delivery,<br><em>proven on-chain.</em></h1>
+    <p class="proof-hero-sub rv rv-d2">
       NexVault receives yield from the Global Yield Distribution System (GYDS) on Nexus.
       Every delivery is a verifiable receipt — a permanent on-chain proof that real yield
       reached this vault. No trust required.
     </p>
-    <div class="proof-hero-badge fi fi4">
-      <span>CONTRACT → EMITS EVENT → LOGGED ON NEXUS → VISIBLE HERE</span>
+    <div class="proof-hero-badge rv rv-d3">
+      <span>CONTRACT &rarr; EMITS EVENT &rarr; LOGGED ON NEXUS &rarr; VISIBLE HERE</span>
     </div>
   </div>
 </section>
@@ -333,34 +351,34 @@
 <div class="proof-content">
 
   <!-- Stats bar -->
-  <div class="stats-bar fi fi5">
+  <div class="stats-bar rv">
     <div class="stat-cell">
       <div class="stat-cell-label">Total Receipts</div>
-      <div class="stat-cell-val" id="stat-count">—</div>
+      <div class="stat-cell-val" id="stat-count">&mdash;</div>
       <div class="stat-cell-sub">GYDS deliveries</div>
     </div>
     <div class="stat-cell">
       <div class="stat-cell-label">Total Yield Proven</div>
-      <div class="stat-cell-val" id="stat-total">—</div>
+      <div class="stat-cell-val" id="stat-total">&mdash;</div>
       <div class="stat-cell-sub">USDX delivered to vault</div>
     </div>
     <div class="stat-cell">
       <div class="stat-cell-label">Last Receipt</div>
-      <div class="stat-cell-val" style="font-size:16px;padding-top:6px" id="stat-last">—</div>
+      <div class="stat-cell-val" style="font-size:16px;padding-top:6px" id="stat-last">&mdash;</div>
       <div class="stat-cell-sub" id="stat-last-block"></div>
     </div>
   </div>
 
   <!-- Status row -->
-  <div class="status-row fi fi6">
+  <div class="status-row rv rv-d1">
     <div class="status-left">
       <span class="status-chain" id="status-chain">NEXUS BLOCKCHAIN</span>
-      <span style="color:var(--text-dim)">·</span>
+      <span style="color:var(--dim)">&middot;</span>
       <span id="status-contract-wrap">
         <span class="status-contract" id="status-contract" title="Click to copy">Vault contract pending deployment</span>
       </span>
     </div>
-    <div style="font-size:9px;color:var(--text-dim);font-family:var(--font-mono)" id="status-block">Block —</div>
+    <div style="font-size:9px;color:var(--dim)" id="status-block">Block &mdash;</div>
   </div>
 
   <!-- Section header -->
@@ -403,7 +421,7 @@
   <div id="receipts-list" style="display:none"></div>
 
   <!-- Explainer -->
-  <div class="explainer">
+  <div class="explainer rv">
     <div class="explainer-title">How this works</div>
     <div class="explainer-grid">
       <div class="explainer-item">
@@ -449,8 +467,21 @@
 
 <div id="toast"></div>
 
-<footer>&copy; 2026 NEXVAULT &middot; BUILT ON NEXUS.XYZ</footer>
+<!-- Footer -->
+<footer class="c-footer">
+  <span class="c-footer-copy">&copy; 2026 NexVault</span>
+  <div class="c-footer-links">
+    <a href="/about">About</a>
+    <a href="/security">Security</a>
+    <a href="/nexcredit">NexCredit</a>
+    <a href="/proof">Proof</a>
+    <a href="/news">News</a>
+    <a href="/whitepaper">Whitepaper</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
 
+<script src="/nv-cyber.js"></script>
 <script>
 // ══════════════════════════════════════════════════════════════════
 // CONFIG  — update when contracts are deployed
@@ -543,11 +574,11 @@ function renderReceipt(r, isNew) {
       '<div class="receipt-amount">' + fmtUSDX(r.amount) + '<span>USDX</span></div>' +
       '<div class="receipt-meta">' +
         '<div class="receipt-meta-item">Block <strong>#' + r.blockNum.toLocaleString() + '</strong></div>' +
-        '<div class="receipt-meta-item">Source <strong style="color:var(--gold)">GYDS Protocol</strong></div>' +
+        '<div class="receipt-meta-item">Source <strong style="color:var(--cyan)">' + 'GYDS Protocol</strong></div>' +
         (r.cumulative ? '<div class="receipt-meta-item">Cumulative <strong>' + fmtUSDX(r.cumulative) + '</strong></div>' : '') +
       '</div>' +
       '<div class="receipt-tx">' +
-        '<span style="color:var(--text-dim)">TX</span>' +
+        '<span style="color:var(--dim)">TX</span>' +
         '<a class="receipt-tx-hash" href="' + explorerLink + '" target="_blank" rel="noopener">' + shortHash(r.txHash) + '</a>' +
         '<button class="copy-btn" onclick="copyTx(\'' + r.txHash + '\')" title="Copy transaction hash">\u2398</button>' +
       '</div>' +

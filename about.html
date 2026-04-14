@@ -4,272 +4,223 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>About Us — NexVault</title>
+  <meta name="description" content="NexVault is a declaration that access to yield is a human right. Meet the builder, the mission, and the philosophy behind Sovereign Yield Banking."/>
+  <link rel="icon" href="/favicon.ico" sizes="any"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nv-cyber.css">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --gold:#c9a84c;--gold2:#8b6914;--bg:#05060a;
-      --text:#f0ece4;--muted:#6b7280;--dim:#374151;
-      --card:rgba(255,255,255,.025);--border:rgba(255,255,255,.07);
-    }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;overflow-x:hidden}
-
-    /* ── Orbs ── */
-    .orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
-
-    /* ── Nav ── */
-    nav{
-      position:fixed;top:0;left:0;right:0;z-index:100;
-      padding:18px 40px;display:flex;align-items:center;
-      justify-content:space-between;flex-wrap:wrap;gap:10px;
-      border-bottom:1px solid rgba(201,168,76,.06);
-      background:rgba(5,6,10,.8);backdrop-filter:blur(20px);
-    }
-    .nav-logo{display:flex;align-items:center;gap:10px}
-    .nav-logomark{
-      width:34px;height:34px;border-radius:8px;
-      background:linear-gradient(135deg,#c9a84c,#8b6914);
-      display:flex;align-items:center;justify-content:center;
-      font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#05060a;
-      flex-shrink:0;
-    }
-    .nav-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;letter-spacing:.12em;color:var(--text)}
-    .nav-link{
-      padding:7px 14px;border-radius:8px;font-size:10px;letter-spacing:.1em;font-weight:600;
-      text-decoration:none;transition:all .2s;
-      border:1px solid rgba(201,168,76,.18);background:rgba(201,168,76,.06);color:var(--gold);
-    }
-    .nav-link:hover{background:rgba(201,168,76,.14)}
-    .nav-link.plain{border-color:rgba(255,255,255,.08);background:transparent;color:var(--muted)}
-    .nav-link.plain:hover{color:var(--text);border-color:rgba(255,255,255,.15)}
-
-    /* ── Animations ── */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
-    .reveal.visible{opacity:1;transform:translateY(0)}
-
     /* ── Hero ── */
-    .hero{
-      min-height:92vh;display:flex;flex-direction:column;
-      align-items:center;justify-content:center;
-      text-align:center;padding:120px 24px 80px;
-      position:relative;z-index:1;
+    .ab-hero {
+      min-height: 92vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 140px 24px 80px;
+      position: relative; z-index: 2;
     }
-    .hero-eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:5px 16px;border-radius:20px;
-      border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.06);
-      font-size:10px;letter-spacing:.18em;color:var(--gold);font-weight:600;
-      margin-bottom:28px;
-    }
-    .hero-title{
-      font-family:'Playfair Display',serif;
-      font-size:clamp(40px,6vw,80px);font-weight:300;
-      line-height:1.1;margin-bottom:24px;color:var(--text);
-    }
-    .hero-title em{
-      font-style:italic;
-      background:linear-gradient(135deg,#f0c040,#c9a84c,#8b6914);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-    }
-    .hero-desc{
-      font-size:15px;color:var(--muted);line-height:1.85;
-      max-width:600px;margin:0 auto 40px;font-weight:400;
-    }
+    .ab-hero .c-title { font-size: clamp(40px,6vw,80px); }
+    .ab-hero .c-desc { max-width: 620px; margin: 0 auto 40px; }
+    .ab-hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 
     /* ── Sections ── */
-    section{padding:80px 24px;max-width:900px;margin:0 auto;position:relative;z-index:1}
-    .section-label{
-      font-size:10px;letter-spacing:.18em;color:var(--gold);font-weight:600;
-      text-transform:uppercase;margin-bottom:12px;
-    }
-    .section-title{
-      font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,44px);
-      font-weight:400;color:var(--text);line-height:1.2;margin-bottom:20px;
-    }
-    .section-body{font-size:14px;color:#9ca3af;line-height:1.9;margin-bottom:16px;font-weight:400}
-
-    /* ── Gold divider ── */
-    .gold-line{
-      height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.35),transparent);
-      margin:0 auto 60px;max-width:900px;
+    .ab-section {
+      max-width: 900px; margin: 0 auto;
+      padding: 80px 24px;
+      position: relative; z-index: 2;
     }
 
-    /* ── Mission statement card ── */
-    .mission-card{
-      background:rgba(8,10,16,.95);border:1px solid rgba(201,168,76,.15);
-      border-radius:20px;padding:48px 40px;text-align:center;
-      position:relative;overflow:hidden;margin:40px 0;
+    /* ── Mission Card ── */
+    .ab-mission-card {
+      text-align: center;
+      margin: 40px 0;
+      border-top: 2px solid var(--cyan);
+      box-shadow: 0 -4px 30px rgba(0,240,255,.08);
     }
-    .mission-card::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:1px;
-      background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent);
+    .ab-mission-card .quote {
+      font-family: var(--font-display);
+      font-size: clamp(18px,2.5vw,28px);
+      font-style: italic;
+      color: var(--text-bright);
+      line-height: 1.5;
+      font-weight: 300;
+      margin-bottom: 20px;
     }
-    .mission-quote{
-      font-family:'Playfair Display',serif;font-size:clamp(18px,2.5vw,28px);
-      font-style:italic;color:var(--text);line-height:1.5;font-weight:300;
-      margin-bottom:20px;
+    .ab-mission-card .attr {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .15em;
     }
-    .mission-attr{font-size:11px;color:var(--muted);letter-spacing:.12em}
 
-    /* ── Team / founder card ── */
-    .founder-card{
-      display:flex;gap:32px;align-items:flex-start;
-      background:var(--card);border:1px solid var(--border);border-radius:20px;
-      padding:36px 32px;margin-top:32px;
+    /* ── Founder Card ── */
+    .ab-founder {
+      display: flex; gap: 32px; align-items: flex-start;
+      margin-top: 32px;
+      border-left: 3px solid var(--cyan);
+      box-shadow: -4px 0 30px rgba(0,240,255,.06);
     }
-    .founder-avatar{
-      width:72px;height:72px;border-radius:50%;flex-shrink:0;
-      background:linear-gradient(135deg,#c9a84c,#8b6914);
-      display:flex;align-items:center;justify-content:center;
-      font-family:'Playfair Display',serif;font-size:28px;color:#05060a;
-      font-weight:700;
+    .ab-founder-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%; flex-shrink: 0;
+      border: 2px solid var(--cyan);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 28px; color: var(--cyan);
+      text-shadow: 0 0 12px rgba(0,240,255,.5);
+      background: rgba(0,240,255,.04);
     }
-    .founder-name{font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:4px}
-    .founder-title{font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:14px;font-weight:600}
-    .founder-bio{font-size:13px;color:#9ca3af;line-height:1.8}
+    .ab-founder-name {
+      font-family: var(--font-display);
+      font-size: 20px; color: var(--text-bright); margin-bottom: 4px;
+    }
+    .ab-founder-title {
+      font-size: 10px; color: var(--cyan);
+      letter-spacing: .12em; margin-bottom: 14px; font-weight: 600;
+      text-shadow: 0 0 8px rgba(0,240,255,.3);
+    }
+    .ab-founder-bio {
+      font-size: 13px; color: var(--muted); line-height: 1.8;
+    }
 
-    /* ── Stats row ── */
-    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
-    .stat-box{
-      background:var(--card);border:1px solid var(--border);border-radius:12px;
-      padding:20px 18px;text-align:center;
+    /* ── Philosophy Grid ── */
+    .ab-phil-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 16px; margin: 32px 0;
     }
-    .stat-num{
-      font-family:'Playfair Display',serif;font-size:32px;color:var(--gold);
-      margin-bottom:5px;line-height:1;
+    .ab-phil-grid .c-card { transition: all .4s; }
+    .ab-phil-grid .c-card:hover {
+      border-color: rgba(0,240,255,.3);
+      box-shadow: 0 0 40px rgba(0,240,255,.12), inset 0 0 40px rgba(0,240,255,.03);
     }
-    .stat-label{font-size:10px;color:var(--muted);letter-spacing:.08em}
+    .phil-tag {
+      font-size: 10px; letter-spacing: .14em;
+      color: var(--cyan); font-weight: 600;
+      margin-bottom: 14px;
+      text-shadow: 0 0 8px rgba(0,240,255,.3);
+    }
+    .phil-heading {
+      font-family: var(--font-display);
+      font-size: 18px; color: var(--text-bright);
+      margin-bottom: 12px; line-height: 1.3; font-weight: 300;
+    }
+    .phil-body {
+      font-size: 12px; color: var(--muted); line-height: 1.75;
+    }
 
-    /* ── Philosophy grid ── */
-    @media(max-width:680px){.phil-grid{grid-template-columns:1fr !important}}
+    /* ── Stats ── */
+    .ab-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 16px; margin-top: 32px;
+    }
+    .ab-stat-box {
+      text-align: center;
+      padding: 28px 18px;
+    }
+    .ab-stat-num {
+      font-family: var(--font-display);
+      font-size: 42px; font-weight: 300;
+      color: var(--cyan);
+      text-shadow: 0 0 15px rgba(0,240,255,.4);
+      margin-bottom: 6px; line-height: 1;
+    }
+    .ab-stat-label {
+      font-size: 10px; color: var(--muted); letter-spacing: .1em;
+    }
 
     /* ── CTA ── */
-    .cta-section{text-align:center;padding:80px 24px;position:relative;z-index:1}
-    .btn-primary{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:16px 36px;border-radius:12px;
-      background:linear-gradient(135deg,#c9a84c,#8b6914);
-      color:#05060a;font-family:'DM Mono',monospace;
-      font-size:13px;letter-spacing:.1em;font-weight:700;
-      text-decoration:none;transition:all .25s;border:none;cursor:pointer;
+    .ab-cta {
+      text-align: center;
+      padding: 80px 24px;
+      position: relative; z-index: 2;
     }
-    .btn-primary:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,.25)}
-    .btn-secondary{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:16px 36px;border-radius:12px;
-      border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.06);
-      color:var(--gold);font-family:'DM Mono',monospace;
-      font-size:13px;letter-spacing:.1em;font-weight:600;
-      text-decoration:none;transition:all .25s;
-    }
-    .btn-secondary:hover{background:rgba(201,168,76,.12)}
+    .ab-cta .c-title { margin-bottom: 14px; }
+    .ab-cta .c-desc { max-width: 500px; margin: 0 auto 32px; }
+    .ab-cta-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 
-    /* ── Footer ── */
-    footer{
-      border-top:1px solid rgba(255,255,255,.05);
-      padding:28px 40px;display:flex;align-items:center;
-      justify-content:space-between;flex-wrap:wrap;gap:12px;
-      position:relative;z-index:1;
-    }
-    .footer-copy{font-size:10px;color:#1a1f2e;letter-spacing:.1em}
-    .footer-links{display:flex;gap:20px;flex-wrap:wrap}
-    .footer-link{font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.08em;transition:color .2s}
-    .footer-link:hover{color:var(--gold)}
+    /* ── Magenta accents ── */
+    .accent-m { color: var(--magenta); text-shadow: 0 0 10px rgba(255,0,255,.4); }
 
-    @media(max-width:680px){
-      nav{padding:16px 20px}
-      .nav-logomark{width:28px;height:28px;font-size:14px}
-      .nav-name{font-size:13px;letter-spacing:.08em}
-      .values-grid{grid-template-columns:1fr}
-      .stats-row{grid-template-columns:1fr 1fr}
-      .founder-card{flex-direction:column}
-      footer{flex-direction:column;text-align:center}
-      .footer-links{justify-content:center}
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      .ab-phil-grid { grid-template-columns: 1fr; }
+      .ab-stats-row { grid-template-columns: 1fr 1fr; }
+      .ab-founder { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
-<!-- Orbs -->
-<div class="orb" style="width:600px;height:600px;background:rgba(201,168,76,.025);top:-200px;right:-150px"></div>
-<div class="orb" style="width:500px;height:500px;background:rgba(96,165,250,.02);bottom:-100px;left:-150px"></div>
+<div id="cyber-loader"><div class="cl-mark">V</div><div class="cl-bar"><div class="cl-fill"></div></div><div class="cl-pct">0%</div></div>
+<canvas id="cyber-grid"></canvas>
 
 <!-- Nav -->
-<nav>
-  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <div class="nav-logomark">V</div>
-      <span class="nav-name">NEXVAULT</span>
-    </a>
-    <a href="/whitepaper" target="_blank" style="padding:4px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.06);color:#c9a84c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(201,168,76,.14)'" onmouseout="this.style.background='rgba(201,168,76,.06)'">↓ WHITEPAPER</a>
-    <a href="/about" style="padding:4px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.1);color:#c9a84c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:600;text-decoration:none">ABOUT US</a>
-    <a href="/security" style="padding:4px 12px;border-radius:20px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.06);color:#c9a84c;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:600;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(201,168,76,.14)'" onmouseout="this.style.background='rgba(201,168,76,.06)'">SECURITY</a>
-    <a href="/nexcredit" class="nav-pill-link">NEXCREDIT</a>
-  </div>
-  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-    <a href="/" class="nav-link plain">← HOME</a>
-    <a href="/app" class="nav-link">LAUNCH APP →</a>
+<nav class="c-nav">
+  <a href="/" class="c-nav-logo"><div class="c-nav-mark">V</div><span class="c-nav-word">NEXVAULT</span></a>
+  <div class="c-nav-links">
+    <a href="/security" class="c-nav-link">SECURITY</a>
+    <a href="/nexcredit" class="c-nav-link">NEXCREDIT</a>
+    <a href="/about" class="c-nav-link">ABOUT</a>
+    <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
+    <a href="/app" class="c-nav-cta">OPEN VAULT</a>
   </div>
 </nav>
 
 <!-- Hero -->
-<section class="hero">
-  <div class="hero-eyebrow">◈ WHO WE ARE</div>
-  <h1 class="hero-title">
+<section class="ab-hero">
+  <div class="c-label rv">WHO WE ARE</div>
+  <h1 class="c-title rv rv-d1">
     Built to Give the World<br>
     <em>What Finance Forgot</em>
   </h1>
-  <p class="hero-desc">
+  <p class="c-desc rv rv-d2">
     NexVault is not just a savings protocol. It is a declaration that access to yield is a human right — not a privilege. We are builders, visionaries, and guardians of a mission that extends far beyond the blockchain.
   </p>
-  <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
-    <a href="/app" class="btn-primary">◈ Open Vault</a>
-    <a href="/whitepaper" target="_blank" class="btn-secondary">↓ Read Whitepaper</a>
+  <div class="ab-hero-btns rv rv-d3">
+    <a href="/app" class="btn-neon">OPEN VAULT</a>
+    <a href="/whitepaper" target="_blank" class="btn-ghost">READ WHITEPAPER</a>
   </div>
 </section>
 
-<div class="gold-line"></div>
+<hr class="c-divider">
 
 <!-- Mission Statement -->
-<section class="reveal">
-  <div class="section-label">OUR MISSION</div>
-  <h2 class="section-title">Sovereign Yield Banking<br>for Every Human on Earth</h2>
+<section class="ab-section rv">
+  <div class="c-label">OUR MISSION</div>
+  <h2 class="c-title">Sovereign Yield Banking<br>for Every Human on Earth</h2>
 
-  <div class="mission-card">
-    <div class="mission-quote">
+  <div class="c-card ab-mission-card rv rv-d1">
+    <div class="quote">
       "This mission did not start with one person or one idea. It belongs to all of us — every depositor, every builder, every person who believes there is a better way to move wealth through the world without asking permission from a system designed to keep it out of reach."
     </div>
-    <div class="mission-attr">— NEXVAULT PROTOCOL · TRANSPARENCY PLEDGE · 2026</div>
+    <div class="attr">— NEXVAULT PROTOCOL · TRANSPARENCY PLEDGE · 2026</div>
   </div>
 
-  <p class="section-body">
+  <p class="c-desc rv rv-d2">
     The financial system was not designed for everyone. It was designed for those who already have access — to institutions, to compound yield, to capital formation. Billions of people on earth have no access to a savings account that outpaces inflation, no mechanism to put even $20 to work in a meaningful way.
   </p>
-  <p class="section-body">
-    NexVault enforces equality at the protocol level. The same 4.44% APY available to an institutional depositor is available to a first-time depositor anywhere on earth with a smartphone and a wallet. No minimum balance. No citizenship requirement. No permission to ask.
+  <p class="c-desc rv rv-d3">
+    NexVault enforces equality at the protocol level. The same <span class="accent-m">4.44% APY</span> available to an institutional depositor is available to a first-time depositor anywhere on earth with a smartphone and a wallet. No minimum balance. No citizenship requirement. No permission to ask.
   </p>
 </section>
 
-<div class="gold-line"></div>
+<hr class="c-divider">
 
 <!-- The Builder -->
-<section class="reveal">
-  <div class="section-label">THE BUILDER</div>
-  <h2 class="section-title">One Person. One Vision. One Protocol.</h2>
-  <p class="section-body">
+<section class="ab-section rv">
+  <div class="c-label">THE BUILDER</div>
+  <h2 class="c-title">One Person. One Vision.<br><em>One Protocol.</em></h2>
+  <p class="c-desc">
     NexVault was conceived, designed, and built by a single architect who understood something most developers miss — that the most powerful financial tools are the ones built with a purpose beyond revenue.
   </p>
 
-  <div class="founder-card">
-    <div class="founder-avatar">V</div>
+  <div class="c-card ab-founder rv rv-d1">
+    <div class="ab-founder-avatar">V</div>
     <div>
-      <div class="founder-name">The Architect</div>
-      <div class="founder-title">FOUNDER · VAULT PROTOCOL</div>
-      <p class="founder-bio">
+      <div class="ab-founder-name">The Architect</div>
+      <div class="ab-founder-title">FOUNDER · VAULT PROTOCOL</div>
+      <p class="ab-founder-bio">
         Guided by the understanding that we are here to give more to the world than we take from it. The decision to build NexVault came not from a business plan but from a belief — that DeFi's real promise was never speculation, it was access. Access to yield for the person in Phnom Penh with $50 the same as the fund manager in New York with $50 million.
         <br><br>
         The protocol's earnings are not a destination. They are a vehicle. The vault architect decides where that vehicle is pointed — and publishes every decision publicly so holders can see exactly where the money goes and what it is building.
@@ -278,104 +229,88 @@
   </div>
 </section>
 
-<div class="gold-line"></div>
+<hr class="c-divider">
 
 <!-- Why We Build -->
-<section class="reveal">
-  <div class="section-label">WHY WE BUILD</div>
-  <h2 class="section-title">Finance Was Supposed<br>to Set People Free</h2>
+<section class="ab-section rv">
+  <div class="c-label">WHY WE BUILD</div>
+  <h2 class="c-title">Finance Was Supposed<br>to <em>Set People Free</em></h2>
 
-  <p class="section-body">
+  <p class="c-desc">
     Somewhere along the way, finance stopped serving people and started serving itself. The systems that were supposed to help humanity accumulate, protect, and grow wealth became the very walls that kept most of humanity out.
   </p>
-  <p class="section-body">
+  <p class="c-desc">
     NexVault was built as a counter to that. Not a disruption for its own sake — but a quiet, deliberate proof that the right technology in the right hands, pointed at the right purpose, can give back what was taken.
   </p>
 
-  <!-- Three philosophy cards -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:32px 0" class="phil-grid">
-
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 22px">
-      <div style="font-size:10px;letter-spacing:.14em;color:var(--gold);font-weight:600;margin-bottom:14px">THE BELIEF</div>
-      <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text);margin-bottom:12px;line-height:1.3;font-weight:300">Access to yield is not a privilege. It is a right.</div>
-      <p style="font-size:12px;color:var(--muted);line-height:1.75">Every human being who saves money deserves a real return on that savings — at the same rate, without asking anyone's permission.</p>
+  <div class="ab-phil-grid">
+    <div class="c-card rv rv-d1">
+      <div class="phil-tag">THE BELIEF</div>
+      <div class="phil-heading">Access to yield is not a privilege. It is a right.</div>
+      <p class="phil-body">Every human being who saves money deserves a real return on that savings — at the same rate, without asking anyone's permission.</p>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 22px">
-      <div style="font-size:10px;letter-spacing:.14em;color:var(--gold);font-weight:600;margin-bottom:14px">THE STANDARD</div>
-      <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text);margin-bottom:12px;line-height:1.3;font-weight:300">Code does not discriminate. Neither should capital.</div>
-      <p style="font-size:12px;color:var(--muted);line-height:1.75">A smart contract treats every wallet identically. No premium tier for large depositors. No geographic restrictions. No credit checks. The same rules run for everyone, enforced by mathematics, not by people.</p>
+    <div class="c-card rv rv-d2">
+      <div class="phil-tag">THE STANDARD</div>
+      <div class="phil-heading">Code does not discriminate. Neither should capital.</div>
+      <p class="phil-body">A smart contract treats every wallet identically. No premium tier for large depositors. No geographic restrictions. No credit checks. The same rules run for everyone, enforced by mathematics, not by people.</p>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 22px">
-      <div style="font-size:10px;letter-spacing:.14em;color:var(--gold);font-weight:600;margin-bottom:14px">THE INTENTION</div>
-      <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--text);margin-bottom:12px;line-height:1.3;font-weight:300">Profit is the vehicle. Purpose is the destination.</div>
-      <p style="font-size:12px;color:var(--muted);line-height:1.75">Protocol earnings are not the end goal. They are the fuel. A portion of every dollar earned by this protocol is locked and reserved — to be deployed toward initiatives that restore, elevate, and rebuild what the world has neglected.</p>
+    <div class="c-card rv rv-d3">
+      <div class="phil-tag">THE INTENTION</div>
+      <div class="phil-heading">Profit is the vehicle. Purpose is the destination.</div>
+      <p class="phil-body">Protocol earnings are not the end goal. They are the fuel. A portion of every dollar earned by this protocol is locked and reserved — to be deployed toward initiatives that restore, elevate, and rebuild what the world has neglected.</p>
     </div>
-
   </div>
-
-
 </section>
 
-<div class="gold-line"></div>
+<hr class="c-divider">
 
 <!-- Stats -->
-<section class="reveal">
-  <div class="section-label">BY THE NUMBERS</div>
-  <h2 class="section-title">Built on a Network That Proved Itself</h2>
-  <p class="section-body">
+<section class="ab-section rv">
+  <div class="c-label">BY THE NUMBERS</div>
+  <h2 class="c-title">Built on a Network That <em>Proved Itself</em></h2>
+  <p class="c-desc">
     NexVault is built on Nexus — a network that completed three successive testnets before mainnet, demonstrating global demand and technical readiness at scale.
   </p>
-  <div class="stats-row">
-    <div class="stat-box">
-      <div class="stat-num">2.6M</div>
-      <div class="stat-label">Testnet Participants</div>
+  <div class="ab-stats-row">
+    <div class="c-card ab-stat-box rv rv-d1">
+      <div class="ab-stat-num"><span class="counter" data-target="2.6">0</span>M</div>
+      <div class="ab-stat-label">Testnet Participants</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-num">190</div>
-      <div class="stat-label">Countries Represented</div>
+    <div class="c-card ab-stat-box rv rv-d2">
+      <div class="ab-stat-num"><span class="counter" data-target="190">0</span></div>
+      <div class="ab-stat-label">Countries Represented</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-num">58M</div>
-      <div class="stat-label">Transactions Processed</div>
+    <div class="c-card ab-stat-box rv rv-d3">
+      <div class="ab-stat-num"><span class="counter" data-target="58">0</span>M</div>
+      <div class="ab-stat-label">Transactions Processed</div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<div class="gold-line"></div>
-<div class="cta-section reveal">
-  <div style="font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,50px);color:var(--text);margin-bottom:14px;font-weight:300;line-height:1.2">
-    Ready to Join the Mission?
-  </div>
-  <p style="font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.75;max-width:500px;margin-left:auto;margin-right:auto">
+<hr class="c-divider">
+<div class="ab-cta rv">
+  <h2 class="c-title">Ready to Join<br><em>the Mission?</em></h2>
+  <p class="c-desc">
     Deposit USDX. Earn sovereign yield. Be part of something that gives back.
   </p>
-  <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
-    <a href="/" class="btn-primary">◈ Join Waitlist</a>
-    <a href="/whitepaper" target="_blank" class="btn-secondary">↓ Read Whitepaper</a>
+  <div class="ab-cta-btns">
+    <a href="/" class="btn-neon">JOIN WAITLIST</a>
+    <a href="/whitepaper" target="_blank" class="btn-magenta">READ WHITEPAPER</a>
   </div>
 </div>
 
 <!-- Footer -->
-<footer>
-  <div class="footer-copy">© 2026 NEXVAULT · BUILT ON NEXUS.XYZ · SOVEREIGN YIELD BANKING FOR EVERY HUMAN ON EARTH</div>
-  <div class="footer-links">
-    <a href="/" class="footer-link">HOME</a>
-    <a href="/about" class="footer-link">ABOUT</a>
-    <a href="/app" class="footer-link">VAULT</a>
-    <a href="/whitepaper" class="footer-link" target="_blank">WHITEPAPER</a>
+<footer class="c-footer">
+  <span class="c-footer-copy">&copy; 2026 NexVault</span>
+  <div class="c-footer-links">
+    <a href="/about">About</a><a href="/security">Security</a><a href="/nexcredit">NexCredit</a>
+    <a href="/proof">Proof</a><a href="/news">News</a><a href="/whitepaper">Whitepaper</a><a href="/terms">Terms</a>
   </div>
 </footer>
 
-<script>
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) }
-    })
-  }, { threshold: 0.1 })
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
-</script>
+<script src="/nv-cyber.js"></script>
 </body>
 </html>
