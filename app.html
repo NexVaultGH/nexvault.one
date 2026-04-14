@@ -1068,21 +1068,6 @@ async function openWalletModal() {
   }
 
   try {
-    // Always force account picker — user must explicitly authorize
-    try {
-      await provider.request({
-        method: 'wallet_requestPermissions',
-        params: [{ eth_accounts: {} }]
-      })
-    } catch(permErr) {
-      // If wallet_requestPermissions fails (user cancelled), stop
-      if (permErr.code === 4001) {
-        if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
-        showNotif('Connection cancelled', 'err')
-        return
-      }
-      // Some wallets don't support this method — fall through to eth_requestAccounts
-    }
     const accounts = await provider.request({ method: 'eth_requestAccounts' })
     if (accounts && accounts.length > 0) {
       window._activeProvider = provider
@@ -1104,13 +1089,6 @@ function doDisconnect() {
   // Save last wallet so we can offer reconnect option
   if (STATE && STATE.address) {
     localStorage.setItem('nexvault_last_wallet', STATE.address)
-  }
-  // Revoke MetaMask permissions so it doesn't auto-reconnect
-  var prov = window._activeProvider || window.ethereum
-  if (prov) {
-    try {
-      prov.request({ method: 'wallet_revokePermissions', params: [{ eth_accounts: {} }] }).catch(function(){})
-    } catch(e) {}
   }
   // Mark as logged out — prevents auto-reconnect on reload
   localStorage.setItem('nexvault_logged_out', 'true')
