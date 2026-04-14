@@ -1083,9 +1083,42 @@ async function openWalletModal() {
 
 // -- Disconnect ----------------------------------------
 function doDisconnect() {
+  // Save last wallet so we can offer reconnect option
+  if (STATE && STATE.address) {
+    localStorage.setItem('nexvault_last_wallet', STATE.address)
+  }
   window._activeProvider = null
   window.onWalletDisconnected()
   showNotif('Wallet disconnected', 'ok')
+}
+
+// -- Reconnect choice modal ----------------------------
+function showReconnectModal() {
+  var last = localStorage.getItem('nexvault_last_wallet')
+  if (!last) {
+    // No previous wallet — go straight to connect
+    openWalletModal()
+    return
+  }
+  var short = last.slice(0,6) + '...' + last.slice(-4)
+  removeWalletModal()
+  var d = document.createElement('div')
+  d.id = 'nv-wallet-modal'
+  d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(5,5,15,.92);backdrop-filter:blur(14px)'
+  d.innerHTML = '<div style="background:#0a0a1a;border:1px solid rgba(0,240,255,.2);border-radius:8px;padding:36px 28px;width:380px;max-width:92vw;text-align:center;position:relative;box-shadow:0 0 40px rgba(0,240,255,.06)">' +
+    '<div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.4),transparent)"></div>' +
+    '<button onclick="removeWalletModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#8888aa;font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>' +
+    '<div style="font-family:Playfair Display,serif;font-size:22px;color:#f5f5ff;margin-bottom:8px">Welcome Back</div>' +
+    '<div style="font-size:12px;color:#8888aa;line-height:1.7;margin-bottom:24px">Connect to your previous wallet or use a different one.</div>' +
+    '<button onclick="removeWalletModal();openWalletModal()" style="width:100%;padding:14px;border-radius:4px;border:1px solid rgba(0,240,255,.3);background:rgba(0,240,255,.06);color:#00f0ff;font-family:DM Mono,monospace;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,240,255,.3);box-shadow:0 0 15px rgba(0,240,255,.1);text-align:center">' +
+      '<div>RECONNECT PREVIOUS WALLET</div>' +
+      '<div style="font-size:10px;font-weight:400;color:#5a5a7a;margin-top:4px">' + short + '</div>' +
+    '</button>' +
+    '<button onclick="removeWalletModal();localStorage.removeItem(\\\'nexvault_last_wallet\\\');openWalletModal()" style="width:100%;padding:14px;border-radius:4px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:#c9a84c;font-family:DM Mono,monospace;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;text-align:center">CONNECT NEW WALLET</button>' +
+    '<button onclick="removeWalletModal();connectViaWalletConnect()" style="width:100%;padding:12px;border-radius:4px;border:1px solid rgba(0,240,255,.1);background:rgba(0,240,255,.02);color:#8888aa;font-family:DM Mono,monospace;font-size:11px;font-weight:500;cursor:pointer;letter-spacing:.06em;text-align:center">&#x25A3; SCAN QR CODE</button>' +
+  '</div>'
+  document.body.appendChild(d)
+  d.addEventListener('click', function(e) { if (e.target === d) removeWalletModal() })
 }
 
 // -- Account / chain listeners -------------------------
@@ -1183,16 +1216,9 @@ async function loadNexCredit(address) {
     const ownerAddr = '0x44e06fb3517ee815bba5612f783712ac4f498ba0'
     const isFounder = address && address.toLowerCase() === ownerAddr
     console.log('[NC] address:', address?.toLowerCase(), 'owner:', ownerAddr, 'isFounder:', isFounder)
-    // Show helper if non-founder wallet connected
+    // Remove any old helper elements
     var helperEl = document.getElementById('nc-founder-helper')
     if (helperEl) helperEl.remove()
-    if (!isFounder) {
-      var h = document.createElement('div')
-      h.id = 'nc-founder-helper'
-      h.style.cssText = 'font-size:10px;color:#c9a84c;padding:8px 12px;border:1px solid rgba(201,168,76,.15);border-radius:4px;margin-top:8px;line-height:1.6;background:rgba(201,168,76,.03)'
-      h.innerHTML = 'Founder wallet: switch to <strong style="color:#00f0ff">0x44e0...8ba0</strong> in MetaMask for Elite status'
-      card.appendChild(h)
-    }
     const demoScore = isFounder ? 1000 : 0
     const demoLabel = isFounder ? 'ELITE' : 'NO HISTORY'
     const demoColor = isFounder ? '#39ff14' : '#5a5a7a'
@@ -1255,7 +1281,14 @@ async function loadNexCredit(address) {
 }
 
 // -- Globals -------------------------------------------
-window.connectWallet    = openWalletModal
+window.connectWallet    = function() {
+  // If user logged out and has a previous wallet, show choice modal
+  if (localStorage.getItem('nexvault_last_wallet') && !STATE.connected) {
+    showReconnectModal()
+  } else {
+    openWalletModal()
+  }
+}
 window.disconnectWallet = doDisconnect
 window.switchNetwork    = openWalletModal
 </script>
