@@ -1068,13 +1068,20 @@ async function openWalletModal() {
   }
 
   try {
-    // If "Connect New Wallet" was clicked, force the account picker
-    if (_forceNewWallet) {
-      _forceNewWallet = false
+    // Always force account picker — user must explicitly authorize
+    try {
       await provider.request({
         method: 'wallet_requestPermissions',
         params: [{ eth_accounts: {} }]
       })
+    } catch(permErr) {
+      // If wallet_requestPermissions fails (user cancelled), stop
+      if (permErr.code === 4001) {
+        if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
+        showNotif('Connection cancelled', 'err')
+        return
+      }
+      // Some wallets don't support this method — fall through to eth_requestAccounts
     }
     const accounts = await provider.request({ method: 'eth_requestAccounts' })
     if (accounts && accounts.length > 0) {
@@ -1098,6 +1105,16 @@ function doDisconnect() {
   if (STATE && STATE.address) {
     localStorage.setItem('nexvault_last_wallet', STATE.address)
   }
+  // Revoke MetaMask permissions so it doesn't auto-reconnect
+  var prov = window._activeProvider || window.ethereum
+  if (prov) {
+    try {
+      prov.request({ method: 'wallet_revokePermissions', params: [{ eth_accounts: {} }] }).catch(function(){})
+    } catch(e) {}
+  }
+  // Mark as logged out — prevents auto-reconnect on reload
+  localStorage.setItem('nexvault_logged_out', 'true')
+  localStorage.removeItem('nexvault_address')
   window._activeProvider = null
   window.onWalletDisconnected()
   showNotif('Wallet disconnected', 'ok')
@@ -1219,9 +1236,13 @@ function showConnectMethodModal() {
 })()
 
 // -- Auto-reconnect on page load -----------------------
+// ONLY auto-reconnects if user did NOT explicitly logout.
+// After logout, user must click Connect and authorize again.
 window.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('nexvault_address')
-  if (!saved) return
+  const loggedOut = localStorage.getItem('nexvault_logged_out')
+  // If user explicitly logged out, do NOT auto-reconnect
+  if (!saved || loggedOut === 'true') return
   waitForMetaMask().then(provider => {
     if (!provider) { localStorage.removeItem('nexvault_address'); return }
     provider.request({ method: 'eth_accounts' }).then(accounts => {
@@ -1404,7 +1425,8 @@ window.switchNetwork    = openWalletModal
     STATE.connected = true
     STATE.address = address
 
-    // Remember this wallet so page reload auto-reconnects
+    // Clear logged-out flag and remember wallet
+    localStorage.removeItem('nexvault_logged_out')
     localStorage.setItem('nexvault_address', address)
 
     const short = address.slice(0,6)+'...'+address.slice(-4)
