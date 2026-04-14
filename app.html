@@ -1182,6 +1182,16 @@ async function loadNexCredit(address) {
     const ownerAddr = '0x44e06fb3517ee815bba5612f783712ac4f498ba0'
     const isFounder = address && address.toLowerCase() === ownerAddr
     console.log('[NC] address:', address?.toLowerCase(), 'owner:', ownerAddr, 'isFounder:', isFounder)
+    // Show helper if non-founder wallet connected
+    var helperEl = document.getElementById('nc-founder-helper')
+    if (helperEl) helperEl.remove()
+    if (!isFounder) {
+      var h = document.createElement('div')
+      h.id = 'nc-founder-helper'
+      h.style.cssText = 'font-size:10px;color:#c9a84c;padding:8px 12px;border:1px solid rgba(201,168,76,.15);border-radius:4px;margin-top:8px;line-height:1.6;background:rgba(201,168,76,.03)'
+      h.innerHTML = 'Founder wallet: switch to <strong style="color:#00f0ff">0x44e0...8ba0</strong> in MetaMask for Elite status'
+      card.appendChild(h)
+    }
     const demoScore = isFounder ? 1000 : 0
     const demoLabel = isFounder ? 'ELITE' : 'NO HISTORY'
     const demoColor = isFounder ? '#39ff14' : '#5a5a7a'
