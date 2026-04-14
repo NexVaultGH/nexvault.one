@@ -1051,6 +1051,9 @@ function showNoMetaMaskModal() {
   }
 }
 
+// -- Flag: force account picker for "new wallet" flow --
+var _forceNewWallet = false
+
 // -- MAIN CONNECT FUNCTION -----------------------------
 async function openWalletModal() {
   const btn = document.getElementById('wallet-btn')
@@ -1065,6 +1068,14 @@ async function openWalletModal() {
   }
 
   try {
+    // If "Connect New Wallet" was clicked, force the account picker
+    if (_forceNewWallet) {
+      _forceNewWallet = false
+      await provider.request({
+        method: 'wallet_requestPermissions',
+        params: [{ eth_accounts: {} }]
+      })
+    }
     const accounts = await provider.request({ method: 'eth_requestAccounts' })
     if (accounts && accounts.length > 0) {
       window._activeProvider = provider
@@ -1096,6 +1107,8 @@ function doDisconnect() {
 function handleConnectNew() {
   removeWalletModal()
   localStorage.removeItem('nexvault_last_wallet')
+  localStorage.removeItem('nexvault_address')
+  _forceNewWallet = true
   showConnectMethodModal()
 }
 
