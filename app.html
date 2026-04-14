@@ -988,7 +988,30 @@ async function loadNexCredit(address) {
   const card = document.getElementById('nexcredit-card')
   if (!card) return
   if (!NEXCREDIT_ADDRESS || NEXCREDIT_ADDRESS === '') {
-    card.style.display = 'none'
+    // Pre-deploy: show founder Elite preview for OWNER, demo for others
+    card.style.display = 'block'
+    const isFounder = address && address.toLowerCase() === '0x44e06fb3517ee815bba5612f783712ac4f498ba0'
+    const demoScore = isFounder ? 1000 : 0
+    const demoLabel = isFounder ? 'ELITE' : 'NO HISTORY'
+    const demoColor = isFounder ? '#39ff14' : '#5a5a7a'
+    const demoDs = isFounder ? 250 : 0
+    const demoLc = isFounder ? 250 : 0
+    const demoPl = isFounder ? 250 : 0
+    const demoBe = isFounder ? 250 : 0
+    document.getElementById('nc-score-num').textContent = demoScore
+    document.getElementById('nc-score-num').style.color = demoColor
+    document.getElementById('nc-score-label').textContent = demoLabel
+    document.getElementById('nc-score-label').style.color = demoColor
+    document.getElementById('nc-bar').style.width = (demoScore / 10) + '%'
+    if (document.getElementById('nc-total-text')) document.getElementById('nc-total-text').textContent = demoScore + ' / 1000'
+    document.getElementById('nc-ds').textContent = demoDs + '/250'
+    document.getElementById('nc-lc').textContent = demoLc + '/250'
+    document.getElementById('nc-pl').textContent = demoPl + '/250'
+    document.getElementById('nc-be').textContent = demoBe + '/250'
+    document.getElementById('nc-ds-bar').style.width = (demoDs/250*100) + '%'
+    document.getElementById('nc-lc-bar').style.width = (demoLc/250*100) + '%'
+    document.getElementById('nc-pl-bar').style.width = (demoPl/250*100) + '%'
+    document.getElementById('nc-be-bar').style.width = (demoBe/250*100) + '%'
     return
   }
   card.style.display = 'block'
