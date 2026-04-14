@@ -679,65 +679,74 @@
 <!-- Ethers v6 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
 
-<!-- WalletConnect v2 — QR bridge for mobile MetaMask → desktop session -->
-<script type="module">
-import { EthereumProvider } from 'https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.17.5/+esm'
-
-const WC_PROJECT_ID = '44a4b0d66bd62948f4ca92a7d6b3c7d2'
+<!-- MetaMask SDK — generates QR code for mobile-to-desktop bridge -->
+<script src="https://cdn.jsdelivr.net/npm/@metamask/sdk@0.28.4/dist/browser/iife/metamask-sdk.js"></script>
+<script>
+// Initialize MetaMask SDK for QR code connection
+var _mmSDK = null;
 
 window.connectViaWalletConnect = async function() {
   try {
-    // Remove any existing modal
     if (window.removeWalletModal) window.removeWalletModal()
+    if (window.showNotif) window.showNotif('Opening QR scanner...', 'ok')
 
-    const wcProvider = await EthereumProvider.init({
-      projectId: WC_PROJECT_ID,
-      chains: [1],
-      optionalChains: [1],
-      showQrModal: true,
-      qrModalOptions: {
-        themeMode: 'dark',
-        themeVariables: {
-          '--wcm-z-index': '999999',
+    if (!_mmSDK) {
+      var MMSDK = window.MetaMaskSDK && window.MetaMaskSDK.MetaMaskSDK
+      if (!MMSDK) {
+        // SDK didn't load — fall back to deep-link modal
+        if (window.showNoMetaMaskModal) window.showNoMetaMaskModal()
+        return
+      }
+      _mmSDK = new MMSDK({
+        dappMetadata: {
+          name: 'NexVault',
+          url: 'https://nexvault.one',
         },
-      },
-      metadata: {
-        name: 'NexVault',
-        description: 'USDX Savings Protocol — Sovereign Yield Banking',
-        url: 'https://nexvault.one',
-        icons: ['https://nexvault.one/icon-192.png'],
-      },
-    })
-
-    await wcProvider.enable()
-
-    if (wcProvider.accounts && wcProvider.accounts.length > 0) {
-      // Store WC provider globally for contract calls
-      window._wcProvider = wcProvider
-      window._activeProvider = wcProvider
-
-      // Wire up disconnect
-      wcProvider.on('disconnect', () => {
-        window._wcProvider = null
-        if (window.onWalletDisconnected) window.onWalletDisconnected()
+        checkInstallationImmediately: false,
+        modals: {
+          install: ({ link }) => {
+            // Show install modal with QR
+            return { unmount: () => {} }
+          },
+          otp: () => {
+            return { updateOTPValue: () => {} }
+          },
+        },
       })
-      wcProvider.on('accountsChanged', (accounts) => {
-        if (!accounts || accounts.length === 0) {
+      await _mmSDK.init()
+    }
+
+    var sdkProvider = _mmSDK.getProvider()
+    if (!sdkProvider) {
+      if (window.showNoMetaMaskModal) window.showNoMetaMaskModal()
+      return
+    }
+
+    var accounts = await sdkProvider.request({ method: 'eth_requestAccounts' })
+
+    if (accounts && accounts.length > 0) {
+      window._activeProvider = sdkProvider
+
+      sdkProvider.on('accountsChanged', function(accts) {
+        if (!accts || accts.length === 0) {
           if (window.onWalletDisconnected) window.onWalletDisconnected()
         } else {
-          if (window.onWalletConnected) window.onWalletConnected(accounts[0])
+          if (window.onWalletConnected) window.onWalletConnected(accts[0])
         }
       })
 
-      if (window.onWalletConnected) window.onWalletConnected(wcProvider.accounts[0])
+      sdkProvider.on('chainChanged', function() { window.location.reload() })
+
+      if (window.onWalletConnected) window.onWalletConnected(accounts[0])
       if (window.showNotif) window.showNotif('Wallet connected via QR', 'ok')
     }
   } catch (err) {
-    console.warn('WalletConnect error:', err)
-    if (err.message && err.message.includes('User rejected')) {
-      if (window.showNotif) window.showNotif('Connection cancelled', 'err')
+    console.warn('MetaMask SDK error:', err)
+    if (err.code === 4001) {
+      if (window.showNotif) window.showNotif('Connection rejected', 'err')
     } else {
-      if (window.showNotif) window.showNotif('QR connect failed — try again', 'err')
+      // Fall back to deep-link modal
+      if (window.showNoMetaMaskModal) window.showNoMetaMaskModal()
     }
   }
 }
