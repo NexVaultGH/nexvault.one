@@ -251,6 +251,47 @@
     </div>
   </div>
 
+  <!-- Network Status -->
+  <div class="sc-section rv">
+    <div class="sc-section-title">Network Status</div>
+    <div class="sc-section-line"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+      <!-- Testnet (LIVE) -->
+      <div class="c-card" style="padding:24px;border-color:rgba(57,255,20,.15);background:rgba(57,255,20,.02);position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(57,255,20,.4),transparent)"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:8px;height:8px;border-radius:50%;background:#39ff14;box-shadow:0 0 8px rgba(57,255,20,.6);animation:dotPulse 2s ease-in-out infinite"></div>
+          <div style="font-size:11px;color:#39ff14;letter-spacing:.14em;font-weight:600;text-shadow:0 0 8px rgba(57,255,20,.4)">NEXUS TESTNET — LIVE</div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;line-height:2;color:var(--muted)">
+          <div><span style="color:var(--cyan);min-width:80px;display:inline-block">Chain ID:</span> 3945</div>
+          <div><span style="color:var(--cyan);min-width:80px;display:inline-block">RPC:</span> testnet.rpc.nexus.xyz</div>
+          <div><span style="color:var(--cyan);min-width:80px;display:inline-block">Explorer:</span> <a href="https://testnet.explorer.nexus.xyz" target="_blank" style="color:var(--cyan);text-decoration:none">testnet.explorer.nexus.xyz</a></div>
+          <div><span style="color:var(--cyan);min-width:80px;display:inline-block">Faucet:</span> <a href="https://faucet.nexus.xyz" target="_blank" style="color:var(--cyan);text-decoration:none">faucet.nexus.xyz</a></div>
+          <div><span style="color:var(--cyan);min-width:80px;display:inline-block">Currency:</span> NEX</div>
+        </div>
+      </div>
+
+      <!-- Mainnet (Q2 2026) -->
+      <div class="c-card" style="padding:24px;border-color:rgba(201,168,76,.15);background:rgba(201,168,76,.02);position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.4),transparent)"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:8px;height:8px;border-radius:50%;background:transparent;border:1.5px solid #c9a84c;box-shadow:0 0 6px rgba(201,168,76,.3)"></div>
+          <div style="font-size:11px;color:#c9a84c;letter-spacing:.14em;font-weight:600;text-shadow:0 0 8px rgba(201,168,76,.3)">NEXUS MAINNET — Q2 2026</div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;line-height:2;color:var(--muted)">
+          <div><span style="color:#c9a84c;min-width:80px;display:inline-block">Status:</span> Configuration pending official launch</div>
+          <div><span style="color:#c9a84c;min-width:80px;display:inline-block">Chain ID:</span> TBA</div>
+          <div><span style="color:#c9a84c;min-width:80px;display:inline-block">RPC:</span> TBA</div>
+          <div><span style="color:#c9a84c;min-width:80px;display:inline-block">Explorer:</span> TBA</div>
+          <div><span style="color:#c9a84c;min-width:80px;display:inline-block">Currency:</span> NEX</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Test Coverage -->
   <div class="sc-section rv">
     <div class="sc-section-title">Test Coverage</div>

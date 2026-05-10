@@ -216,6 +216,7 @@
     <a href="/whitepaper" class="c-nav-link">WHITEPAPER</a>
     <a href="/app" class="c-nav-cta" style="display:none">OPEN VAULT</a>
     <div style="display:flex;align-items:center;gap:10px;margin-left:12px">
+      <span id="network-pill" style="display:none;align-items:center;gap:6px;padding:5px 12px;border-radius:4px;border:1px solid rgba(57,255,20,.25);background:rgba(57,255,20,.08);color:#39ff14;font-family:'DM Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.06em;white-space:nowrap"></span>
       <div class="blink" style="width:7px;height:7px;border-radius:50%;background:#39ff14;flex-shrink:0;box-shadow:0 0 8px rgba(57,255,20,.5)"></div>
       <button id="wallet-btn" class="wallet-btn" onclick="connectWallet()">
         <span id="wallet-icon">&#x25C8;</span>
@@ -844,12 +845,111 @@ window.connectViaWalletConnect = async function() {
      WALLET CONNECTION
 ============================================= -->
 <script>
-// -- Config (fill in at Nexus mainnet launch) ----------
-const NEXUS_CHAIN_ID = 1
-const NEXUS_RPC_URL  = ''
+// -- Network Config -------------------------------------
+const NETWORKS = {
+  testnet: {
+    chainId: '0xF69',  // 3945 in hex
+    chainIdNum: 3945,
+    chainName: 'Nexus Testnet',
+    nativeCurrency: { name: 'Nexus', symbol: 'NEX', decimals: 18 },
+    rpcUrls: ['https://testnet.rpc.nexus.xyz'],
+    blockExplorerUrls: ['https://testnet.explorer.nexus.xyz']
+  },
+  mainnet: {
+    // Filled in Q2 2026 when Nexus mainnet launches
+    chainId: '',
+    chainIdNum: 0,
+    chainName: 'Nexus',
+    nativeCurrency: { name: 'Nexus', symbol: 'NEX', decimals: 18 },
+    rpcUrls: [],
+    blockExplorerUrls: []
+  }
+}
+
+const ACTIVE_NETWORK = NETWORKS.testnet  // Switch to mainnet when ready
+const NETWORK_MODE   = 'testnet'         // 'testnet' or 'mainnet'
+
+// -- Legacy Config (kept for backward compat) ----------
+const NEXUS_CHAIN_ID = ACTIVE_NETWORK.chainIdNum
+const NEXUS_RPC_URL  = ACTIVE_NETWORK.rpcUrls[0] || ''
 const VAULT_ADDRESS      = ''
 const USDX_ADDRESS       = ''
 const NEXCREDIT_ADDRESS  = '' // fill after deploy
+
+// -- Network switching helper -------------------------
+async function ensureCorrectNetwork(provider) {
+  if (!provider || !ACTIVE_NETWORK.chainId) return false
+  try {
+    const currentChainId = await provider.request({ method: 'eth_chainId' })
+    if (currentChainId === ACTIVE_NETWORK.chainId) return true
+    // Try to switch to the active network
+    try {
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: ACTIVE_NETWORK.chainId }]
+      })
+      return true
+    } catch (switchErr) {
+      // Chain not added — try to add it
+      if (switchErr.code === 4902 || (switchErr.data && switchErr.data.originalError && switchErr.data.originalError.code === 4902)) {
+        try {
+          await provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: ACTIVE_NETWORK.chainId,
+              chainName: ACTIVE_NETWORK.chainName,
+              nativeCurrency: ACTIVE_NETWORK.nativeCurrency,
+              rpcUrls: ACTIVE_NETWORK.rpcUrls,
+              blockExplorerUrls: ACTIVE_NETWORK.blockExplorerUrls
+            }]
+          })
+          return true
+        } catch (addErr) {
+          if (window.showNotif) window.showNotif('Network add rejected — switch manually in MetaMask', 'err')
+          return false
+        }
+      }
+      if (switchErr.code === 4001) {
+        if (window.showNotif) window.showNotif('Network switch rejected', 'err')
+      } else {
+        if (window.showNotif) window.showNotif('Network switch failed', 'err')
+      }
+      return false
+    }
+  } catch (e) {
+    return false
+  }
+}
+
+// -- Update network indicator pill --------------------
+async function updateNetworkPill(provider) {
+  const pill = document.getElementById('network-pill')
+  if (!pill) return
+  try {
+    const chainId = provider ? await provider.request({ method: 'eth_chainId' }) : null
+    if (!chainId) {
+      pill.style.display = 'none'
+      return
+    }
+    pill.style.display = 'inline-flex'
+    if (chainId === NETWORKS.testnet.chainId) {
+      pill.textContent = '⚡ NEXUS TESTNET'
+      pill.style.background = 'rgba(57,255,20,.08)'
+      pill.style.borderColor = 'rgba(57,255,20,.25)'
+      pill.style.color = '#39ff14'
+    } else if (NETWORKS.mainnet.chainId && chainId === NETWORKS.mainnet.chainId) {
+      pill.textContent = '⚡ NEXUS MAINNET'
+      pill.style.background = 'rgba(201,168,76,.08)'
+      pill.style.borderColor = 'rgba(201,168,76,.25)'
+      pill.style.color = '#c9a84c'
+    } else {
+      pill.textContent = '⚠ WRONG NETWORK'
+      pill.style.background = 'rgba(248,113,113,.08)'
+      pill.style.borderColor = 'rgba(248,113,113,.3)'
+      pill.style.color = '#f87171'
+    }
+  } catch (e) {}
+}
 
 const METAMASK_ICON = `<svg width="36" height="36" viewBox="0 0 35 33" xmlns="http://www.w3.org/2000/svg">
   <polygon fill="#E17726" stroke="#E17726" stroke-width=".25" stroke-linejoin="round" points="32.9582,0.842 19.3685,10.2157 21.7863,4.5924"/>
@@ -1211,7 +1311,11 @@ function showConnectMethodModal() {
         if (!accounts || accounts.length === 0) window.onWalletDisconnected()
         else window.onWalletConnected(accounts[0])
       })
-      eth.on('chainChanged', () => window.location.reload())
+      eth.on('chainChanged', () => {
+        if (window.updateNetworkPill) updateNetworkPill(eth)
+        // Reload to refresh contract instances on the new chain
+        window.location.reload()
+      })
     } catch(e) {}
   }
 
@@ -1409,7 +1513,7 @@ window.switchNetwork    = openWalletModal
   const fmt = (n, d=2) => Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})
 
   // -- WALLET EVENTS -------------------------------------
-  window.onWalletConnected = (address) => {
+  window.onWalletConnected = async (address) => {
     STATE.connected = true
     STATE.address = address
 
@@ -1427,6 +1531,13 @@ window.switchNetwork    = openWalletModal
     document.getElementById('balance-content').style.display = 'block'
 
     document.getElementById('ref-link').textContent = `nexvault.one/ref/${address.slice(0,6)}...${address.slice(-4)}`
+
+    // Ensure correct network (Nexus testnet/mainnet)
+    const prov = window._activeProvider || window.ethereum
+    if (prov && ACTIVE_NETWORK.chainId) {
+      await ensureCorrectNetwork(prov)
+      await updateNetworkPill(prov)
+    }
 
     updateUI()
     startLiveYield()
@@ -1448,6 +1559,8 @@ window.switchNetwork    = openWalletModal
     btn.className = 'wallet-btn'
     btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>'
     document.getElementById('logout-btn').style.display = 'none'
+    var npill = document.getElementById('network-pill')
+    if (npill) npill.style.display = 'none'
 
     document.getElementById('connect-prompt').style.display = 'block'
     document.getElementById('balance-content').style.display = 'none'
