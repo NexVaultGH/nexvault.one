@@ -171,6 +171,49 @@ const ctrObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.5 });
 document.querySelectorAll('.counter').forEach(el => ctrObs.observe(el));
 
+// ── Hamburger menu (auto-injected on every page using c-nav) ──
+(function(){
+  var nav = document.querySelector('.c-nav');
+  if (!nav) return;
+  var navLinks = nav.querySelector('.c-nav-links');
+  if (!navLinks) return;
+
+  // Create hamburger button
+  var burger = document.createElement('button');
+  burger.className = 'c-hamburger';
+  burger.setAttribute('aria-label', 'Open menu');
+  burger.innerHTML = '<span></span><span></span><span></span>';
+  nav.appendChild(burger);
+
+  // Clone nav links into mobile menu
+  var mobileMenu = document.createElement('div');
+  mobileMenu.className = 'c-mobile-menu';
+  var links = navLinks.querySelectorAll('a');
+  links.forEach(function(a){
+    var clone = document.createElement('a');
+    clone.href = a.href;
+    clone.textContent = a.textContent;
+    if (a.classList.contains('c-nav-cta')) clone.className = 'cta';
+    mobileMenu.appendChild(clone);
+  });
+  document.body.appendChild(mobileMenu);
+
+  function toggle(){
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+  }
+  burger.addEventListener('click', toggle);
+  // Close menu when a link is tapped
+  mobileMenu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      burger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+})();
+
 // ── Loader ──
 (function(){
   const loader = document.getElementById('cyber-loader');
