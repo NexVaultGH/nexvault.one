@@ -1006,7 +1006,7 @@ function exportLeaderboard() {
 //      .sort((a, b) => a.blockNumber - b.blockNumber)
 //      .map((e, i) => ({
 //        wallet: e.args.user,
-//        tier: ['Flexible','90-Day','1-Year','2-Year'][e.args.tier],
+//        tier: ['1-Year','3-Year','5-Year'][e.args.tier],
 //        amount: Number(ethers.formatUnits(e.args.amount, 6)),
 //        time: new Date((await provider.getBlock(e.blockNumber)).timestamp * 1000).toLocaleString(),
 //        badgeMinted: mintedWallets.has(e.args.user.toLowerCase()),
