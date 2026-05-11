@@ -26,10 +26,10 @@
       { text: "What is NexVault?", goto: "what" }, { text: "Yield tiers?", goto: "tiers" },
       { text: "How do I start?", goto: "start" }, { text: "Is it safe?", goto: "safe" }
     ]},
-    what: { msg: "NexVault is a non-custodial USDX savings vault on Nexus blockchain. Deposit USDX, choose a lock period, earn up to 4.44% APY backed by U.S. Treasury yields.", pills: [
+    what: { msg: "NexVault is a non-custodial USDX savings vault on Nexus blockchain. Deposit USDX, choose a lock period, earn up to 4.38% APY backed by U.S. Treasury yields.", pills: [
       { text: "Open Vault", goto: "lv" }, { text: "Back", goto: "root" }
     ]},
-    tiers: { msg: "Three tiers:\n\u2022 1-Year \u2014 3.80% APY\n\u2022 3-Year \u2014 4.10% APY\n\u2022 5-Year \u2014 4.44% APY", pills: [
+    tiers: { msg: "Three tiers:\n\u2022 1-Year \u2014 3.75% APY\n\u2022 3-Year \u2014 3.92% APY\n\u2022 5-Year \u2014 4.38% APY", pills: [
       { text: "Open Vault", goto: "lv" }, { text: "Back", goto: "root" }
     ]},
     start: { msg: "1. Install MetaMask\n2. Get USDX on Nexus\n3. Choose tier & deposit\n\nTakes about 5 minutes.", pills: [
@@ -86,9 +86,9 @@
 
   /* ── Typed Message Handler ──────────────────────────────────── */
   var knowledgeBase = [
-    { keys: ['what','nexvault','protocol','about'], answer: "NexVault is a non-custodial USDX savings vault on the Nexus blockchain. You deposit USDX stablecoins, choose a lock period (1, 3, or 5 years), and earn up to 4.44% APY backed by U.S. Treasury yields through GYDS." },
-    { keys: ['apy','yield','rate','interest','earn','percent','4.44'], answer: "NexVault offers three yield tiers:\n\u2022 1-Year Lock \u2014 3.80% APY\n\u2022 3-Year Lock \u2014 4.10% APY\n\u2022 5-Year Lock \u2014 4.44% APY\n\nYield accrues every second and is backed by U.S. Treasury through GYDS." },
-    { keys: ['tier','lock','1 year','3 year','5 year','commitment','duration'], answer: "Three tiers based on lock duration. 1-Year (365 days) at 3.80% APY, 3-Year (1,095 days) at 4.10% APY, and 5-Year (1,825 days) at 4.44% APY. Longer commitment = higher yield. Same rate for everyone regardless of deposit size." },
+    { keys: ['what','nexvault','protocol','about'], answer: "NexVault is a non-custodial USDX savings vault on the Nexus blockchain. You deposit USDX stablecoins, choose a lock period (1, 3, or 5 years), and earn up to 4.38% APY backed by U.S. Treasury yields through GYDS." },
+    { keys: ['apy','yield','rate','interest','earn','percent','4.38'], answer: "NexVault offers three yield tiers:\n\u2022 1-Year Lock \u2014 3.75% APY\n\u2022 3-Year Lock \u2014 3.92% APY\n\u2022 5-Year Lock \u2014 4.38% APY\n\nYield accrues every second and is backed by U.S. Treasury through GYDS." },
+    { keys: ['tier','lock','1 year','3 year','5 year','commitment','duration'], answer: "Three tiers based on lock duration. 1-Year (365 days) at 3.75% APY, 3-Year (1,095 days) at 3.92% APY, and 5-Year (1,825 days) at 4.38% APY. Longer commitment = higher yield. Same rate for everyone regardless of deposit size." },
     { keys: ['deposit','how to','start','begin','get started','connect'], answer: "Getting started takes 3 steps:\n1. Install MetaMask wallet\n2. Get USDX on the Nexus network\n3. Connect to NexVault, choose a tier, and deposit\n\nThe whole process takes about 5 minutes." },
     { keys: ['safe','security','secure','trust','hack','risk','audit'], answer: "NexVault has 246 passing contract tests. It's fully non-custodial \u2014 your funds stay in the smart contract, only your wallet can withdraw. No admin withdrawal keys exist. The code is open source on GitHub. A CertiK audit is planned." },
     { keys: ['wallet','metamask','connect wallet','which wallet'], answer: "MetaMask is the only supported wallet. Install the browser extension for desktop or the MetaMask mobile app. NexVault also has a Windows desktop app available for download." },

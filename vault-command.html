@@ -227,9 +227,9 @@ body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-
           <tr><th>Tier</th><th>APY</th><th>TVL</th><th>% of Total</th><th>Monthly GYDS (est.)</th><th>Your Cut (10%)</th></tr>
         </thead>
         <tbody id="tvl-breakdown">
-          <tr><td>1-Year Lock</td><td style="color:var(--blue)">3.80%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
-          <tr><td>3-Year Lock</td><td style="color:var(--purple)">4.10%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
-          <tr><td>5-Year Lock</td><td style="color:var(--green)">4.44%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
+          <tr><td>1-Year Lock</td><td style="color:var(--blue)">3.75%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
+          <tr><td>3-Year Lock</td><td style="color:var(--purple)">3.92%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
+          <tr><td>5-Year Lock</td><td style="color:var(--green)">4.38%</td><td>$0</td><td>—</td><td>$0.00</td><td style="color:var(--gold)">$0.00</td></tr>
           <tr style="border-top:1px solid rgba(201,168,76,.12)">
             <td colspan="4" style="color:var(--gold);font-weight:600">TOTAL</td>
             <td style="color:var(--text);font-weight:600" id="tbl-monthly">$0.00</td>
@@ -657,9 +657,9 @@ function updateStats({ tvl, depositors, badges, yieldAmt, pending, auditFund }) 
 function renderTierBreakdown(tvl) {
   // Simulated — at mainnet replace with per-tier on-chain reads
   const tiers = [
-    { name:'1-Year Lock',  apy:'3.80%', color:'var(--blue)',   share: 0.30 },
-    { name:'3-Year Lock',  apy:'4.10%', color:'var(--purple)', share: 0.40 },
-    { name:'5-Year Lock',  apy:'4.44%', color:'var(--green)',  share: 0.30 },
+    { name:'1-Year Lock',  apy:'3.75%', color:'var(--blue)',   share: 0.30 },
+    { name:'3-Year Lock',  apy:'3.92%', color:'var(--purple)', share: 0.40 },
+    { name:'5-Year Lock',  apy:'4.38%', color:'var(--green)',  share: 0.30 },
   ]
   const tbody = document.getElementById('tvl-breakdown')
   const monthly_total = tvl * 0.001
@@ -801,9 +801,9 @@ Once minted, it is permanent on-chain proof that you were here at the beginning.
 
 Deposit USDX and earn:
 
-  3.80% APY — 1-Year Lock (365 days)
-  4.10% APY — 3-Year Lock (1,095 days)
-  4.44% APY — 5-Year Lock (1,825 days)
+  3.75% APY — 1-Year Lock (365 days)
+  3.92% APY — 3-Year Lock (1,095 days)
+  4.38% APY — 5-Year Lock (1,825 days)
 
 No minimum deposit. No KYC. Non-custodial.
 Your yield. Your keys. Your vault.

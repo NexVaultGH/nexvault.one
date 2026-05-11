@@ -212,7 +212,7 @@
     </div>
     <div class="stat-card">
       <div style="font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:500">Ecosystem APY</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#a78bfa">3.80 – 4.44%</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#a78bfa">3.75 – 4.38%</div>
       <div style="font-size:10px;color:var(--dim);margin-top:2px">Tier based</div>
     </div>
     <div class="stat-card">
@@ -263,7 +263,7 @@
             </div>
             <div style="font-size:12px;color:var(--muted);margin-bottom:22px">
               USDX &nbsp;·&nbsp; <span id="tier-label">1-Year</span> Tier &nbsp;·&nbsp;
-              <span id="apy-label" style="color:#60a5fa;font-weight:600">3.80% APY</span>
+              <span id="apy-label" style="color:#60a5fa;font-weight:600">3.75% APY</span>
             </div>
 
             <!-- Live yield ticker -->
@@ -376,7 +376,7 @@
                     <div style="font-size:10px;color:var(--dim)">Locked 365 days</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#60a5fa">3.80%</div>
+                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#60a5fa">3.75%</div>
               </div>
             </div>
 
@@ -389,7 +389,7 @@
                     <div style="font-size:10px;color:var(--dim)">Locked 1095 days</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dim)">4.10%</div>
+                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dim)">3.92%</div>
               </div>
             </div>
 
@@ -402,7 +402,7 @@
                     <div style="font-size:10px;color:var(--dim)">Locked 1825 days — maximum yield</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dim)">4.44%</div>
+                <div class="tier-apy" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dim)">4.38%</div>
               </div>
             </div>
           </div>
@@ -433,7 +433,7 @@
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:8px">
               <span style="font-size:12px;color:var(--muted)">Tier</span>
-              <span id="prev-tier" style="font-size:12px;color:#9ca3af;font-weight:600">1-Year — 3.80% APY</span>
+              <span id="prev-tier" style="font-size:12px;color:#9ca3af;font-weight:600">1-Year — 3.75% APY</span>
             </div>
             <div style="display:flex;justify-content:space-between">
               <span style="font-size:12px;color:var(--muted)">Est. yearly yield</span>
@@ -446,7 +446,7 @@
             ⚠️ Contracts are unaudited at launch. Audit in progress. Deposit amounts you are comfortable with.
           </div>
 
-          <button id="main-action-btn" class="pbtn pbtn-d" onclick="handleAction()">DEPOSIT USDX AT 3.80% APY</button>
+          <button id="main-action-btn" class="pbtn pbtn-d" onclick="handleAction()">DEPOSIT USDX AT 3.75% APY</button>
 
           <!-- Referral -->
           <div style="margin-top:18px;padding:15px;background:rgba(255,255,255,.02);border-radius:10px">
@@ -950,9 +950,9 @@ window.switchNetwork    = switchToNexus
   }
 
   const TIERS = {
-    '1yr': { label: '1-Year',   apy: 3.8,  color: '#60a5fa', lock: 365 },
-    '3yr': { label: '3-Year',   apy: 4.1,  color: '#fbbf24', lock: 1095 },
-    '5yr': { label: '5-Year',   apy: 4.44, color: '#4ade80', lock: 1825 },
+    '1yr': { label: '1-Year',   apy: 3.75, color: '#60a5fa', lock: 365 },
+    '3yr': { label: '3-Year',   apy: 3.92, color: '#fbbf24', lock: 1095 },
+    '5yr': { label: '5-Year',   apy: 4.38, color: '#4ade80', lock: 1825 },
   }
 
   let GOAL = parseFloat(localStorage.getItem('nexvault_goal') || '30000')

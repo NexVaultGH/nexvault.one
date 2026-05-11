@@ -1,7 +1,7 @@
 {
   "name": "NexVault — USDX Savings Protocol",
   "short_name": "NexVault",
-  "description": "Earn up to 4.44% APY on USDX savings backed by U.S. Treasury yield. Connect MetaMask and start earning.",
+  "description": "Earn up to 4.38% APY on USDX savings backed by U.S. Treasury yield. Connect MetaMask and start earning.",
   "start_url": "/app.html",
   "scope": "/",
   "display": "standalone",

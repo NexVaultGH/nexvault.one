@@ -282,7 +282,7 @@
     </div>
     <div class="stat-card">
       <div style="font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;font-weight:500">Ecosystem APY</div>
-      <div style="font-family:'Playfair Display',serif;font-size:24px;color:var(--gold);text-shadow:0 0 10px rgba(201,168,76,.3)">3.80 -- 4.44%</div>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;color:var(--gold);text-shadow:0 0 10px rgba(201,168,76,.3)">3.75 -- 4.38%</div>
       <div style="font-size:10px;color:var(--dim);margin-top:3px">Tier based</div>
     </div>
     <div class="stat-card">
@@ -348,7 +348,7 @@
             </div>
             <div style="font-size:12px;color:var(--muted);margin-bottom:22px">
               USDX &nbsp;&middot;&nbsp; <span id="tier-label">1-Year</span> Tier &nbsp;&middot;&nbsp;
-              <span id="apy-label" style="color:var(--cyan);font-weight:600;text-shadow:0 0 6px rgba(0,240,255,.3)">3.80% APY</span>
+              <span id="apy-label" style="color:var(--cyan);font-weight:600;text-shadow:0 0 6px rgba(0,240,255,.3)">3.75% APY</span>
             </div>
 
             <!-- Live yield ticker -->
@@ -545,7 +545,7 @@
                     <div style="font-size:10px;color:var(--dim)">Locked 365 days</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--cyan);text-shadow:0 0 10px rgba(0,240,255,.3)">3.80%</div>
+                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--cyan);text-shadow:0 0 10px rgba(0,240,255,.3)">3.75%</div>
               </div>
             </div>
 
@@ -558,7 +558,7 @@
                     <div style="font-size:10px;color:var(--dim)">Locked 1095 days</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--dim)">4.10%</div>
+                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--dim)">3.92%</div>
               </div>
             </div>
 
@@ -571,7 +571,7 @@
                     <div style="font-size:10px;color:var(--dim)">Locked 1825 days -- maximum yield</div>
                   </div>
                 </div>
-                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--dim)">4.44%</div>
+                <div class="tier-apy" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--dim)">4.38%</div>
               </div>
             </div>
           </div>
@@ -602,7 +602,7 @@
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:8px">
               <span style="font-size:12px;color:var(--muted)">Tier</span>
-              <span id="prev-tier" style="font-size:12px;color:var(--text);font-weight:600">1-Year -- 3.80% APY</span>
+              <span id="prev-tier" style="font-size:12px;color:var(--text);font-weight:600">1-Year -- 3.75% APY</span>
             </div>
             <div style="display:flex;justify-content:space-between">
               <span style="font-size:12px;color:var(--muted)">Est. yearly yield</span>
@@ -615,7 +615,7 @@
             Contracts are unaudited at launch. Audit in progress. Deposit amounts you are comfortable with.
           </div>
 
-          <button id="main-action-btn" class="pbtn pbtn-d" onclick="handleAction()">DEPOSIT USDX AT 3.80% APY</button>
+          <button id="main-action-btn" class="pbtn pbtn-d" onclick="handleAction()">DEPOSIT USDX AT 3.75% APY</button>
 
           <!-- Referral -->
           <div style="margin-top:18px;padding:16px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px">
@@ -658,7 +658,7 @@
           <div style="font-size:12px;color:var(--muted);margin-top:10px">Connect wallet to see your personal chart</div>
         </div>
         <div class="c-card" style="padding:26px">
-          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:14px;font-weight:600">12-MONTH PROJECTION -- 1-YEAR TIER (3.80% APY)</div>
+          <div style="font-size:10px;color:var(--muted);letter-spacing:.12em;margin-bottom:14px;font-weight:600">12-MONTH PROJECTION -- 1-YEAR TIER (3.75% APY)</div>
           <svg class="mini-chart" id="chart-proj" viewBox="0 0 300 80"></svg>
           <div style="font-size:12px;color:var(--muted);margin-top:10px" id="proj-note">Deposit USDX to see your projection</div>
         </div>
@@ -1547,9 +1547,9 @@ window.switchNetwork    = openWalletModal
   }
 
   const TIERS = {
-    '1yr': { label: '1-Year',   apy: 3.8,  color: '#00f0ff', lock: 365 },
-    '3yr': { label: '3-Year',   apy: 4.1,  color: '#c9a84c', lock: 1095 },
-    '5yr': { label: '5-Year',   apy: 4.44, color: '#39ff14', lock: 1825 },
+    '1yr': { label: '1-Year',   apy: 3.75, color: '#00f0ff', lock: 365 },
+    '3yr': { label: '3-Year',   apy: 3.92, color: '#c9a84c', lock: 1095 },
+    '5yr': { label: '5-Year',   apy: 4.38, color: '#39ff14', lock: 1825 },
   }
 
   let GOAL = parseFloat(localStorage.getItem('nexvault_goal') || '30000')

@@ -1,7 +1,7 @@
 {
   "name": "NexVault — USDX Savings Protocol",
   "short_name": "NexVault",
-  "description": "Earn fixed-rate USDX yield on Nexus blockchain. 3.80% – 4.44% APY.",
+  "description": "Earn fixed-rate USDX yield on Nexus blockchain. 3.75% – 4.38% APY.",
   "start_url": "/app",
   "scope": "/",
   "display": "standalone",

@@ -174,15 +174,15 @@ new_terminal = """  <!-- ═══ HOLOGRAPHIC DEV TERMINAL ═══ -->
             </div>
             <div class="dev-panel-b">
               <div class="tier-bar-wrap">
-                <div class="tier-bar-label"><span class="tier-bar-name">1-Year Lock (3.80%)</span><span class="tier-bar-pct">42%</span></div>
+                <div class="tier-bar-label"><span class="tier-bar-name">1-Year Lock (3.75%)</span><span class="tier-bar-pct">42%</span></div>
                 <div class="tier-bar-bg"><div class="tier-bar-fill" style="width:42%"></div></div>
               </div>
               <div class="tier-bar-wrap">
-                <div class="tier-bar-label"><span class="tier-bar-name">3-Year Lock (4.10%)</span><span class="tier-bar-pct">35%</span></div>
+                <div class="tier-bar-label"><span class="tier-bar-name">3-Year Lock (3.92%)</span><span class="tier-bar-pct">35%</span></div>
                 <div class="tier-bar-bg"><div class="tier-bar-fill" style="width:35%"></div></div>
               </div>
               <div class="tier-bar-wrap">
-                <div class="tier-bar-label"><span class="tier-bar-name">5-Year Lock (4.44%)</span><span class="tier-bar-pct">23%</span></div>
+                <div class="tier-bar-label"><span class="tier-bar-name">5-Year Lock (4.38%)</span><span class="tier-bar-pct">23%</span></div>
                 <div class="tier-bar-bg"><div class="tier-bar-fill" style="width:23%"></div></div>
               </div>
             </div>

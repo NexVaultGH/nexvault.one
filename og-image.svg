@@ -61,7 +61,7 @@
   <text x="80" y="390" font-family="Georgia,serif" font-size="72" font-weight="400" font-style="italic" fill="url(#cyanGrad)" filter="url(#glow)">Yield Banking</text>
 
   <!-- Sub description -->
-  <text x="80" y="450" font-family="monospace" font-size="18" fill="#8888aa">Earn up to 4.44% APY on locked USDX &#8212; backed by U.S. Treasury yield</text>
+  <text x="80" y="450" font-family="monospace" font-size="18" fill="#8888aa">Earn up to 4.38% APY on locked USDX &#8212; backed by U.S. Treasury yield</text>
 
   <!-- Stat box: 246 passing tests -->
   <rect x="80" y="490" width="180" height="72" rx="6" fill="rgba(0,240,255,0.03)" stroke="#00f0ff" stroke-width="1" opacity="0.6"/>
@@ -71,11 +71,11 @@
   <!-- Tier pills (right side) -->
   <g>
     <rect x="280" y="490" width="140" height="36" rx="4" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.4"/>
-    <text x="350" y="513" text-anchor="middle" font-family="monospace" font-size="13" fill="#00f0ff">1-Year &#8212; 3.80%</text>
+    <text x="350" y="513" text-anchor="middle" font-family="monospace" font-size="13" fill="#00f0ff">1-Year &#8212; 3.75%</text>
     <rect x="430" y="490" width="140" height="36" rx="4" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.4"/>
-    <text x="500" y="513" text-anchor="middle" font-family="monospace" font-size="13" fill="#00f0ff">3-Year &#8212; 4.10%</text>
+    <text x="500" y="513" text-anchor="middle" font-family="monospace" font-size="13" fill="#00f0ff">3-Year &#8212; 3.92%</text>
     <rect x="580" y="490" width="140" height="36" rx="4" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.6"/>
-    <text x="650" y="513" text-anchor="middle" font-family="monospace" font-size="13" fill="#c9a84c" filter="url(#glow)">5-Year &#8212; 4.44%</text>
+    <text x="650" y="513" text-anchor="middle" font-family="monospace" font-size="13" fill="#c9a84c" filter="url(#glow)">5-Year &#8212; 4.38%</text>
   </g>
 
   <!-- URL -->

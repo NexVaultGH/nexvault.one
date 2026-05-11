@@ -375,7 +375,7 @@
     </div>
     <div class="stat-hex">
       <div class="stat-label">APY Range</div>
-      <div class="stat-val" style="color:var(--purple)">3.80 – 4.44%</div>
+      <div class="stat-val" style="color:var(--purple)">3.75 – 4.38%</div>
       <div class="stat-sub">Across 3 lock tiers</div>
     </div>
     <div class="stat-hex">
@@ -471,7 +471,7 @@
               <span style="color:var(--dim)">&#x00B7;</span>
               <span id="tier-color" style="color:var(--blue)">1-Year Tier</span>
               <span style="color:var(--dim)">&#x00B7;</span>
-              <span id="apy-color" style="color:var(--blue);font-weight:600">3.80% APY</span>
+              <span id="apy-color" style="color:var(--blue);font-weight:600">3.75% APY</span>
             </div>
 
             <!-- Live yield feed -->
@@ -560,17 +560,17 @@
           <div class="tier-selector">
             <button class="tier-btn sel" id="t1" onclick="pickTier('1yr',this)">
               <div class="tier-btn-name">1-YR</div>
-              <div class="tier-btn-apy" style="color:var(--blue)">3.80%</div>
+              <div class="tier-btn-apy" style="color:var(--blue)">3.75%</div>
               <div class="tier-btn-lock">365 days</div>
             </button>
             <button class="tier-btn" id="t3" onclick="pickTier('3yr',this)">
               <div class="tier-btn-name">3-YR</div>
-              <div class="tier-btn-apy" style="color:var(--purple)">4.10%</div>
+              <div class="tier-btn-apy" style="color:var(--purple)">3.92%</div>
               <div class="tier-btn-lock">1,095 days</div>
             </button>
             <button class="tier-btn" id="t5" onclick="pickTier('5yr',this)">
               <div class="tier-btn-name">5-YR</div>
-              <div class="tier-btn-apy" style="color:var(--gold)">4.44%</div>
+              <div class="tier-btn-apy" style="color:var(--gold)">4.38%</div>
               <div class="tier-btn-lock">1,825 days</div>
             </button>
           </div>
@@ -593,7 +593,7 @@
           <div class="preview" id="preview-box">
             <div style="font-size:9px;letter-spacing:.08em;color:var(--dim);font-weight:600;margin-bottom:8px">PREVIEW</div>
             <div class="preview-row"><span class="preview-l">You deposit</span><span class="preview-v" id="pv-amt">$0.00 USDX</span></div>
-            <div class="preview-row"><span class="preview-l">Lock tier</span><span class="preview-v" id="pv-tier">1-Year &#x2014; 3.80% APY</span></div>
+            <div class="preview-row"><span class="preview-l">Lock tier</span><span class="preview-v" id="pv-tier">1-Year &#x2014; 3.75% APY</span></div>
             <div class="preview-row"><span class="preview-l">Est. yearly yield</span><span class="preview-v" style="color:var(--green)" id="pv-yield">+$0.00</span></div>
             <div class="preview-row"><span class="preview-l">% change at unlock</span><span class="preview-v" style="color:var(--green)" id="pv-pct">+0.00%</span></div>
             <div class="preview-row"><span class="preview-l">Unlocks</span><span class="preview-v" id="pv-unlock">&#x2014;</span></div>
@@ -601,7 +601,7 @@
 
           <div class="warn">&#x26A0;&#xFE0F; Contracts tested (246/246) but not yet third-party audited. Deposit what you're comfortable with.</div>
 
-          <button class="action-btn dep" id="main-btn">DEPOSIT USDX AT 3.80% APY</button>
+          <button class="action-btn dep" id="main-btn">DEPOSIT USDX AT 3.75% APY</button>
 
           <!-- Referral -->
           <div class="ref-box">
@@ -704,15 +704,15 @@
             </div>
             <div class="dev-panel-b">
               <div class="tier-bar-wrap">
-                <div class="tier-bar-label"><span class="tier-bar-name">1-Year Lock (3.80%)</span><span class="tier-bar-pct">42%</span></div>
+                <div class="tier-bar-label"><span class="tier-bar-name">1-Year Lock (3.75%)</span><span class="tier-bar-pct">42%</span></div>
                 <div class="tier-bar-bg"><div class="tier-bar-fill" style="width:42%"></div></div>
               </div>
               <div class="tier-bar-wrap">
-                <div class="tier-bar-label"><span class="tier-bar-name">3-Year Lock (4.10%)</span><span class="tier-bar-pct">35%</span></div>
+                <div class="tier-bar-label"><span class="tier-bar-name">3-Year Lock (3.92%)</span><span class="tier-bar-pct">35%</span></div>
                 <div class="tier-bar-bg"><div class="tier-bar-fill" style="width:35%"></div></div>
               </div>
               <div class="tier-bar-wrap">
-                <div class="tier-bar-label"><span class="tier-bar-name">5-Year Lock (4.44%)</span><span class="tier-bar-pct">23%</span></div>
+                <div class="tier-bar-label"><span class="tier-bar-name">5-Year Lock (4.38%)</span><span class="tier-bar-pct">23%</span></div>
                 <div class="tier-bar-bg"><div class="tier-bar-fill" style="width:23%"></div></div>
               </div>
             </div>
@@ -1354,9 +1354,9 @@ function pickTier(tier, el) {
   document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('sel'));
   el.classList.add('sel');
   const tiers = {
-    '1yr': ['1-Year', 3.80, 365, 'var(--blue)'],
-    '3yr': ['3-Year', 4.10, 1095, 'var(--purple)'],
-    '5yr': ['5-Year', 4.44, 1825, 'var(--gold)']
+    '1yr': ['1-Year', 3.75, 365, 'var(--blue)'],
+    '3yr': ['3-Year', 3.92, 1095, 'var(--purple)'],
+    '5yr': ['5-Year', 4.38, 1825, 'var(--gold)']
   };
   const t = tiers[tier];
 
@@ -1385,7 +1385,7 @@ function setAction(mode) {
   document.getElementById('tab-wtd').classList.toggle('act', mode === 'wtd');
   const btn = document.getElementById('main-btn');
   if (mode === 'wtd') { btn.className = 'action-btn wtd'; btn.textContent = 'WITHDRAW USDX'; }
-  else { btn.className = 'action-btn dep'; btn.textContent = 'DEPOSIT USDX AT 3.80% APY'; }
+  else { btn.className = 'action-btn dep'; btn.textContent = 'DEPOSIT USDX AT 3.75% APY'; }
 }
 
 // ── Amount helpers ──
@@ -1398,7 +1398,7 @@ function setAmt(v) {
 function updatePreview() {
   const amt = parseFloat(document.getElementById('amount-input').value) || 0;
   const sel = document.querySelector('.tier-btn.sel');
-  const apyText = sel ? sel.querySelector('.tier-btn-apy').textContent : '3.80%';
+  const apyText = sel ? sel.querySelector('.tier-btn-apy').textContent : '3.75%';
   const apyVal = parseFloat(apyText) / 100;
   const yearly = amt * apyVal;
   const pct = apyVal * 100;
