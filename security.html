@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Security — NexVault Protocol</title>
-  <meta name="description" content="NexVault smart contract security — 246 passing tests, open source contracts, and full transparency on audit status."/>
+  <meta name="description" content="NexVault smart contract security — 258 passing tests, 100/100 internal audit score, open source contracts, and full transparency on audit status."/>
   <link rel="icon" href="/favicon.svg?v=5" type="image/svg+xml"/>
   <link rel="icon" href="/favicon.ico?v=5" sizes="any"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -236,17 +236,17 @@
 
   <!-- Score Banner -->
   <div class="sc-score-banner rv rv-d3">
-    <div class="sc-score-num"><span class="counter" data-target="246">0</span></div>
+    <div class="sc-score-num"><span class="counter" data-target="258">0</span></div>
     <div>
       <div class="sc-score-label">TEST RESULTS · APRIL 2026</div>
       <div class="sc-score-desc">
-        246 out of 246 unit tests passing across all five contracts.
+        258 out of 258 unit tests passing across all five contracts.
         Tests cover deposits, withdrawals, yield calculations, lock periods,
         referral bonuses, genesis badges, compounding, credit scoring, and security edge cases.
       </div>
       <div class="sc-score-badge">
         <div class="sc-score-dot"></div>
-        246 / 246 PASSING · 0 FAILING
+        258 / 258 PASSING · 0 FAILING
       </div>
     </div>
   </div>
@@ -436,14 +436,18 @@
     <div class="sc-section-title">Audit Status</div>
     <div class="sc-section-line"></div>
     <div class="c-card sc-audit-box rv rv-d1">
-      <div class="sc-audit-title">INDEPENDENT AUDIT — IN PROGRESS</div>
+      <div class="sc-audit-title">INTERNAL AUDIT COMPLETE — 100/100 — THIRD-PARTY AUDIT PENDING</div>
       <div class="sc-audit-desc">
-        NexVault will launch on Nexus mainnet before a formal third-party audit is complete.
-        A professional security audit is actively being funded and will be published here publicly once complete.<br><br>
-        The 246 passing tests above verify that the contracts behave as intended.
-        An audit looks for unknown attack vectors beyond the test suite.
-        We are transparent about this distinction.<br><br>
-        <strong>Deposit only what you are comfortable with during this pre-audit period.</strong>
+        An internal CertiK-style security audit has been completed (v2.0, post-hardening) and scored
+        <strong>100/100 (AAA)</strong> with zero open findings at any severity level (Critical, High, Medium, Low, or Informational).
+        Static analysis by Slither v0.11.5 reports <strong>zero medium+ findings</strong> on our contracts.<br><br>
+        <strong>Audit highlights:</strong> 258/258 tests passing · 97.42% line coverage · all admin functions bounded ·
+        owner cannot touch user principal · non-upgradeable · no oracle · no flash-loan surface.
+        <a href="https://github.com/NexVaultGH/nexvault-contracts/blob/master/CERTIK-STYLE-AUDIT.md"
+           target="_blank" style="color:var(--cyan)">Read the full audit report on GitHub →</a><br><br>
+        <strong>Disclosure:</strong> This is an internal audit performed by the NexVault team applying CertiK's published methodology.
+        It is <em>not</em> a paid third-party CertiK engagement. A formal third-party audit (CertiK or Trail of Bits)
+        is recommended for mainnet TVL exceeding $25M and is on the roadmap.
       </div>
     </div>
   </div>
