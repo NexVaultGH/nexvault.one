@@ -253,6 +253,34 @@
   </div>
 </div>
 
+<!-- ═══════════════ DASHBOARD ACCESS GATE ═══════════════ -->
+<!-- Decides whether the Coming Soon lock applies. The dashboard unlocks
+     ONLY for:
+       1. localhost / 127.0.0.1            (local dev)
+       2. a private key set in localStorage on the live site:
+          localStorage.setItem('nexvault_dev_unlock','nexvault-dev-3945-testnet')
+     Public visitors always stay locked. Safe default = LOCKED — if this
+     script fails to run, the overlay simply stays in place. -->
+<script>
+  (function () {
+    function isUnlocked() {
+      var h = (location.hostname || '').toLowerCase();
+      if (h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '') return true;
+      try {
+        var key = 'nexvault' + '-dev-' + '3945' + '-testnet';
+        if (localStorage.getItem('nexvault_dev_unlock') === key) return true;
+      } catch (e) {}
+      return false;
+    }
+    window.NEXVAULT_DASHBOARD_UNLOCKED = isUnlocked();
+    if (window.NEXVAULT_DASHBOARD_UNLOCKED) {
+      var lock = document.getElementById('coming-soon-lock');
+      if (lock && lock.parentNode) lock.parentNode.removeChild(lock);
+      console.log('%c[NexVault] Dashboard UNLOCKED for testing — public lock bypassed.', 'color:#00f0ff;font-weight:bold');
+    }
+  })();
+</script>
+
 <!-- Cyber Grid Canvas -->
 <canvas id="cyber-grid"></canvas>
 
@@ -1397,6 +1425,8 @@ function showConnectMethodModal() {
 // ONLY auto-reconnects if user did NOT explicitly logout.
 // After logout, user must click Connect and authorize again.
 window.addEventListener('DOMContentLoaded', () => {
+  // Pre-launch: only auto-reconnect when the dashboard is unlocked for testing
+  if (!window.NEXVAULT_DASHBOARD_UNLOCKED) return
   const saved = localStorage.getItem('nexvault_address')
   const loggedOut = localStorage.getItem('nexvault_logged_out')
   // If user explicitly logged out, do NOT auto-reconnect
@@ -1537,25 +1567,45 @@ async function loadNexCredit(address) {
 }
 
 // -- Globals -------------------------------------------
-// ── DASHBOARD LOCKED (pre-launch) ──────────────────────────────────────
-// The #coming-soon-lock overlay blocks all UI access. These overrides are
-// a belt-and-suspenders guard: even if the overlay is removed (e.g. via
-// devtools), wallet connection stays disabled until launch.
+// ── DASHBOARD ACCESS GATE (pre-launch) ─────────────────────────────────
+// Wallet functions are gated on window.NEXVAULT_DASHBOARD_UNLOCKED, set by
+// the access-gate script right after <body>.
+//   • LOCKED  (public): connect/switch are no-ops that show a notice.
+//   • UNLOCKED (localhost OR private localStorage key): real functions —
+//     full Nexus testnet testing (faucet → deposit → yield → withdraw)
+//     works normally.
 //
-// TO UNLOCK AT MAINNET — restore connectWallet to:
-//   if (localStorage.getItem('nexvault_last_wallet') && !STATE.connected)
-//     showReconnectModal()
-//   else openWalletModal()
-// and restore: window.switchNetwork = openWalletModal
+// TO FULLY UNLOCK AT MAINNET: delete the #coming-soon-lock div and the
+// access-gate script after <body>, then delete this if/else gate and keep
+// only the UNLOCKED assignments below.
 function dashboardLockedNotice() {
   if (window.showNotif) {
     window.showNotif('Dashboard launches with Nexus mainnet — Q2 2026', 'err')
   }
 }
-window.connectWallet           = dashboardLockedNotice
-window.connectViaWalletConnect = dashboardLockedNotice
-window.disconnectWallet        = doDisconnect
-window.switchNetwork           = dashboardLockedNotice
+// Capture the real WalletConnect handler before any override.
+var _realConnectViaWalletConnect = window.connectViaWalletConnect
+function realConnectWallet() {
+  // If user logged out and has a previous wallet, show choice modal
+  if (localStorage.getItem('nexvault_last_wallet') && !STATE.connected) {
+    showReconnectModal()
+  } else {
+    openWalletModal()
+  }
+}
+if (window.NEXVAULT_DASHBOARD_UNLOCKED) {
+  // UNLOCKED — real wallet functions (testing access)
+  window.connectWallet           = realConnectWallet
+  window.connectViaWalletConnect = _realConnectViaWalletConnect
+  window.disconnectWallet        = doDisconnect
+  window.switchNetwork           = openWalletModal
+} else {
+  // LOCKED — public visitors cannot connect
+  window.connectWallet           = dashboardLockedNotice
+  window.connectViaWalletConnect = dashboardLockedNotice
+  window.disconnectWallet        = doDisconnect
+  window.switchNetwork           = dashboardLockedNotice
+}
 </script>
 
 <!-- =============================================
