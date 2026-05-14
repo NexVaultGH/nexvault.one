@@ -230,6 +230,29 @@
 </head>
 <body>
 
+<!-- ═══════════════ COMING SOON LOCK ═══════════════ -->
+<!-- Pre-launch lock. This fixed overlay sits above the entire app
+     (z-index 100000) and blocks ALL interaction with the dashboard
+     underneath. To unlock at mainnet launch: delete this entire block
+     AND restore the wallet functions near the "DASHBOARD LOCKED" comment
+     in the globals script below. -->
+<div id="coming-soon-lock" style="position:fixed;inset:0;z-index:100000;background:#05050f;display:flex;align-items:center;justify-content:center;text-align:center;padding:32px">
+  <div style="max-width:540px;font-family:'DM Mono',monospace">
+    <div style="font-family:'Playfair Display',serif;font-size:60px;line-height:1;color:#00f0ff;text-shadow:0 0 30px rgba(0,240,255,.5);margin-bottom:14px">V</div>
+    <div style="font-size:10px;letter-spacing:.28em;color:#4ade80;font-weight:600;margin-bottom:26px">&#9679; NEXUS TESTNET LIVE &nbsp;&middot;&nbsp; MAINNET Q2 2026</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(38px,8vw,64px);font-weight:300;color:#f0ece4;line-height:1.05;margin:0 0 18px">Dashboard<br><em style="font-style:italic;color:#00f0ff">Coming Soon</em></h1>
+    <p style="font-size:12px;line-height:1.9;color:rgba(255,255,255,.55);margin:0 0 30px">
+      The NexVault vault dashboard is locked until launch. Smart contracts are
+      fully audited &mdash; 100/100 security score, 258/258 tests passing &mdash;
+      and testnet-ready. Deposits open when NexVault goes live on Nexus mainnet.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="/" class="btn-neon" style="margin:0">BACK TO HOME</a>
+      <a href="/whitepaper" class="btn-ghost" style="margin:0">READ WHITEPAPER</a>
+    </div>
+  </div>
+</div>
+
 <!-- Cyber Grid Canvas -->
 <canvas id="cyber-grid"></canvas>
 
@@ -1514,16 +1537,25 @@ async function loadNexCredit(address) {
 }
 
 // -- Globals -------------------------------------------
-window.connectWallet    = function() {
-  // If user logged out and has a previous wallet, show choice modal
-  if (localStorage.getItem('nexvault_last_wallet') && !STATE.connected) {
-    showReconnectModal()
-  } else {
-    openWalletModal()
+// ── DASHBOARD LOCKED (pre-launch) ──────────────────────────────────────
+// The #coming-soon-lock overlay blocks all UI access. These overrides are
+// a belt-and-suspenders guard: even if the overlay is removed (e.g. via
+// devtools), wallet connection stays disabled until launch.
+//
+// TO UNLOCK AT MAINNET — restore connectWallet to:
+//   if (localStorage.getItem('nexvault_last_wallet') && !STATE.connected)
+//     showReconnectModal()
+//   else openWalletModal()
+// and restore: window.switchNetwork = openWalletModal
+function dashboardLockedNotice() {
+  if (window.showNotif) {
+    window.showNotif('Dashboard launches with Nexus mainnet — Q2 2026', 'err')
   }
 }
-window.disconnectWallet = doDisconnect
-window.switchNetwork    = openWalletModal
+window.connectWallet           = dashboardLockedNotice
+window.connectViaWalletConnect = dashboardLockedNotice
+window.disconnectWallet        = doDisconnect
+window.switchNetwork           = dashboardLockedNotice
 </script>
 
 <!-- =============================================
