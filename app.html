@@ -255,28 +255,60 @@
 
 <!-- ═══════════════ DASHBOARD ACCESS GATE ═══════════════ -->
 <!-- Decides whether the Coming Soon lock applies. The dashboard unlocks
-     ONLY for:
-       1. localhost / 127.0.0.1            (local dev)
-       2. a private key set in localStorage on the live site:
+     for the team in THREE ways (public visitors always stay locked):
+       1. localhost / 127.0.0.1                  — local dev, zero setup
+       2. bookmarkable dev link (the easy one):
+          https://nexvault.one/app?dev=nexvault-dev-3945-testnet
+          Visiting it once unlocks AND remembers this browser, then strips
+          the ?dev= param from the address bar. Every plain /app visit
+          after that stays unlocked here.
+       3. localStorage key (manual fallback):
           localStorage.setItem('nexvault_dev_unlock','nexvault-dev-3945-testnet')
-     Public visitors always stay locked. Safe default = LOCKED — if this
-     script fails to run, the overlay simply stays in place. -->
+     Safe default = LOCKED — if this script fails to run, the overlay
+     simply stays in place. -->
 <script>
   (function () {
-    function isUnlocked() {
+    // Private dev key — assembled at runtime so it is not a single
+    // greppable literal. Obscure, not cryptographically secret (adequate:
+    // there is no mainnet contract behind this gate yet).
+    var DEV_KEY   = 'nexvault' + '-dev-' + '3945' + '-testnet';
+    var STORE_KEY = 'nexvault_dev_unlock';
+
+    function isLocalhost() {
       var h = (location.hostname || '').toLowerCase();
-      if (h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '') return true;
-      try {
-        var key = 'nexvault' + '-dev-' + '3945' + '-testnet';
-        if (localStorage.getItem('nexvault_dev_unlock') === key) return true;
-      } catch (e) {}
-      return false;
+      return h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '';
     }
-    window.NEXVAULT_DASHBOARD_UNLOCKED = isUnlocked();
-    if (window.NEXVAULT_DASHBOARD_UNLOCKED) {
+    function urlDevKey() {
+      try { return new URLSearchParams(location.search).get('dev'); }
+      catch (e) { return null; }
+    }
+    function storedDevKey() {
+      try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; }
+    }
+
+    var unlocked = false;
+
+    if (isLocalhost()) {
+      unlocked = true;
+    } else if (urlDevKey() === DEV_KEY) {
+      // Bookmarkable dev link. Persist so future plain /app visits stay
+      // unlocked in this browser, then clean the param from the URL.
+      unlocked = true;
+      try { localStorage.setItem(STORE_KEY, DEV_KEY); } catch (e) {}
+      try { history.replaceState(null, '', location.pathname + location.hash); }
+      catch (e) {}
+    } else if (storedDevKey() === DEV_KEY) {
+      unlocked = true;
+    }
+
+    window.NEXVAULT_DASHBOARD_UNLOCKED = unlocked;
+
+    if (unlocked) {
       var lock = document.getElementById('coming-soon-lock');
       if (lock && lock.parentNode) lock.parentNode.removeChild(lock);
       console.log('%c[NexVault] Dashboard UNLOCKED for testing — public lock bypassed.', 'color:#00f0ff;font-weight:bold');
+    } else {
+      console.log('%c[NexVault] Dashboard is locked (pre-launch). Team access: open the private ?dev= link.', 'color:#c9a84c');
     }
   })();
 </script>
