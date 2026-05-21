@@ -416,9 +416,9 @@
           <div id="connect-prompt" style="text-align:center;padding:24px 0">
             <div style="font-size:44px;margin-bottom:16px;color:var(--cyan);text-shadow:0 0 20px rgba(0,240,255,.4)">&#x25C8;</div>
             <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text-bright);margin-bottom:8px">Connect Your Wallet</div>
-            <div style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.7">Connect MetaMask to view your vault balance, track live yield, and manage deposits.</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.7">Connect MetaMask or Coinbase Wallet to view your vault balance, track live yield, and manage deposits.</div>
             <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-              <button onclick="connectWallet()" class="btn-neon" style="margin:0">CONNECT METAMASK</button>
+              <button onclick="connectWallet()" class="btn-neon" style="margin:0">CONNECT WALLET</button>
               <button onclick="if(window.connectViaWalletConnect)connectViaWalletConnect();else showNoMetaMaskModal()" style="padding:14px 28px;border-radius:4px;border:1px solid rgba(0,240,255,.15);background:rgba(0,240,255,.03);color:var(--cyan);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.08em;transition:all .3s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(0,240,255,.08)';this.style.borderColor='rgba(0,240,255,.3)'" onmouseout="this.style.background='rgba(0,240,255,.03)';this.style.borderColor='rgba(0,240,255,.15)'">&#x25A3; SCAN QR CODE</button>
             </div>
           </div>
@@ -818,6 +818,18 @@
 <script>
 var _wcProvider = null
 
+// Copy the WalletConnect URI to clipboard (named fn — avoids fragile inline escaping)
+function copyWCUri() {
+  var el = document.getElementById('wc-uri-data')
+  if (!el) return
+  var done = function (msg) { var s = document.getElementById('copy-status'); if (s) s.textContent = msg }
+  try {
+    navigator.clipboard.writeText(el.value)
+      .then(function () { done('COPIED!') })
+      .catch(function () { el.removeAttribute('type'); el.select && el.select(); done('Select the text above and copy') })
+  } catch (e) { done('Copy not supported — select manually') }
+}
+
 function showWCQRModal(uri) {
   if (window.removeWalletModal) window.removeWalletModal()
   var d = document.createElement('div')
@@ -826,18 +838,18 @@ function showWCQRModal(uri) {
   d.innerHTML = '<div style="background:#0a0a1a;border:1px solid rgba(0,240,255,.2);border-radius:8px;padding:36px 30px;width:400px;max-width:94vw;text-align:center;position:relative;box-shadow:0 0 60px rgba(0,240,255,.08)">' +
     '<div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,240,255,.4),transparent)"></div>' +
     '<button onclick="closeWCQR()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#8888aa;font-size:22px;cursor:pointer;line-height:1;padding:0">&#x2715;</button>' +
-    '<div style="font-size:10px;letter-spacing:.2em;color:#00f0ff;font-weight:600;margin-bottom:16px;text-shadow:0 0 8px rgba(0,240,255,.4)">SCAN WITH METAMASK MOBILE</div>' +
+    '<div style="font-size:10px;letter-spacing:.2em;color:#00f0ff;font-weight:600;margin-bottom:16px;text-shadow:0 0 8px rgba(0,240,255,.4)">SCAN WITH YOUR WALLET APP</div>' +
     '<div id="wc-qr-box" style="width:220px;height:220px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:#ffffff;padding:10px">' +
       '<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(uri) + '&format=png" style="width:100%;height:100%" onerror="this.parentElement.innerHTML=\'<div style=color:#666;font-size:11px>QR failed</div>\'" />' +
     '</div>' +
     '<div style="font-size:11px;color:#8888aa;line-height:1.8;margin-bottom:16px;text-align:left;padding:0 10px">' +
       '<div style="margin-bottom:8px;color:#e0e0f0;font-weight:600">How to scan:</div>' +
-      '<div style="margin-bottom:4px">1. Open <strong style="color:#00f0ff">MetaMask</strong> on your phone</div>' +
-      '<div style="margin-bottom:4px">2. Tap the <strong style="color:#00f0ff">QR icon</strong> (top-right in MetaMask)</div>' +
-      '<div>3. Scan this code with <strong style="color:#00f0ff">MetaMask\'s scanner</strong></div>' +
-      '<div style="margin-top:8px;font-size:10px;color:#5a5a7a">Do NOT use your phone camera — use MetaMask\'s built-in scanner</div>' +
+      '<div style="margin-bottom:4px">1. Open <strong style="color:#00f0ff">MetaMask</strong> or <strong style="color:#0052ff">Coinbase Wallet</strong> on your phone</div>' +
+      '<div style="margin-bottom:4px">2. Tap the wallet\'s <strong style="color:#00f0ff">scan / WalletConnect</strong> icon</div>' +
+      '<div>3. Scan this code with the <strong style="color:#00f0ff">wallet\'s built-in scanner</strong></div>' +
+      '<div style="margin-top:8px;font-size:10px;color:#5a5a7a">Use the wallet app\'s scanner — not your phone\'s camera app</div>' +
     '</div>' +
-    '<button onclick="navigator.clipboard.writeText(document.getElementById(\\\'wc-uri-data\\\').value).then(function(){document.getElementById(\\\'copy-status\\\').textContent=\\\'COPIED!\\\'})" style="width:100%;padding:10px;border-radius:4px;border:1px solid rgba(0,240,255,.12);background:rgba(0,240,255,.03);color:#8888aa;font-family:DM Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:.08em;margin-bottom:12px">COPY WALLETCONNECT URI</button>' +
+    '<button onclick="copyWCUri()" style="width:100%;padding:10px;border-radius:4px;border:1px solid rgba(0,240,255,.12);background:rgba(0,240,255,.03);color:#8888aa;font-family:DM Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:.08em;margin-bottom:12px">COPY WALLETCONNECT URI</button>' +
     '<div id="copy-status" style="font-size:9px;color:#39ff14;height:14px;margin-bottom:8px"></div>' +
     '<input type="hidden" id="wc-uri-data" value="' + uri.replace(/"/g, '&quot;') + '" />' +
     '<div style="display:flex;align-items:center;gap:8px;justify-content:center;padding:10px;border:1px solid rgba(0,240,255,.1);border-radius:6px;background:rgba(0,240,255,.03)">' +
@@ -894,10 +906,15 @@ window.connectViaWalletConnect = async function() {
     updateWCStatus('CONNECTING TO RELAY...')
     console.log('[WC] Step 3: initializing provider...')
     console.log('[WC] Step 3: initializing with project ID...')
+    // Scope the WalletConnect session to NEXUS (not Ethereum). Follows the
+    // active network automatically (testnet now, mainnet 3946 when switched).
+    var _nxChain = (typeof ACTIVE_NETWORK !== 'undefined' && ACTIVE_NETWORK.chainIdNum) ? ACTIVE_NETWORK.chainIdNum : 3946
+    var _nxRpc   = (typeof ACTIVE_NETWORK !== 'undefined' && ACTIVE_NETWORK.rpcUrls && ACTIVE_NETWORK.rpcUrls[0]) ? ACTIVE_NETWORK.rpcUrls[0] : 'https://mainnet.rpc.nexus.xyz'
     _wcProvider = await EthereumProvider.init({
       projectId: '44a4b0d66bd62948f4ca92a7d6b3c7d2',
-      chains: [1],
-      optionalChains: [1],
+      chains: [_nxChain],
+      optionalChains: [_nxChain],
+      rpcMap: { [_nxChain]: _nxRpc },
       showQrModal: false,
       metadata: {
         name: 'NexVault',
@@ -982,18 +999,18 @@ const NETWORKS = {
     blockExplorerUrls: ['https://testnet.explorer.nexus.xyz']
   },
   mainnet: {
-    // Filled in Q2 2026 when Nexus mainnet launches
-    chainId: '',
-    chainIdNum: 0,
-    chainName: 'Nexus',
+    // Nexus mainnet — LIVE (verified via RPC eth_chainId + chainlist: chain 3946)
+    chainId: '0xF6A',  // 3946 in hex
+    chainIdNum: 3946,
+    chainName: 'Nexus Mainnet',
     nativeCurrency: { name: 'Nexus', symbol: 'NEX', decimals: 18 },
-    rpcUrls: [],
-    blockExplorerUrls: []
+    rpcUrls: ['https://mainnet.rpc.nexus.xyz'],
+    blockExplorerUrls: ['https://explorer.nexus.xyz']
   }
 }
 
-const ACTIVE_NETWORK = NETWORKS.testnet  // Switch to mainnet when ready
-const NETWORK_MODE   = 'testnet'         // 'testnet' or 'mainnet'
+const ACTIVE_NETWORK = NETWORKS.mainnet  // Nexus mainnet is live (chain 3946)
+const NETWORK_MODE   = 'mainnet'         // 'testnet' or 'mainnet'
 
 // -- Legacy Config (kept for backward compat) ----------
 const NEXUS_CHAIN_ID = ACTIVE_NETWORK.chainIdNum
@@ -1184,6 +1201,89 @@ function waitForMetaMask() {
     }, interval)
   })
 }
+
+// =======================================================
+//  COINBASE WALLET CONNECTION
+//  Detected via EIP-6963 rdns "com.coinbase.wallet" (cannot be
+//  spoofed), with a window.ethereum.isCoinbaseWallet fallback.
+//  Same explicit-allowlist approach as MetaMask — we only accept
+//  known wallets, never a blind window.ethereum.
+// =======================================================
+const COINBASE_ICON = `<svg width="36" height="36" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><rect width="1024" height="1024" rx="512" fill="#0052FF"/><circle cx="512" cy="512" r="234" fill="#fff"/><rect x="424" y="424" width="176" height="176" rx="32" fill="#0052FF"/></svg>`
+
+function getCoinbaseProvider() {
+  // Priority 1: EIP-6963 exact rdns
+  if (_eip6963Providers['com.coinbase.wallet']) return _eip6963Providers['com.coinbase.wallet']
+  const eth = window.ethereum
+  if (!eth) return null
+  // Priority 2: providers[] array
+  if (eth.providers && eth.providers.length) {
+    const cb = eth.providers.find(p => p && p.isCoinbaseWallet)
+    if (cb) return cb
+  }
+  // Priority 3: single provider flagged as Coinbase
+  if (eth.isCoinbaseWallet) return eth
+  return null
+}
+
+function waitForCoinbase() {
+  return new Promise(resolve => {
+    window.dispatchEvent(new Event('eip6963:requestProvider'))
+    if (_eip6963Providers['com.coinbase.wallet']) { resolve(_eip6963Providers['com.coinbase.wallet']); return }
+    let elapsed = 0
+    const interval = 50
+    const timer = setInterval(() => {
+      elapsed += interval
+      const provider = getCoinbaseProvider()
+      if (provider) { clearInterval(timer); resolve(provider) }
+      else if (elapsed >= 3000) { clearInterval(timer); resolve(null) }
+    }, interval)
+  })
+}
+
+async function connectCoinbase() {
+  removeWalletModal()
+  const btn = document.getElementById('wallet-btn')
+  if (btn) btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite">&#x25CC;</span><span> CONNECTING...</span>'
+
+  const provider = await waitForCoinbase()
+  if (!provider) {
+    if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
+    // No Coinbase extension. Desktop -> bridge a mobile wallet via WalletConnect QR.
+    if (!isMobile() && window.connectViaWalletConnect) { connectViaWalletConnect(); return }
+    window.open('https://www.coinbase.com/wallet/downloads', '_blank')
+    if (window.showNotif) window.showNotif('Coinbase Wallet not detected — install it or scan the QR', 'err')
+    return
+  }
+
+  try {
+    const accounts = await provider.request({ method: 'eth_requestAccounts' })
+    if (accounts && accounts.length > 0) {
+      window._activeProvider = provider
+      // Attach live listeners to the Coinbase provider
+      try {
+        provider.on && provider.on('accountsChanged', a => {
+          if (!a || a.length === 0) window.onWalletDisconnected()
+          else window.onWalletConnected(a[0])
+        })
+        provider.on && provider.on('chainChanged', () => {
+          if (window.updateNetworkPill) updateNetworkPill(provider)
+          window.location.reload()
+        })
+      } catch (e) {}
+      window.onWalletConnected(accounts[0])
+    } else {
+      if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
+      if (window.showNotif) window.showNotif('No accounts — unlock Coinbase Wallet and try again', 'err')
+    }
+  } catch (err) {
+    if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
+    if (err.code === 4001) { if (window.showNotif) window.showNotif('Connection cancelled', 'err') }
+    else if (err.code === -32002) { if (window.showNotif) window.showNotif('Coinbase popup already open — check the extension', 'err') }
+    else { if (window.showNotif) window.showNotif('Connection failed — unlock Coinbase Wallet and try again', 'err') }
+  }
+}
+window.connectCoinbase = connectCoinbase
 
 // -- Is mobile device? ---------------------------------
 function isMobile() {
@@ -1420,10 +1520,13 @@ function showConnectMethodModal() {
     '<button onclick="removeWalletModal();openWalletModal()" style="width:100%;padding:16px;border-radius:4px;border:1px solid rgba(0,240,255,.3);background:rgba(0,240,255,.06);color:#00f0ff;font-family:DM Mono,monospace;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,240,255,.3);box-shadow:0 0 15px rgba(0,240,255,.1);text-align:center;display:flex;align-items:center;justify-content:center;gap:10px">' +
       '<span style="font-size:18px">&#x1F98A;</span> METAMASK EXTENSION' +
     '</button>' +
+    '<button onclick="removeWalletModal();connectCoinbase()" style="width:100%;padding:16px;border-radius:4px;border:1px solid rgba(0,82,255,.4);background:rgba(0,82,255,.08);color:#5b8cff;font-family:DM Mono,monospace;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:.06em;box-shadow:0 0 15px rgba(0,82,255,.1);text-align:center;display:flex;align-items:center;justify-content:center;gap:10px">' +
+      '<span style="display:inline-flex;width:18px;height:18px;border-radius:50%;background:#0052FF;align-items:center;justify-content:center"><span style="width:7px;height:7px;background:#fff;border-radius:1px"></span></span> COINBASE WALLET' +
+    '</button>' +
     '<button onclick="removeWalletModal();connectViaWalletConnect()" style="width:100%;padding:16px;border-radius:4px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.04);color:#c9a84c;font-family:DM Mono,monospace;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.06em;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px">' +
       '<span style="font-size:16px">&#x25A3;</span> SCAN QR CODE (MOBILE)' +
     '</button>' +
-    '<div style="font-size:10px;color:#5a5a7a;margin-top:16px;line-height:1.6">Extension connects your browser wallet.<br>QR code bridges your phone wallet to this browser.</div>' +
+    '<div style="font-size:10px;color:#5a5a7a;margin-top:16px;line-height:1.6">Extensions connect your browser wallet (MetaMask, Coinbase).<br>QR bridges a phone wallet to this browser.</div>' +
   '</div>'
   document.body.appendChild(d)
   d.addEventListener('click', function(e) { if (e.target === d) removeWalletModal() })
@@ -1446,11 +1549,16 @@ function showConnectMethodModal() {
   }
 
   if (window.ethereum) attach(window.ethereum)
+  // Attach to known wallets as they announce. NOT { once:true } — multiple
+  // wallets each fire this event, and a non-matching one must not consume it.
+  const _attachedRdns = {}
   window.addEventListener('eip6963:announceProvider', (event) => {
-    if (event.detail?.info?.rdns === 'io.metamask') {
+    const rdns = event.detail && event.detail.info && event.detail.info.rdns
+    if ((rdns === 'io.metamask' || rdns === 'com.coinbase.wallet') && !_attachedRdns[rdns]) {
+      _attachedRdns[rdns] = true
       attach(event.detail.provider)
     }
-  }, { once: true })
+  })
 })()
 
 // -- Auto-reconnect on page load -----------------------
@@ -1463,17 +1571,21 @@ window.addEventListener('DOMContentLoaded', () => {
   const loggedOut = localStorage.getItem('nexvault_logged_out')
   // If user explicitly logged out, do NOT auto-reconnect
   if (!saved || loggedOut === 'true') return
-  waitForMetaMask().then(provider => {
-    if (!provider) { localStorage.removeItem('nexvault_address'); return }
-    provider.request({ method: 'eth_accounts' }).then(accounts => {
+  // Reconnect to whichever known wallet still holds an authorized account.
+  const tryReconnect = (getProv) => getProv().then(provider => {
+    if (!provider) return false
+    return provider.request({ method: 'eth_accounts' }).then(accounts => {
       if (accounts && accounts.length > 0) {
         window._activeProvider = provider
         window.onWalletConnected(accounts[0])
-      } else {
-        localStorage.removeItem('nexvault_address')
+        return true
       }
-    }).catch(() => localStorage.removeItem('nexvault_address'))
+      return false
+    }).catch(() => false)
   })
+  tryReconnect(waitForMetaMask)
+    .then(ok => ok ? true : tryReconnect(waitForCoinbase))
+    .then(ok => { if (!ok) localStorage.removeItem('nexvault_address') })
 })
 
 // -- NexCredit -----------------------------------------
@@ -1618,11 +1730,12 @@ function dashboardLockedNotice() {
 // Capture the real WalletConnect handler before any override.
 var _realConnectViaWalletConnect = window.connectViaWalletConnect
 function realConnectWallet() {
-  // If user logged out and has a previous wallet, show choice modal
+  // If user logged out and has a previous wallet, show reconnect choice
   if (localStorage.getItem('nexvault_last_wallet') && !STATE.connected) {
     showReconnectModal()
   } else {
-    openWalletModal()
+    // Otherwise show the wallet picker (MetaMask / Coinbase / QR)
+    showConnectMethodModal()
   }
 }
 if (window.NEXVAULT_DASHBOARD_UNLOCKED) {
