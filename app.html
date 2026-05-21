@@ -955,7 +955,7 @@ window.connectViaWalletConnect = async function() {
       })
 
       if (window.onWalletConnected) window.onWalletConnected(_wcProvider.accounts[0])
-      if (window.showNotif) window.showNotif('Wallet connected via QR', 'ok')
+      // onWalletConnected already shows a "Wallet connected" toast — no duplicate here.
     }
   } catch (err) {
     console.error('[WC] FAILED:', err)
@@ -1160,14 +1160,15 @@ function getMetaMaskProvider() {
   if (!eth) return null
 
   // -- Priority 2: providers array -----------------------
+  // Require genuine MetaMask, and exclude wallets (e.g. Coinbase) whose
+  // multiplexer also sets isMetaMask=true on a compatibility shim.
   if (eth.providers && eth.providers.length) {
-    const mm = eth.providers.find(p => p.isMetaMask)
+    const mm = eth.providers.find(p => p && p.isMetaMask && !p.isCoinbaseWallet)
     if (mm) return mm
   }
 
   // -- Priority 3: single provider -----------------------
-  // Accept any provider that says isMetaMask = true
-  if (eth.isMetaMask) {
+  if (eth.isMetaMask && !eth.isCoinbaseWallet) {
     return eth
   }
 
@@ -1249,8 +1250,15 @@ async function connectCoinbase() {
   const provider = await waitForCoinbase()
   if (!provider) {
     if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
-    // No Coinbase extension. Desktop -> bridge a mobile wallet via WalletConnect QR.
-    if (!isMobile() && window.connectViaWalletConnect) { connectViaWalletConnect(); return }
+    if (isMobile()) {
+      // Mobile, no in-app provider -> open this dApp inside the Coinbase Wallet
+      // app via its universal link (parity with the MetaMask deep-link path).
+      if (window.showNotif) window.showNotif('Opening Coinbase Wallet…', 'ok')
+      window.location.href = 'https://go.cb-w.com/dapp?cb_url=' + encodeURIComponent('https://nexvault.one/app')
+      return
+    }
+    // Desktop, no extension -> bridge a mobile wallet via the WalletConnect QR.
+    if (window.connectViaWalletConnect) { connectViaWalletConnect(); return }
     window.open('https://www.coinbase.com/wallet/downloads', '_blank')
     if (window.showNotif) window.showNotif('Coinbase Wallet not detected — install it or scan the QR', 'err')
     return
@@ -1260,17 +1268,7 @@ async function connectCoinbase() {
     const accounts = await provider.request({ method: 'eth_requestAccounts' })
     if (accounts && accounts.length > 0) {
       window._activeProvider = provider
-      // Attach live listeners to the Coinbase provider
-      try {
-        provider.on && provider.on('accountsChanged', a => {
-          if (!a || a.length === 0) window.onWalletDisconnected()
-          else window.onWalletConnected(a[0])
-        })
-        provider.on && provider.on('chainChanged', () => {
-          if (window.updateNetworkPill) updateNetworkPill(provider)
-          window.location.reload()
-        })
-      } catch (e) {}
+      nvAttachProviderListeners(provider)
       window.onWalletConnected(accounts[0])
     } else {
       if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
@@ -1407,6 +1405,7 @@ async function openWalletModal() {
     const accounts = await provider.request({ method: 'eth_requestAccounts' })
     if (accounts && accounts.length > 0) {
       window._activeProvider = provider
+      nvAttachProviderListeners(provider)
       window.onWalletConnected(accounts[0])
     } else {
       if (btn) { btn.className = 'wallet-btn'; btn.innerHTML = '<span>&#x25C8;</span><span>CONNECT WALLET</span>' }
@@ -1533,30 +1532,40 @@ function showConnectMethodModal() {
 }
 
 // -- Account / chain listeners -------------------------
-;(function attachListeners() {
-  function attach(eth) {
-    try {
-      eth.on('accountsChanged', accounts => {
-        if (!accounts || accounts.length === 0) window.onWalletDisconnected()
-        else window.onWalletConnected(accounts[0])
-      })
-      eth.on('chainChanged', () => {
-        if (window.updateNetworkPill) updateNetworkPill(eth)
-        // Reload to refresh contract instances on the new chain
-        window.location.reload()
-      })
-    } catch(e) {}
-  }
+// Centralized, de-duplicated provider listener attachment.
+// Guards with a per-provider flag so accountsChanged/chainChanged is attached
+// AT MOST ONCE per provider object — even when both MetaMask and Coinbase are
+// installed and window.ethereum aliases one of them. Prevents onWalletConnected
+// from firing multiple times per event.
+window.__nvLastChainId = null
+function nvAttachProviderListeners(provider) {
+  if (!provider || provider.__nvListened) return
+  try { provider.__nvListened = true } catch (e) { /* frozen provider */ }
+  try {
+    provider.on && provider.on('accountsChanged', accounts => {
+      if (!accounts || accounts.length === 0) window.onWalletDisconnected()
+      else window.onWalletConnected(accounts[0])
+    })
+    provider.on && provider.on('chainChanged', (cid) => {
+      if (window.updateNetworkPill) updateNetworkPill(provider)
+      // Only reload when the chain actually changed — prevents reload loops
+      // from duplicate/echoed chainChanged events.
+      if (cid && cid === window.__nvLastChainId) return
+      window.__nvLastChainId = cid || window.__nvLastChainId
+      window.location.reload()
+    })
+  } catch (e) {}
+}
+window.nvAttachProviderListeners = nvAttachProviderListeners
 
-  if (window.ethereum) attach(window.ethereum)
+;(function attachListeners() {
+  if (window.ethereum) nvAttachProviderListeners(window.ethereum)
   // Attach to known wallets as they announce. NOT { once:true } — multiple
-  // wallets each fire this event, and a non-matching one must not consume it.
-  const _attachedRdns = {}
+  // wallets each fire this event; the per-provider flag handles de-dup.
   window.addEventListener('eip6963:announceProvider', (event) => {
     const rdns = event.detail && event.detail.info && event.detail.info.rdns
-    if ((rdns === 'io.metamask' || rdns === 'com.coinbase.wallet') && !_attachedRdns[rdns]) {
-      _attachedRdns[rdns] = true
-      attach(event.detail.provider)
+    if (rdns === 'io.metamask' || rdns === 'com.coinbase.wallet') {
+      nvAttachProviderListeners(event.detail.provider)
     }
   })
 })()
@@ -1586,6 +1595,7 @@ window.addEventListener('DOMContentLoaded', () => {
   tryReconnect(waitForMetaMask)
     .then(ok => ok ? true : tryReconnect(waitForCoinbase))
     .then(ok => { if (!ok) localStorage.removeItem('nexvault_address') })
+    .catch(() => { try { localStorage.removeItem('nexvault_address') } catch (e) {} })
 })
 
 // -- NexCredit -----------------------------------------
@@ -2197,9 +2207,11 @@ if (window.NEXVAULT_DASHBOARD_UNLOCKED) {
   function drawChart(id, data, color) {
     const svg = document.getElementById(id)
     if(!svg) return
+    if(!data || data.length===0) { svg.innerHTML=''; return }
     const w=300, h=80
     const mn=Math.min(...data), mx=Math.max(...data)
-    const xp=i=>(i/(data.length-1))*w
+    const denom = data.length>1 ? data.length-1 : 1  // guard 0/0 -> NaN on single-point data
+    const xp=i=>(i/denom)*w
     const yp=v=>h-((v-mn)/(mx-mn||1))*(h-12)-6
     const pts=data.map((v,i)=>`${xp(i)},${yp(v)}`).join(' ')
     const area=`M0,${h} `+data.map((v,i)=>`L${xp(i)},${yp(v)}`).join(' ')+` L${w},${h} Z`
