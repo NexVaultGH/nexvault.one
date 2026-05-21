@@ -122,18 +122,18 @@
   </div>
 </nav>
 
-<!-- ═══════════════ TESTNET BANNER ═══════════════ -->
-<div id="testnet-banner" style="position:fixed;top:78px;left:0;right:0;padding:10px 24px;background:rgba(74,222,128,0.06);border-bottom:1px solid rgba(74,222,128,0.15);text-align:center;font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,0.7);z-index:50;backdrop-filter:blur(10px);">
-  <span style="color:#4ade80;font-weight:600;letter-spacing:0.08em;">● NEXUS TESTNET LIVE</span>
+<!-- ═══════════════ NETWORK BANNER ═══════════════ -->
+<div id="net-banner" style="position:fixed;top:78px;left:0;right:0;padding:10px 24px;background:rgba(74,222,128,0.06);border-bottom:1px solid rgba(74,222,128,0.15);text-align:center;font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,0.7);z-index:50;backdrop-filter:blur(10px);">
+  <span style="color:#4ade80;font-weight:600;letter-spacing:0.08em;">● NEXUS MAINNET LIVE</span>
   <span style="margin:0 8px;color:rgba(255,255,255,0.2);">|</span>
-  <span>Smart contracts audited 100/100 &amp; testnet-ready — <a href="/security" style="color:#c9a84c;text-decoration:underline;">view the security audit</a></span>
+  <span>Smart contracts audited 100/100 — <a href="/security" style="color:#c9a84c;text-decoration:underline;">view the security audit</a></span>
   <span style="margin:0 8px;color:rgba(255,255,255,0.2);">|</span>
-  <span>Mainnet launching Q2 2026</span>
-  <button onclick="document.getElementById('testnet-banner').style.display='none';localStorage.setItem('testnet-banner-dismissed','1')" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:14px;">×</button>
+  <span>NexVault launching soon</span>
+  <button onclick="document.getElementById('net-banner').style.display='none';localStorage.setItem('nv-net-banner-dismissed','1')" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:14px;">×</button>
 </div>
 <script>
-  if (localStorage.getItem('testnet-banner-dismissed') === '1') {
-    var b = document.getElementById('testnet-banner');
+  if (localStorage.getItem('nv-net-banner-dismissed') === '1') {
+    var b = document.getElementById('net-banner');
     if (b) b.style.display = 'none';
   }
 </script>

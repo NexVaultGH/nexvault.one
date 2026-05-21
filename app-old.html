@@ -190,7 +190,7 @@
     <!-- Testnet / Mainnet toggle -->
     <button id="network-toggle-btn" onclick="toggleNetwork()"
       style="padding:5px 12px;border-radius:20px;font-size:10px;letter-spacing:.08em;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid rgba(251,191,36,.35);background:rgba(251,191,36,.08);color:#fbbf24;font-family:'DM Mono',monospace">
-      TESTNET
+      MAINNET
     </button>
     <div class="blink" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0"></div>
     <button id="wallet-btn" class="wallet-btn" onclick="window._activeProvider ? disconnectWallet() : connectWallet()">
@@ -588,7 +588,7 @@ const NETWORKS = {
 }
 
 // ── CHANGE THIS TO SWITCH BETWEEN TESTNET / MAINNET ──
-let ACTIVE_NETWORK = 'testnet'
+let ACTIVE_NETWORK = 'mainnet'
 
 function getNetConfig() { return NETWORKS[ACTIVE_NETWORK] }
 
