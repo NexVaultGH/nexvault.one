@@ -1,0 +1,14 @@
+# NexVault — Security Policy (RFC 9116)
+# Responsible disclosure of vulnerabilities in the NexVault protocol or website.
+
+Contact: https://github.com/NexVaultGH/nexvault-contracts/security/advisories/new
+Contact: https://github.com/NexVaultGH/nexvault.one/security/advisories/new
+Expires: 2027-05-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://nexvault.one/.well-known/security.txt
+Policy: https://nexvault.one/security
+
+# Scope: nexvault.one, the NexVault dApp, and the NexVault smart contracts
+# (github.com/NexVaultGH/nexvault-contracts).
+# Please do NOT test against live user funds. There is no bug-bounty program
+# at this pre-launch stage; good-faith reports are reviewed and credited.
